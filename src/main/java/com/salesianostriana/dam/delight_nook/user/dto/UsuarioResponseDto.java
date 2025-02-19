@@ -13,7 +13,9 @@ public record UsuarioResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String refreshToken,
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String activationToken
+        String activationToken,
+        String nombreCompleto,
+        String avatar
 ) {
 
     public static UsuarioResponseDto of (Usuario usuario) {
@@ -23,7 +25,9 @@ public record UsuarioResponseDto(
                 usuario.getUsername(),
                 null,
                 null,
-                usuario.getActivationToken()
+                usuario.getActivationToken(),
+                usuario.getNombreCompleto(),
+                usuario.getAvatar()
         );
     }
 
@@ -34,7 +38,9 @@ public record UsuarioResponseDto(
                 usuario.getUsername(),
                 token,
                 refreshToken,
-                null
+                null,
+                usuario.getNombreCompleto(),
+                usuario.getAvatar()
         );
     }
 }

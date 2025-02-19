@@ -45,7 +45,7 @@ public class UsuarioService {
         return UUID.randomUUID().toString();
     }
 
-    public Usuario acitvateAccount(ValidateUsuarioDto validateUsuarioDto) {
+    public Usuario activateAccount(ValidateUsuarioDto validateUsuarioDto) {
 
         return usuarioRepository.findByActivationToken(validateUsuarioDto.activationToken())
                 .filter(usuario -> ChronoUnit.MINUTES.between(Instant.now(), usuario.getCreatedAt()) - activationDuration < 0)
