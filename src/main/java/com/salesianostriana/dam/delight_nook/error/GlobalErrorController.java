@@ -1,11 +1,8 @@
 package com.salesianostriana.dam.delight_nook.error;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.salesianostriana.dam.delight_nook.error.dto.ApiValidationSubError;
 import lombok.extern.java.Log;
 import org.springframework.http.*;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
