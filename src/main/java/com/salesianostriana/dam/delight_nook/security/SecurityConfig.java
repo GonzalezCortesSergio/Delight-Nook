@@ -68,8 +68,8 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(HttpMethod.POST,  "/api/usuario/auth/login", "/api/usuario/auth/refresh/token", "/error").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/usuario/auth/register").hasRole("ADMIN")
+                .requestMatchers("/api/usuario/auth/**", "/error", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
         );
 
