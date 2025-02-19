@@ -6,6 +6,7 @@ import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshTokenSe
 import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.dto.LoginRequest;
 import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
+import com.salesianostriana.dam.delight_nook.user.dto.ValidateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 import com.salesianostriana.dam.delight_nook.user.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -60,5 +58,11 @@ public class UsuarioController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UsuarioResponseDto.of(usuario, accessToken, refreshToken.getToken()));
+    }
+
+    @PostMapping("/auth/validate")
+    public UsuarioResponseDto validateAccount(@RequestBody @Validated ValidateUsuarioDto validateUsuarioDto) {
+
+        return UsuarioResponseDto.of(usuarioService.acitvateAccount(validateUsuarioDto));
     }
 }
