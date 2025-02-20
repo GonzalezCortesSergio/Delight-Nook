@@ -1,9 +1,12 @@
 package com.salesianostriana.dam.delight_nook.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.salesianostriana.dam.delight_nook.user.model.UserRole;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public record UsuarioResponseDto(
         UUID id,
@@ -15,7 +18,8 @@ public record UsuarioResponseDto(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String activationToken,
         String nombreCompleto,
-        String avatar
+        String avatar,
+        Set<String> roles
 ) {
 
     public static UsuarioResponseDto of (Usuario usuario) {
@@ -27,7 +31,10 @@ public record UsuarioResponseDto(
                 null,
                 usuario.getActivationToken(),
                 usuario.getNombreCompleto(),
-                usuario.getAvatar()
+                usuario.getAvatar(),
+                usuario.getRoles().stream()
+                        .map(UserRole::toString)
+                        .collect(Collectors.toSet())
         );
     }
 
@@ -40,7 +47,10 @@ public record UsuarioResponseDto(
                 refreshToken,
                 null,
                 usuario.getNombreCompleto(),
-                usuario.getAvatar()
+                usuario.getAvatar(),
+                usuario.getRoles().stream()
+                        .map(UserRole::toString)
+                        .collect(Collectors.toSet())
         );
     }
 }

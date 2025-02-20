@@ -67,7 +67,10 @@ public class UsuarioController {
                                                                             "username": "Usuario_2",
                                                                             "activationToken": "371ada8f-4dec-4bbf-afe5-4d22070f25a9",
                                                                             "nombreCompleto": "Usuario 1",
-                                                                            "avatar": "avatar.png"
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ]
                                                                         }
                                                                     """
                                                     )
@@ -159,7 +162,7 @@ public class UsuarioController {
             @Parameter(in = ParameterIn.QUERY,
             description = "Distintivo del usuario a crear",
             schema = @Schema(type = "string"),
-            example = "")
+            example = "almacenero")
             @RequestParam(defaultValue = "user", required = false) String userRole) {
 
         Usuario usuario = usuarioService.saveUsuario(usuarioDto, userRole);
@@ -186,7 +189,10 @@ public class UsuarioController {
                                                                     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1Nzk2ZDQyMi1kZDQ4LTQ5ZTgtYmM3MS1jNjEzY2FhYzAwNTIiLCJpYXQiOjE3Mzk5NjkwNTgsImV4cCI6MTczOTk2OTExOH0.wegxMbt6rtBKxslg8e5BL3P669F5BobBESTs8StAHEY",
                                                                     "refreshToken": "3267f607-32d7-402b-b085-e08fe4f7e90f",
                                                                     "nombreCompleto": "admin",
-                                                                    "avatar": "admin.png"
+                                                                    "avatar": "admin.png",
+                                                                    "roles": [
+                                                                        "ADMIN"
+                                                                    ]
                                                                 }
                                                             """
                                             )
@@ -308,7 +314,10 @@ public class UsuarioController {
                                                                             "id": "7eedf5b4-f3cb-4759-8be0-7cab736d6ef2",
                                                                             "username": "Usuario_1",
                                                                             "nombreCompleto": "Usuario 1",
-                                                                            "avatar": "avatar.png"
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ]
                                                                         }
                                                                     """
                                                     )
@@ -425,7 +434,10 @@ public class UsuarioController {
                                                                             "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZDg0Yzg4MC01ZDA4LTRhMDQtOGUzYi0wZGQwY2VhZWVhODEiLCJpYXQiOjE3NDAwNDI0NjksImV4cCI6MTc0MDA0MjUyOX0.V0l2NwylK-SDjDmCi6fUPJCcFmzemsWMcTQPKkvrnoo",
                                                                             "refreshToken": "d770ad63-5486-422c-bcd6-41ea81e89130",
                                                                             "nombreCompleto": "admin",
-                                                                            "avatar": "admin.png"
+                                                                            "avatar": "admin.png",
+                                                                            "roles": [
+                                                                                "ADMIN"
+                                                                            ]
                                                                         }
                                                                     """
                                                     )
@@ -489,70 +501,91 @@ public class UsuarioController {
                                                                                     "id": "a57b573c-c9a2-4970-af0b-d90961c1bef2",
                                                                                     "username": "admin",
                                                                                     "nombreCompleto": "admin",
-                                                                                    "avatar": "admin.png"
+                                                                                    "avatar": "admin.png",
+                                                                                    "roles": [
+                                                                                        "ADMIN"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "e3c64584-1a13-4012-a8a2-789db46354d2",
                                                                                     "username": "Usuario_11",
-                                                                                    "activationToken": "9e31a105-144e-4590-bf57-47d939c6cdb9",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "7a11d9f7-1f9f-4995-8f27-803895317895",
                                                                                     "username": "Usuario_10",
-                                                                                    "activationToken": "39ed6283-e6e1-4f4c-8087-6565c31b5ad4",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "19cfd021-d52f-454d-a544-0ed7848c105a",
                                                                                     "username": "Usuario_9",
-                                                                                    "activationToken": "da4f22dc-79b6-4283-bb9a-cc8983b99996",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "91f60545-757f-41a1-b739-92b9caaa85d2",
                                                                                     "username": "Usuario_8",
-                                                                                    "activationToken": "8d228992-5d4b-40a0-b7e3-3ea345b9779f",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "0c95f8a1-7a6d-4d7e-8af3-9db38c5a9d8e",
                                                                                     "username": "Usuario_7",
-                                                                                    "activationToken": "642c596f-fe3d-4ee5-9112-2b3bf4ce37a8",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "0efd5305-9da0-4884-b1fb-23395e06c9c9",
                                                                                     "username": "Usuario_6",
-                                                                                    "activationToken": "2d76f550-d669-4d22-a62b-ee8e6a20fe5d",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "ef52acb5-25f1-42c2-9514-29a196e1bf79",
                                                                                     "username": "Usuario_5",
-                                                                                    "activationToken": "48485703-f81b-4626-8f5a-19ae38f93602",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "ac98c778-57db-40e1-9379-4e3ed1982ae9",
                                                                                     "username": "Usuario_4",
-                                                                                    "activationToken": "95bf2cab-cdb7-4c9a-b0e6-b3b5d9d7fcb4",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 },
                                                                                 {
                                                                                     "id": "efc5f4da-640c-4539-bd64-3dfae835f712",
                                                                                     "username": "Usuario_3",
-                                                                                    "activationToken": "1033701e-32dd-4094-a943-5b9f983a5ab3",
                                                                                     "nombreCompleto": "Usuario 1",
-                                                                                    "avatar": "avatar.png"
+                                                                                    "avatar": "avatar.png",
+                                                                                    "roles": [
+                                                                                        "ALMACENERO"
+                                                                                    ]
                                                                                 }
                                                                             ],
                                                                             "pageable": {
@@ -639,5 +672,186 @@ public class UsuarioController {
     public Page<UsuarioResponseDto> findAll(@PageableDefault Pageable pageable, @RequestParam(defaultValue = "no", required = false) String filter) {
 
         return usuarioService.findAllByUserRole(pageable, filter);
+    }
+
+    @Operation(summary = "Se agrega el rol de admin a un usuario")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se añade el rol correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "c2f7ec8b-d98a-4f67-8430-f7655a323445",
+                                                                            "username": "Usuario_1",
+                                                                            "nombreCompleto": "Usuario 1",
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ADMIN",
+                                                                                "ALMACENERO"
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Usuario no encontrado",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado el usuario: Usuario_1",
+                                                                            "instance": "/api/usuario/admin/addAdmin/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token caducado",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 323 milliseconds ago at 2025-02-20T17:02:24.000Z. Current time: 2025-02-20T17:02:24.323Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/admin/addAdmin/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PutMapping("/admin/addAdmin/{username}")
+    public UsuarioResponseDto addAdmin(
+            @Parameter(in = ParameterIn.PATH,
+            description = "Nombre de usuario",
+            schema = @Schema(type = "string"),
+            example = "Usuario_1")
+            @PathVariable String username) {
+
+        return UsuarioResponseDto.of(usuarioService.addRoleAdmin(username));
+    }
+
+    @Operation(summary = "Se quita el rol de admin a un usuario")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se quita el rol correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "c2f7ec8b-d98a-4f67-8430-f7655a323445",
+                                                                            "username": "Usuario_1",
+                                                                            "nombreCompleto": "Usuario 1",
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Usuario no encontrado",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado el usuario: Usuario_1",
+                                                                            "instance": "/api/usuario/admin/removeAdmin/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token caducado",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 323 milliseconds ago at 2025-02-20T17:02:24.000Z. Current time: 2025-02-20T17:02:24.323Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/admin/removeAdmin/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PutMapping("/admin/removeAdmin/{username}")
+    public UsuarioResponseDto removeAdmin(
+            @Parameter(in = ParameterIn.PATH,
+            description = "Nombre de usuario",
+            schema = @Schema(type = "string"),
+            example = "Usuario_1")
+            @PathVariable String username) {
+
+        return UsuarioResponseDto.of(usuarioService.removeRoleAdmin(username));
     }
 }
