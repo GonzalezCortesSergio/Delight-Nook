@@ -5,13 +5,17 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = PasswordMatchesValidator.class)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface PasswordMatches {
+@Constraint(validatedBy = UniqueUsernameValidator.class)
+public @interface UniqueUsername {
 
-    String message() default "Las contraseñas no coinciden";
+    String message() default "El nombre de usuario ya existe";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
+
 }
