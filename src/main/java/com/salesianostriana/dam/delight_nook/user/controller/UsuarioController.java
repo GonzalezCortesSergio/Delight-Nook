@@ -2,6 +2,7 @@ package com.salesianostriana.dam.delight_nook.user.controller;
 
 import com.salesianostriana.dam.delight_nook.security.jwt.access.JwtService;
 import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshToken;
+import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshTokenRequest;
 import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshTokenService;
 import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.dto.LoginRequest;
@@ -151,9 +152,14 @@ public class UsuarioController {
                             )
                     }
             )
-            @RequestBody @Validated CreateUsuarioDto usuarioDto) {
+            @RequestBody @Validated CreateUsuarioDto usuarioDto,
+            @Parameter(in = ParameterIn.QUERY,
+            description = "Distintivo del usuario a crear",
+            schema = @Schema(type = "string"),
+            example = "")
+            @RequestParam(defaultValue = "user", required = false) String userRole) {
 
-        Usuario usuario = usuarioService.createUsuario(usuarioDto);
+        Usuario usuario = usuarioService.saveUsuario(usuarioDto, userRole);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UsuarioResponseDto.of(usuario));
@@ -395,5 +401,66 @@ public class UsuarioController {
         Usuario usuario = usuarioService.activateAccount(validateUsuarioDto);
 
         return UsuarioResponseDto.of(usuario);
+    }
+
+    @Operation(summary = "Se refrescan los token de acceso y refresco del usuario")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Se han refrescado los token correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "bd84c880-5d08-4a04-8e3b-0dd0ceaeea81",
+                                                                            "username": "admin",
+                                                                            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiZDg0Yzg4MC01ZDA4LTRhMDQtOGUzYi0wZGQwY2VhZWVhODEiLCJpYXQiOjE3NDAwNDI0NjksImV4cCI6MTc0MDA0MjUyOX0.V0l2NwylK-SDjDmCi6fUPJCcFmzemsWMcTQPKkvrnoo",
+                                                                            "refreshToken": "d770ad63-5486-422c-bcd6-41ea81e89130",
+                                                                            "nombreCompleto": "admin",
+                                                                            "avatar": "admin.png"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token de refresco caducado o no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "Token de refresco caducado. Por favor, vuelva a loguearse",
+                                                                            "instance": "/api/usuario/auth/refresh/token"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PostMapping("/auth/refresh/token")
+    public ResponseEntity<UsuarioResponseDto> refreshToken(@RequestBody RefreshTokenRequest req) {
+
+        String token = req.refreshToken();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(refreshTokenService.refreshToken(token));
     }
 }
