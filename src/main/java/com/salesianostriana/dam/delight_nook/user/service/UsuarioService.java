@@ -3,6 +3,8 @@ package com.salesianostriana.dam.delight_nook.user.service;
 import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.dto.ValidateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.error.ActivationExpiredException;
+import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
+import com.salesianostriana.dam.delight_nook.user.model.Cajero;
 import com.salesianostriana.dam.delight_nook.user.model.UserRole;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 import com.salesianostriana.dam.delight_nook.user.repository.UsuarioRepository;
@@ -26,15 +28,54 @@ public class UsuarioService {
     @Value("${jwt.verification.duration}")
     private int activationDuration;
 
-    public Usuario createUsuario(CreateUsuarioDto usuarioDto) {
+    private Usuario createUsuario(CreateUsuarioDto usuarioDto) {
+
+        return usuarioRepository.save(Usuario.builder()
+                .username(usuarioDto.username())
+                .email(usuarioDto.email())
+                .nombreCompleto(usuarioDto.nombreCompleto())
+                .avatar(usuarioDto.avatar())
+                .roles(Set.of(UserRole.ADMIN))
+                .activationToken(generateRandomActivationCode())
+                .build());
+    }
+
+    public Usuario saveUsuario(CreateUsuarioDto usuarioDto, String userRole) {
+
+        if(userRole.equalsIgnoreCase("almacenero"))
+            return createAlmacenero(usuarioDto);
+
+        if(userRole.equalsIgnoreCase("cajero"))
+
+            return createCajero(usuarioDto);
+
+        return createUsuario(usuarioDto);
+
+    }
+
+    private Almacenero createAlmacenero(CreateUsuarioDto usuarioDto) {
 
         return usuarioRepository.save(
-                Usuario.builder()
+                Almacenero.builder()
                         .username(usuarioDto.username())
                         .email(usuarioDto.email())
                         .nombreCompleto(usuarioDto.nombreCompleto())
                         .avatar(usuarioDto.avatar())
-                        .roles(Set.of(UserRole.ADMIN))
+                        .roles(Set.of(UserRole.ALMACENERO))
+                        .activationToken(generateRandomActivationCode())
+                        .build()
+        );
+    }
+
+    private Cajero createCajero(CreateUsuarioDto usuarioDto) {
+
+        return usuarioRepository.save(
+                Cajero.builder()
+                        .username(usuarioDto.username())
+                        .email(usuarioDto.email())
+                        .nombreCompleto(usuarioDto.nombreCompleto())
+                        .avatar(usuarioDto.avatar())
+                        .roles(Set.of(UserRole.CAJERO))
                         .activationToken(generateRandomActivationCode())
                         .build()
         );
