@@ -1,9 +1,12 @@
 package com.salesianostriana.dam.delight_nook.error;
 
 import com.salesianostriana.dam.delight_nook.error.dto.ApiValidationSubError;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.java.Log;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -21,7 +24,7 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
                 "Error de validación");
 
         List<ApiValidationSubError> subErrors = ex.getAllErrors().stream()
-                .map(ApiValidationSubError::fromError)
+                .map(ApiValidationSubError::from)
                 .toList();
 
         result.setProperty("invalid-params", subErrors);
@@ -29,5 +32,33 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(result);
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ProblemDetail handleEntityNotFoundException(EntityNotFoundException ex) {
+
+        ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
+                ex.getMessage());
+
+        detail.setTitle("Entidad no encontrada");
+
+        return detail;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ProblemDetail handleConstraintViolationException(ConstraintViolationException ex) {
+
+        ProblemDetail result = ProblemDetail.
+                forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+
+        List<ApiValidationSubError> subErrors = ex.getConstraintViolations().stream()
+                .map(ApiValidationSubError::from)
+                .toList();
+
+        result.setProperty("invalid-params", subErrors);
+
+        return result;
+    }
+
+
 
 }

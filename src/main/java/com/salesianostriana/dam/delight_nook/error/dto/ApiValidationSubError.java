@@ -1,8 +1,13 @@
 package com.salesianostriana.dam.delight_nook.error.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.ConstraintViolation;
+import org.hibernate.validator.internal.engine.path.NodeImpl;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+
+import java.util.Optional;
 
 public record ApiValidationSubError(
         String object,
@@ -12,7 +17,7 @@ public record ApiValidationSubError(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Object rejectedValue
 ) {
-    public static ApiValidationSubError fromError(ObjectError error) {
+    public static ApiValidationSubError from(ObjectError error) {
 
         if (error instanceof FieldError fieldError) {
             return new ApiValidationSubError(
@@ -32,4 +37,20 @@ public record ApiValidationSubError(
         }
 
     }
+
+    public static ApiValidationSubError from(ConstraintViolation v) {
+
+        return new ApiValidationSubError(
+                v.getRootBean().getClass().getSimpleName(),
+                v.getMessage(),
+                Optional.ofNullable(v.getPropertyPath())
+                        .map(PathImpl.class::cast)
+                        .map(PathImpl::getLeafNode)
+                        .map(NodeImpl::asString)
+                        .orElse("unknown"),
+                v.getInvalidValue()
+        );
+    }
+
+
 }
