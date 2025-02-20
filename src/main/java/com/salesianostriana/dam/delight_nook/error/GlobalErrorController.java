@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.delight_nook.error;
 
 import com.salesianostriana.dam.delight_nook.error.dto.ApiValidationSubError;
+import com.salesianostriana.dam.delight_nook.user.error.BorradoPropioException;
 import com.salesianostriana.dam.delight_nook.user.error.UsuarioSinRolException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -60,13 +61,13 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
         return result;
     }
 
-    @ExceptionHandler(UsuarioSinRolException.class)
-    public ProblemDetail handleUsuarioSinRolException(UsuarioSinRolException ex) {
+    @ExceptionHandler(BadRequestException.class)
+    public ProblemDetail handleBadRequestException(BadRequestException ex) {
 
         ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 ex.getMessage());
 
-        detail.setTitle("No ha podido quitar el rol");
+        detail.setTitle("Solicitud incorrecta");
 
         return detail;
     }
