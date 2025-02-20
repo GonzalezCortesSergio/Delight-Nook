@@ -43,15 +43,22 @@ public class GlobalErrorController extends ResponseEntityExceptionHandler {
 
         return detail;
     }
-/*
+
+    @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolationException(ConstraintViolationException ex) {
 
         ProblemDetail result = ProblemDetail.
                 forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
 
-        List<ApiValidationSubError>
+        List<ApiValidationSubError> subErrors = ex.getConstraintViolations().stream()
+                .map(ApiValidationSubError::from)
+                .toList();
+
+        result.setProperty("invalid-params", subErrors);
+
+        return result;
     }
 
- */
+
 
 }
