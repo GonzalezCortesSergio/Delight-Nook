@@ -5,6 +5,7 @@ import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
 import com.salesianostriana.dam.delight_nook.user.dto.ValidateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.error.ActivationExpiredException;
 import com.salesianostriana.dam.delight_nook.user.error.UsuarioNotFoundException;
+import com.salesianostriana.dam.delight_nook.user.error.UsuarioSinRolException;
 import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
 import com.salesianostriana.dam.delight_nook.user.model.Cajero;
 import com.salesianostriana.dam.delight_nook.user.model.UserRole;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -127,5 +129,31 @@ public class UsuarioService {
             throw new UsuarioNotFoundException("No se ha encontrado ningún usuario");
 
         return result.map(UsuarioResponseDto::of);
+    }
+
+    public Usuario addRoleAdmin(String username) {
+
+        return usuarioRepository.findFirstByUsername(username)
+                .map(usuario -> {
+                    usuario.getRoles().add(UserRole.ADMIN);
+
+                    return usuarioRepository.save(usuario);
+                }).orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
+    }
+
+    public Usuario removeRoleAdmin(String username) {
+
+        return usuarioRepository.findFirstByUsername(username)
+                .map(usuario -> {
+
+                    if (usuario.getRoles().stream().anyMatch(userRole -> userRole.equals(UserRole.ADMIN))
+                    && usuario.getRoles().size() == 1)
+                        throw new UsuarioSinRolException("No se puede dejar un usuario sin rol");
+
+                    usuario.getRoles().remove(UserRole.ADMIN);
+
+                    return usuarioRepository.save(usuario);
+                })
+                .orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
     }
 }
