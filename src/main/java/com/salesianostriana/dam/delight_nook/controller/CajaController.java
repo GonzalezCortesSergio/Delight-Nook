@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.delight_nook.controller;
 
 import com.salesianostriana.dam.delight_nook.dto.CreateCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.EditCajaDto;
 import com.salesianostriana.dam.delight_nook.dto.GetCajaDto;
 import com.salesianostriana.dam.delight_nook.model.Caja;
 import com.salesianostriana.dam.delight_nook.service.CajaService;
@@ -251,5 +252,11 @@ public class CajaController {
     public Page<GetCajaDto> findAll(@PageableDefault Pageable pageable) {
 
         return cajaService.findAll(pageable);
+    }
+
+    @PutMapping("/admin/editar/{idCaja}")
+    public GetCajaDto edit(@RequestBody EditCajaDto editCajaDto, @PathVariable Long idCaja) {
+
+        return GetCajaDto.of(cajaService.editDineroCaja(editCajaDto, idCaja));
     }
 }

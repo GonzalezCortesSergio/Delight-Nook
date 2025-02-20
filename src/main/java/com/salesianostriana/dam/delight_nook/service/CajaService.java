@@ -1,8 +1,10 @@
 package com.salesianostriana.dam.delight_nook.service;
 
 import com.salesianostriana.dam.delight_nook.dto.CreateCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.EditCajaDto;
 import com.salesianostriana.dam.delight_nook.dto.GetCajaDto;
 import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
+import com.salesianostriana.dam.delight_nook.error.MoneyHigherException;
 import com.salesianostriana.dam.delight_nook.model.Caja;
 import com.salesianostriana.dam.delight_nook.repository.CajaRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +34,20 @@ public class CajaService {
             throw new CajaNotFoundException("No se han encontrado cajas");
 
         return result.map(GetCajaDto::of);
+    }
+
+    public Caja editDineroCaja(EditCajaDto editCajaDto, Long idCaja) {
+
+        return cajaRepository.findById(idCaja)
+                .map(caja -> {
+                    double dineroCaja = caja.getDineroCaja();
+                    if(-dineroCaja > editCajaDto.dineroNuevo())
+                        throw new MoneyHigherException("No puedes sacar más dineo del que se encuentra en la caja");
+
+                    caja.setDineroCaja(dineroCaja + editCajaDto.dineroNuevo());
+
+                    return cajaRepository.save(caja);
+                })
+                .orElseThrow(() -> new CajaNotFoundException("No se ha encontrado la caja con ID: %d".formatted(idCaja)));
     }
 }
