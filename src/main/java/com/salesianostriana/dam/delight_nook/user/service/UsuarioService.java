@@ -4,6 +4,7 @@ import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
 import com.salesianostriana.dam.delight_nook.user.dto.ValidateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.error.ActivationExpiredException;
+import com.salesianostriana.dam.delight_nook.user.error.BorradoPropioException;
 import com.salesianostriana.dam.delight_nook.user.error.UsuarioNotFoundException;
 import com.salesianostriana.dam.delight_nook.user.error.UsuarioSinRolException;
 import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
@@ -155,5 +156,12 @@ public class UsuarioService {
                     return usuarioRepository.save(usuario);
                 })
                 .orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
+    }
+
+    public void deleteByUsername(Usuario usuario, String username) {
+        if(usuario.getUsername().equals(username))
+            throw new BorradoPropioException("Un usuario no se puede borrar a si mismo");
+
+        usuarioRepository.deleteByUsername(username);
     }
 }
