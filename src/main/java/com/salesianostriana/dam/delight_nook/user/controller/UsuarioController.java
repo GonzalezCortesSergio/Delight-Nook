@@ -66,7 +66,6 @@ public class UsuarioController {
                                                                         {
                                                                             "id": "08be4ce7-6e1d-4f4a-bb78-a9149949b110",
                                                                             "username": "Usuario_2",
-                                                                            "activationToken": "371ada8f-4dec-4bbf-afe5-4d22070f25a9",
                                                                             "nombreCompleto": "Usuario 1",
                                                                             "avatar": "avatar.png",
                                                                             "roles": [

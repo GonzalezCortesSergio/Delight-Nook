@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.delight_nook.user.service;
 
+import com.salesianostriana.dam.delight_nook.error.BadRequestException;
 import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
 import com.salesianostriana.dam.delight_nook.user.dto.ValidateUsuarioDto;
@@ -12,18 +13,20 @@ import com.salesianostriana.dam.delight_nook.user.model.Cajero;
 import com.salesianostriana.dam.delight_nook.user.model.UserRole;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 import com.salesianostriana.dam.delight_nook.user.repository.UsuarioRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,6 +36,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JavaMailSender mailSender;
 
     @Value("${jwt.verification.duration}")
     private int activationDuration;
@@ -51,15 +55,38 @@ public class UsuarioService {
 
     public Usuario saveUsuario(CreateUsuarioDto usuarioDto, String userRole) {
 
-        if(userRole.equalsIgnoreCase("almacenero"))
-            return createAlmacenero(usuarioDto);
+        Usuario usuario;
 
-        if(userRole.equalsIgnoreCase("cajero"))
+        if(userRole.equalsIgnoreCase("almacenero")) {
+            usuario = createAlmacenero(usuarioDto);
+        }
 
-            return createCajero(usuarioDto);
 
-        return createUsuario(usuarioDto);
+        else if(userRole.equalsIgnoreCase("cajero"))
+            usuario = createCajero(usuarioDto);
 
+        else
+            usuario = createUsuario(usuarioDto);
+
+        try {
+            sendSimpleMessage(usuario.getEmail(), "Autenticación", "Su código de autenticación es: %s".formatted(usuario.getActivationToken()));
+        }catch (MessagingException ex) {
+            throw new BadRequestException("Illo lascagao");
+        }
+        return usuario;
+
+    }
+
+    private void sendSimpleMessage(String to, String subject, String text) throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setFrom("noreply@delight-nook.com");
+        helper.setSubject(subject);
+        helper.setText(text);
+
+        mailSender.send(message);
     }
 
     private Almacenero createAlmacenero(CreateUsuarioDto usuarioDto) {
@@ -107,6 +134,15 @@ public class UsuarioService {
                     return usuarioRepository.save(usuario);
                 })
                 .orElseThrow(() -> new ActivationExpiredException("El código de activación no existe o ha caducado"));
+    }
+
+    private void sendMail(String to, String subject, String text) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@delight-nook.com");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
     }
 
     public Page<UsuarioResponseDto> findAllByUserRole(Pageable pageable, String userRole) {
