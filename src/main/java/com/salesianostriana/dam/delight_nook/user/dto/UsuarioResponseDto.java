@@ -15,8 +15,6 @@ public record UsuarioResponseDto(
         String token,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String refreshToken,
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        String activationToken,
         String nombreCompleto,
         String avatar,
         Set<String> roles
@@ -29,7 +27,6 @@ public record UsuarioResponseDto(
                 usuario.getUsername(),
                 null,
                 null,
-                usuario.getActivationToken(),
                 usuario.getNombreCompleto(),
                 usuario.getAvatar(),
                 usuario.getRoles().stream()
@@ -45,7 +42,6 @@ public record UsuarioResponseDto(
                 usuario.getUsername(),
                 token,
                 refreshToken,
-                null,
                 usuario.getNombreCompleto(),
                 usuario.getAvatar(),
                 usuario.getRoles().stream()
