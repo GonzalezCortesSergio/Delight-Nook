@@ -13,17 +13,20 @@ import com.salesianostriana.dam.delight_nook.user.model.Cajero;
 import com.salesianostriana.dam.delight_nook.user.model.UserRole;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 import com.salesianostriana.dam.delight_nook.user.repository.UsuarioRepository;
+import com.salesianostriana.dam.delight_nook.util.SendGridMailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -36,7 +39,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
+    private final SendGridMailService mailService;
 
     @Value("${jwt.verification.duration}")
     private int activationDuration;
@@ -69,24 +72,14 @@ public class UsuarioService {
             usuario = createUsuario(usuarioDto);
 
         try {
-            sendSimpleMessage(usuario.getEmail(), "Autenticación", "Su código de autenticación es: %s".formatted(usuario.getActivationToken()));
-        }catch (MessagingException ex) {
-            throw new BadRequestException("Illo lascagao");
+            mailService.sendMail(usuario.getEmail(), "Activación de cuenta", usuario.getActivationToken());
+        }catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el email de activación");
         }
+
         return usuario;
 
-    }
-
-    private void sendSimpleMessage(String to, String subject, String text) throws MessagingException {
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(to);
-        helper.setFrom("noreply@delight-nook.com");
-        helper.setSubject(subject);
-        helper.setText(text);
-
-        mailSender.send(message);
     }
 
     private Almacenero createAlmacenero(CreateUsuarioDto usuarioDto) {
@@ -134,15 +127,6 @@ public class UsuarioService {
                     return usuarioRepository.save(usuario);
                 })
                 .orElseThrow(() -> new ActivationExpiredException("El código de activación no existe o ha caducado"));
-    }
-
-    private void sendMail(String to, String subject, String text) {
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@delight-nook.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
     }
 
     public Page<UsuarioResponseDto> findAllByUserRole(Pageable pageable, String userRole) {
@@ -194,10 +178,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
     }
 
-    public void deleteByUsername(Usuario usuario, String username) {
-        if(usuario.getUsername().equals(username))
-            throw new BorradoPropioException("Un usuario no se puede borrar a si mismo");
-
+    public void deleteByUsername(String username) {
         usuarioRepository.deleteByUsername(username);
     }
 }

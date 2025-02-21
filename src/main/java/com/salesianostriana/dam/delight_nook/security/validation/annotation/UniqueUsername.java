@@ -1,5 +1,6 @@
-package com.salesianostriana.dam.delight_nook.security.validation;
+package com.salesianostriana.dam.delight_nook.security.validation.annotation;
 
+import com.salesianostriana.dam.delight_nook.security.validation.validator.UniqueUsernameValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

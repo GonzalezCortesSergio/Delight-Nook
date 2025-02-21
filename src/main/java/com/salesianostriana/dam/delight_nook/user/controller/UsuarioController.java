@@ -26,6 +26,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -914,10 +916,11 @@ public class UsuarioController {
                     )
             }
     )
+    @PostAuthorize("#username != authentication.principal.username")
     @DeleteMapping("/admin/delete/{username}")
-    public ResponseEntity<?> deleteByUsername(@AuthenticationPrincipal Usuario usuario, @PathVariable String username) {
+    public ResponseEntity<?> deleteByUsername(@PathVariable String username) {
 
-        usuarioService.deleteByUsername(usuario, username);
+        usuarioService.deleteByUsername(username);
 
         return ResponseEntity.noContent().build();
     }

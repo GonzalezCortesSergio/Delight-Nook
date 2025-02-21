@@ -36,18 +36,15 @@ public class CajaService {
         return result.map(GetCajaDto::of);
     }
 
-    public Caja editDineroCaja(EditCajaDto editCajaDto, Long idCaja) {
+    public Caja editDineroCaja(EditCajaDto editCajaDto) {
 
-        return cajaRepository.findById(idCaja)
+        return cajaRepository.findById(editCajaDto.id())
                 .map(caja -> {
                     double dineroCaja = caja.getDineroCaja();
-                    if(-dineroCaja > editCajaDto.dineroNuevo())
-                        throw new MoneyHigherException("No puedes sacar más dineo del que se encuentra en la caja");
-
                     caja.setDineroCaja(dineroCaja + editCajaDto.dineroNuevo());
 
                     return cajaRepository.save(caja);
                 })
-                .orElseThrow(() -> new CajaNotFoundException("No se ha encontrado la caja con ID: %d".formatted(idCaja)));
+                .orElseThrow(() -> new CajaNotFoundException("No se ha encontrado la caja con ID: %d".formatted(editCajaDto.id())));
     }
 }
