@@ -1,6 +1,6 @@
 package com.salesianostriana.dam.delight_nook.user.dto;
 
-import com.salesianostriana.dam.delight_nook.security.validation.UniqueUsername;
+import com.salesianostriana.dam.delight_nook.security.validation.annotation.UniqueUsername;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

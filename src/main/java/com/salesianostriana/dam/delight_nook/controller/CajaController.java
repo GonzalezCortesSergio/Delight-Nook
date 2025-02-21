@@ -1,8 +1,8 @@
 package com.salesianostriana.dam.delight_nook.controller;
 
 import com.salesianostriana.dam.delight_nook.dto.CreateCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.EditCajaDto;
 import com.salesianostriana.dam.delight_nook.dto.GetCajaDto;
-import com.salesianostriana.dam.delight_nook.model.Caja;
 import com.salesianostriana.dam.delight_nook.service.CajaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -251,5 +251,92 @@ public class CajaController {
     public Page<GetCajaDto> findAll(@PageableDefault Pageable pageable) {
 
         return cajaService.findAll(pageable);
+    }
+
+    @Operation(summary = "Se agrega o quita dinero en la caja")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se edita el dinero de la caja correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetCajaDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": 1,
+                                                                            "nombre": "Caja 1",
+                                                                            "dineroCaja": 308.75
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/caja/admin/editar"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Algún dato no es válido (ID inexistente, o se intenta sacar más dinero del que hay en la caja)",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Bad Request",
+                                                                            "status": 400,
+                                                                            "detail": "Error de validación",
+                                                                            "instance": "/api/caja/admin/editar",
+                                                                            "invalid-params": [
+                                                                                {
+                                                                                    "object": "editCajaDto",
+                                                                                    "message": "La caja con ID: 0 no existe"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PutMapping("/admin/editar")
+    public GetCajaDto edit(@RequestBody @Validated EditCajaDto editCajaDto) {
+
+        return GetCajaDto.of(cajaService.editDineroCaja(editCajaDto));
     }
 }

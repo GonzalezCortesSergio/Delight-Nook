@@ -1,6 +1,6 @@
-package com.salesianostriana.dam.delight_nook.security.validation;
+package com.salesianostriana.dam.delight_nook.security.validation.validator;
 
-import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
+import com.salesianostriana.dam.delight_nook.security.validation.annotation.UniqueUsername;
 import com.salesianostriana.dam.delight_nook.user.repository.UsuarioRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
