@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
@@ -14,7 +16,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE Caja c set c.deleted = true where id=?")
+@SQLDelete(sql = "UPDATE Caja set deleted = true where id=?")
+@SQLRestriction("deleted=false")
 @Builder
 public class Caja {
 
