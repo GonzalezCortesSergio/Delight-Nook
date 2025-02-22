@@ -1,8 +1,8 @@
 package com.salesianostriana.dam.delight_nook.controller;
 
-import com.salesianostriana.dam.delight_nook.dto.CreateCajaDto;
-import com.salesianostriana.dam.delight_nook.dto.EditCajaDto;
-import com.salesianostriana.dam.delight_nook.dto.GetCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.caja.CreateCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.caja.EditCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.caja.GetCajaDto;
 import com.salesianostriana.dam.delight_nook.service.CajaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
