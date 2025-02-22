@@ -47,4 +47,8 @@ public class CajaService {
                 })
                 .orElseThrow(() -> new CajaNotFoundException("No se ha encontrado la caja con ID: %d".formatted(editCajaDto.id())));
     }
+
+    public void deleteById(Long id) {
+        cajaRepository.deleteById(id);
+    }
 }
