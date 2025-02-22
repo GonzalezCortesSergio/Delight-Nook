@@ -335,7 +335,28 @@ public class CajaController {
             }
     )
     @PutMapping("/admin/editar")
-    public GetCajaDto edit(@RequestBody @Validated EditCajaDto editCajaDto) {
+    public GetCajaDto edit(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "ID de la caja y dinero a insertar o sacar",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = EditCajaDto.class),
+                                    examples = {
+                                            @ExampleObject(
+                                                    value = """
+                                                                {
+                                                                    "id": 1,
+                                                                    "dineroNuevo": 150
+                                                                }
+                                                            """
+                                            )
+                                    }
+                            )
+                    }
+            )
+            @RequestBody @Validated EditCajaDto editCajaDto) {
 
         return GetCajaDto.of(cajaService.editDineroCaja(editCajaDto));
     }
