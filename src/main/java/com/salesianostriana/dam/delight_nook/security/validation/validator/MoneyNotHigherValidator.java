@@ -1,6 +1,6 @@
 package com.salesianostriana.dam.delight_nook.security.validation.validator;
 
-import com.salesianostriana.dam.delight_nook.dto.EditCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.caja.EditCajaDto;
 import com.salesianostriana.dam.delight_nook.repository.CajaRepository;
 import com.salesianostriana.dam.delight_nook.security.validation.annotation.MoneyNotHigher;
 import jakarta.validation.ConstraintValidator;

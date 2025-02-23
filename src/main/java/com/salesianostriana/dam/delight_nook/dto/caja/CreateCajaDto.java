@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.delight_nook.dto;
+package com.salesianostriana.dam.delight_nook.dto.caja;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

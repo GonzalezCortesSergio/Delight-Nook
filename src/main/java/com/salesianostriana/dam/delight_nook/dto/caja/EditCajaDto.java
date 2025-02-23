@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.delight_nook.dto;
+package com.salesianostriana.dam.delight_nook.dto.caja;
 
 import com.salesianostriana.dam.delight_nook.security.validation.annotation.MoneyNotHigher;
 

@@ -1,10 +1,9 @@
 package com.salesianostriana.dam.delight_nook.service;
 
-import com.salesianostriana.dam.delight_nook.dto.CreateCajaDto;
-import com.salesianostriana.dam.delight_nook.dto.EditCajaDto;
-import com.salesianostriana.dam.delight_nook.dto.GetCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.caja.CreateCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.caja.EditCajaDto;
+import com.salesianostriana.dam.delight_nook.dto.caja.GetCajaDto;
 import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
-import com.salesianostriana.dam.delight_nook.error.MoneyHigherException;
 import com.salesianostriana.dam.delight_nook.model.Caja;
 import com.salesianostriana.dam.delight_nook.repository.CajaRepository;
 import lombok.RequiredArgsConstructor;
