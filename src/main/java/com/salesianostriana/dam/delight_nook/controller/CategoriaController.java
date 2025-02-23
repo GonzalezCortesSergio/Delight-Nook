@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -311,5 +314,118 @@ public class CategoriaController {
         categoriaService.deleteById(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Se muestran todas las categorías base")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se han encontrado categorías",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = Page.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "content": [
+                                                                                {
+                                                                                    "id": 1,
+                                                                                    "nombre": "Pantalones"
+                                                                                },
+                                                                                {
+                                                                                    "id": 3,
+                                                                                    "nombre": "Camisetas"
+                                                                                }
+                                                                            ],
+                                                                            "pageable": {
+                                                                                "pageNumber": 0,
+                                                                                "pageSize": 10,
+                                                                                "sort": {
+                                                                                    "empty": true,
+                                                                                    "sorted": false,
+                                                                                    "unsorted": true
+                                                                                },
+                                                                                "offset": 0,
+                                                                                "paged": true,
+                                                                                "unpaged": false
+                                                                            },
+                                                                            "last": true,
+                                                                            "totalElements": 2,
+                                                                            "totalPages": 1,
+                                                                            "size": 10,
+                                                                            "number": 0,
+                                                                            "sort": {
+                                                                                "empty": true,
+                                                                                "sorted": false,
+                                                                                "unsorted": true
+                                                                            },
+                                                                            "first": true,
+                                                                            "numberOfElements": 2,
+                                                                            "empty": false
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se han encontrado categorías",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se han encontrado categorías",
+                                                                            "instance": "/api/categoria"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/categoria"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping
+    public Page<GetCategoriaDto> findAllBase(@PageableDefault Pageable pageable) {
+
+        return categoriaService.findAllBase(pageable);
     }
 }
