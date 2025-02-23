@@ -2,6 +2,7 @@ package com.salesianostriana.dam.delight_nook.controller;
 
 import com.salesianostriana.dam.delight_nook.dto.categoria.GetCategoriaDto;
 import com.salesianostriana.dam.delight_nook.model.Categoria;
+import com.salesianostriana.dam.delight_nook.security.validation.annotation.UniqueCategoryName;
 import com.salesianostriana.dam.delight_nook.service.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Categoría",
 description = "Controlador para gestionar categorías")
+@Validated
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
@@ -80,11 +82,47 @@ public class CategoriaController {
                                             }
                                     )
                             }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "La categoría ya existe",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Bad Request",
+                                                                            "status": 400,
+                                                                            "detail": "crear.nombre: La categoría con ese nombre ya existe",
+                                                                            "instance": "/api/categoria/admin/crear/Peluches",
+                                                                            "invalid-params": [
+                                                                                {
+                                                                                    "object": "CategoriaController",
+                                                                                    "message": "La categoría con ese nombre ya existe",
+                                                                                    "field": "nombre",
+                                                                                    "rejectedValue": "Peluches"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
                     )
             }
     )
     @PostMapping("/admin/crear/{nombre}")
-    public ResponseEntity<GetCategoriaDto> crear(@PathVariable String nombre) {
+    public ResponseEntity<GetCategoriaDto> crear(
+            @Parameter(in = ParameterIn.PATH,
+            description = "Nombre de la nueva categoría",
+            schema = @Schema(type = "string"),
+            example= "Peluches")
+            @PathVariable @UniqueCategoryName String nombre) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(

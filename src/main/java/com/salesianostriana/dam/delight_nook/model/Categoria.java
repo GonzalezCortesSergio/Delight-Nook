@@ -22,6 +22,7 @@ public class Categoria {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String nombre;
 
     @ManyToOne
@@ -34,6 +35,8 @@ public class Categoria {
     )
     @Builder.Default
     private List<Categoria> categoriasHijas = new ArrayList<>();
+
+    private boolean deleted;
 
     public void addToCategoriaPadre(Categoria categoria) {
 
