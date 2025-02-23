@@ -60,4 +60,10 @@ public class CategoriaService {
 
         return result.map(GetCategoriaDto::of);
     }
+
+    public Categoria findById(Long id) {
+
+        return categoriaRepository.findById(id)
+                .orElseThrow(() -> new CategoriaNotFoundException("No se ha encontrado la categoría con ID: %d".formatted(id)));
+    }
 }
