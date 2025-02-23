@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.delight_nook.controller;
 
+import com.salesianostriana.dam.delight_nook.dto.categoria.CreateCategoriaHijaDto;
 import com.salesianostriana.dam.delight_nook.dto.categoria.GetCategoriaDto;
 import com.salesianostriana.dam.delight_nook.model.Categoria;
 import com.salesianostriana.dam.delight_nook.security.validation.annotation.UniqueCategoryName;
@@ -18,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/categoria")
@@ -127,6 +125,142 @@ public class CategoriaController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
                         GetCategoriaDto.of(categoriaService.create(nombre))
+                );
+    }
+
+    @Operation(summary = "Se crea una categoría hija")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Se crea la categoría correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetCategoriaDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": 2,
+                                                                            "nombre": "Vaqueros",
+                                                                            "categoriaPadre": "Pantalones"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado la posible categoría padre",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado la categoría con ID: 0",
+                                                                            "instance": "/api/categoria/admin/crearHija"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "La categoría ya existe",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Bad Request",
+                                                                            "status": 400,
+                                                                            "detail": "Error de validación",
+                                                                            "instance": "/api/categoria/admin/crearHija",
+                                                                            "invalid-params": [
+                                                                                {
+                                                                                    "object": "createCategoriaHijaDto",
+                                                                                    "message": "La categoría con ese nombre ya existe",
+                                                                                    "field": "categoriaNombre",
+                                                                                    "rejectedValue": "Vaqueros"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/categoria/admin/crearHija"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PostMapping("/admin/crearHija")
+    public ResponseEntity<GetCategoriaDto> crearCategoriaHija(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "ID de la categoría padre y nombre de la nueva categoría",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CreateCategoriaHijaDto.class),
+                                    examples = {
+                                            @ExampleObject(
+                                                    value = """
+                                                                {
+                                                                    "categoriaMadreId": 1,
+                                                                    "categoriaNombre": "Vaqueros"
+                                                                }
+                                                            """
+                                            )
+                                    }
+                            )
+                    }
+            )
+            @RequestBody @Validated CreateCategoriaHijaDto categoriaHijaDto) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(
+                        GetCategoriaDto.of(categoriaService.createCategoriaHija(categoriaHijaDto))
                 );
     }
 }
