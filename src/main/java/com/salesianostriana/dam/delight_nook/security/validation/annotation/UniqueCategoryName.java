@@ -6,7 +6,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.PARAMETER})
+@Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = UniqueCategoryNameValidator.class)
