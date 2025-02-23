@@ -42,4 +42,9 @@ public class CategoriaService {
                 })
                 .orElseThrow(() -> new CategoriaNotFoundException("No se ha encontrado la categoría con ID: %d".formatted(categoriaHijaDto.categoriaMadreId())));
     }
+
+    @Transactional
+    public void deleteById(Long id) {
+        categoriaRepository.deleteById(id);
+    }
 }

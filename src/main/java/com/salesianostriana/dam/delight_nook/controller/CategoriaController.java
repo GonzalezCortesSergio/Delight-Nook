@@ -263,4 +263,53 @@ public class CategoriaController {
                         GetCategoriaDto.of(categoriaService.createCategoriaHija(categoriaHijaDto))
                 );
     }
+
+    @Operation(summary = "Se borra una categoría")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Se ha borrado la categoría correctamente",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/categoria/admin/borrar/1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @DeleteMapping("/admin/borrar/{id}")
+    public ResponseEntity<?> deleteById(
+            @Parameter(in = ParameterIn.PATH,
+            description = "ID de la categoría a borrar",
+            schema = @Schema(type = "long"),
+            example = "1")
+            @PathVariable Long id) {
+
+        categoriaService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
