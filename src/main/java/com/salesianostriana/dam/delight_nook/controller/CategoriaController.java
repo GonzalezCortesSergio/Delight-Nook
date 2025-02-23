@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.delight_nook.controller;
 
 import com.salesianostriana.dam.delight_nook.dto.categoria.CreateCategoriaHijaDto;
+import com.salesianostriana.dam.delight_nook.dto.categoria.GetCategoriaDetailsDto;
 import com.salesianostriana.dam.delight_nook.dto.categoria.GetCategoriaDto;
 import com.salesianostriana.dam.delight_nook.model.Categoria;
 import com.salesianostriana.dam.delight_nook.security.validation.annotation.UniqueCategoryName;
@@ -427,5 +428,95 @@ public class CategoriaController {
     public Page<GetCategoriaDto> findAllBase(@PageableDefault Pageable pageable) {
 
         return categoriaService.findAllBase(pageable);
+    }
+
+    @Operation(summary = "Se muestran los detalles de una categoría")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se ha encontrado la categoría",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetCategoriaDetailsDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "categoria": {
+                                                                                "id": 2,
+                                                                                "nombre": "Vaqueros",
+                                                                                "categoriaPadre": "Camisetas"
+                                                                            },
+                                                                            "categoriasHijas": [
+                                                                                {
+                                                                                    "id": 3,
+                                                                                    "nombre": "Shorts",
+                                                                                    "categoriaPadre": "Vaqueros"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado la categoría",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado la categoría con ID: 5",
+                                                                            "instance": "/api/categoria/5"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/categoria/5"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping("/{id}")
+    public GetCategoriaDetailsDto findById(@PathVariable Long id) {
+
+        return GetCategoriaDetailsDto.of(categoriaService.findById(id));
     }
 }
