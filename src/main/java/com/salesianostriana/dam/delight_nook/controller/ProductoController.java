@@ -698,4 +698,53 @@ public class ProductoController {
 
         return GetProductoDetailsDto.of(producto, productoService.getImageUrl(producto.getImagen()));
     }
+
+    @Operation(summary = "Se borra un producto")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Se ha borrado el producto correctamente",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/producto/admin/borrar/1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @DeleteMapping("/admin/borrar/{id}")
+    public ResponseEntity<?> deleteById(
+            @Parameter(in = ParameterIn.PATH,
+            description = "ID del producto a borrar",
+            schema = @Schema(type = "long"),
+            example = "1")
+            @PathVariable Long id) {
+
+        productoService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
