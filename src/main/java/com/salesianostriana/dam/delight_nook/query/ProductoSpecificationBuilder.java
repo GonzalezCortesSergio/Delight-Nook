@@ -1,9 +1,7 @@
 package com.salesianostriana.dam.delight_nook.query;
 
-import com.salesianostriana.dam.delight_nook.model.Categoria;
 import com.salesianostriana.dam.delight_nook.model.Producto;
 import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
-import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -19,36 +17,28 @@ extends GenericSpecificationBuilder<Producto>{
     @Override
     public Specification<Producto> build() {
 
-        Specification<Producto> result = super.build();
+        Specification<Producto> result;
 
+        if (params.isEmpty())
+            return null;
 
+        SearchCriteria first = params.get(0);
+
+        if (first.key().equalsIgnoreCase("categoria"))
+            result = Producto.filterByCategoria(first);
+        else
+            result = super.build(first);
+
+        for (int i = 1; i < params.size(); i++) {
+            if (params.get(i).key().equalsIgnoreCase("categoria"))
+                result = result.and(Producto.filterByCategoria(params.get(i)));
+            else
+                result = super.build(params.get(i));
+
+            //result = result.and(Producto.filterByCategoria(params.get(i)));
+        }
 
         return result;
-
-
     }
 
-    //No hace falta el SetJoin.
-
-    private Specification<Producto> build(SearchCriteria criteria) {
-
-        return ((root, query, criteriaBuilder) -> {
-
-            if(criteria.key().equalsIgnoreCase("categoria") && criteria.operation().equalsIgnoreCase(":")) {
-
-                CriteriaQuery<Producto> criteriaQuery = criteriaBuilder.createQuery(Producto.class);
-                Root<Producto> productoRoot = criteriaQuery.from(Producto.class);
-
-                criteriaQuery.select(productoRoot);
-                SetJoin<Producto, Categoria> categoria = productoRoot.joinSet("categoria", JoinType.LEFT);
-
-                Predicate nombrePredicate = criteriaBuilder.equal(categoria.get("nombre"), criteria.value());
-                productoRoot.fetch(String.valueOf(categoria));
-
-                criteriaQuery.where(nombrePredicate);
-            }
-
-            return null;
-        });
-    }
 }

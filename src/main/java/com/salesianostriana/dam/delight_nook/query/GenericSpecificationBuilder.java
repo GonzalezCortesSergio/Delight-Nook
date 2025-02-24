@@ -28,7 +28,7 @@ public abstract class GenericSpecificationBuilder<T> {
     }
 
 
-    private Specification<T> build(SearchCriteria criteria) {
+    protected Specification<T> build(SearchCriteria criteria) {
 
         return ((root, query, criteriaBuilder) -> {
 
