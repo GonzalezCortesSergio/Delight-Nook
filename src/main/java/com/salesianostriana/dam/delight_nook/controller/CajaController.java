@@ -3,7 +3,15 @@ package com.salesianostriana.dam.delight_nook.controller;
 import com.salesianostriana.dam.delight_nook.dto.caja.CreateCajaDto;
 import com.salesianostriana.dam.delight_nook.dto.caja.EditCajaDto;
 import com.salesianostriana.dam.delight_nook.dto.caja.GetCajaDto;
+import com.salesianostriana.dam.delight_nook.security.jwt.access.JwtService;
+import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshToken;
+import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshTokenService;
 import com.salesianostriana.dam.delight_nook.service.CajaService;
+import com.salesianostriana.dam.delight_nook.service.GestionaService;
+import com.salesianostriana.dam.delight_nook.user.dto.LoginRequest;
+import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
+import com.salesianostriana.dam.delight_nook.user.model.Cajero;
+import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -14,12 +22,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +44,10 @@ description = "Controlador para gestionar las cajas")
 public class CajaController {
 
     private final CajaService cajaService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
+    private final GestionaService gestionaService;
 
 
     @Operation(summary = "Se crea una caja nueva")
@@ -412,5 +429,191 @@ public class CajaController {
         cajaService.deleteById(idCaja);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Un cajero inicia sesión")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Se inicia sesión correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "username": "manolitox1998",
+                                                                            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0YTE4MjBmZC1hNDA2LTQwZTYtYmRlMC1iZmVkMjQzODgzNmEiLCJpYXQiOjE3NDA0MzQ5NzMsImV4cCI6MTc0MDQzNTI3M30.2ZAk2StjgUdZqDVeNp5Swizk2GkL-PepU4j77RJ-d0s",
+                                                                            "refreshToken": "c5f41067-b4ee-4648-9504-f047211ca5fc",
+                                                                            "nombreCompleto": "Manolo López Guzmán",
+                                                                            "avatar": "",
+                                                                            "roles": [
+                                                                                "CAJERO"
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado la caja",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado la caja con ID: 2",
+                                                                            "instance": "/api/caja/2/login"
+                                                                        }
+                                                                    """
+
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Datos no válidos",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Bad Request",
+                                                                            "status": 400,
+                                                                            "detail": "Error de validación",
+                                                                            "instance": "/api/caja/2/login",
+                                                                            "invalid-params": [
+                                                                                {
+                                                                                    "object": "loginRequest",
+                                                                                    "message": "no debe estar vacío",
+                                                                                    "field": "password",
+                                                                                    "rejectedValue": ""
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Credenciales no válidas",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Unauthorized",
+                                                                            "status": 401,
+                                                                            "detail": "Bad credentials",
+                                                                            "instance": "/api/caja/2/login"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "La caja ya está ocupada",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Solicitud incorrecta",
+                                                                            "status": 400,
+                                                                            "detail": "La caja se encuentra ocupada",
+                                                                            "instance": "/api/caja/1/login"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PostMapping("/{cajaId}/login")
+    public ResponseEntity<UsuarioResponseDto> loginCajero(
+            @Parameter(in = ParameterIn.PATH,
+            description = "ID de la caja en la que iniciar sesión",
+            schema = @Schema(type = "long"),
+            example = "1")
+            @PathVariable Long cajaId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Usuario y contraseña",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = LoginRequest.class),
+                                    examples = {
+                                            @ExampleObject(
+                                                    value = """
+                                                                {
+                                                                    "username": "manolitox1998",
+                                                                    "password": "1234"
+                                                                }
+                                                            """
+                                            )
+                                    }
+                            )
+                    }
+            )
+            @RequestBody @Validated LoginRequest loginRequest) {
+
+        Authentication auth =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                loginRequest.username(),
+                                loginRequest.password()
+                        )
+                );
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        Usuario usuario = (Usuario) auth.getPrincipal();
+
+        String accessToken = jwtService.generateAccessToken(usuario);
+        RefreshToken refreshToken = refreshTokenService.create(usuario);
+
+        if(usuario instanceof Cajero cajero) {
+            gestionaService.create(cajero, cajaId);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(
+                        UsuarioResponseDto.of(usuario, accessToken, refreshToken.getToken())
+                );
+
     }
 }
