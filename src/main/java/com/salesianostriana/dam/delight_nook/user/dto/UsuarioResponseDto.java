@@ -9,7 +9,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public record UsuarioResponseDto(
-        UUID id,
         String username,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String token,
@@ -23,7 +22,6 @@ public record UsuarioResponseDto(
     public static UsuarioResponseDto of (Usuario usuario) {
 
         return new UsuarioResponseDto(
-                usuario.getId(),
                 usuario.getUsername(),
                 null,
                 null,
@@ -38,7 +36,6 @@ public record UsuarioResponseDto(
     public static UsuarioResponseDto of (Usuario usuario, String token, String refreshToken) {
 
         return new UsuarioResponseDto(
-                usuario.getId(),
                 usuario.getUsername(),
                 token,
                 refreshToken,

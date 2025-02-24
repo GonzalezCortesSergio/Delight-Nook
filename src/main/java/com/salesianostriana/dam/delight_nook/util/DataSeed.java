@@ -49,7 +49,7 @@ public class DataSeed {
                 .nombreCompleto("Pedro López Guzmán")
                 .avatar("")
                 .email("preql1s23@gmail.com")
-                .roles(Set.of(UserRole.ALMACENERO))
+                .roles(Set.of(UserRole.ALMACENERO, UserRole.ADMIN))
                 .enabled(true)
                 .build();
 

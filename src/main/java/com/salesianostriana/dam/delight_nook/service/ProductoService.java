@@ -62,7 +62,7 @@ public class ProductoService {
         if(result.isEmpty())
             throw new ProductoNoEncontradoException("No se han encontrado productos");
 
-        return result.map(GetProductoDto::of);
+        return result.map(producto -> GetProductoDto.of(producto, getImageUrl(producto.getImagen())));
 
     }
 

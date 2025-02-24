@@ -1,11 +1,11 @@
 package com.salesianostriana.dam.delight_nook.controller;
 
-import com.salesianostriana.dam.delight_nook.dto.producto.CreateProductoDto;
-import com.salesianostriana.dam.delight_nook.dto.producto.EditProductoDto;
-import com.salesianostriana.dam.delight_nook.dto.producto.GetProductoDetailsDto;
-import com.salesianostriana.dam.delight_nook.dto.producto.GetProductoDto;
+import com.salesianostriana.dam.delight_nook.dto.producto.*;
 import com.salesianostriana.dam.delight_nook.model.Producto;
+import com.salesianostriana.dam.delight_nook.model.Stock;
 import com.salesianostriana.dam.delight_nook.service.ProductoService;
+import com.salesianostriana.dam.delight_nook.service.StockService;
+import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
 import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
 import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
 import com.salesianostriana.dam.delight_nook.util.files.utils.MimeTypeDetector;
@@ -26,10 +26,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +46,7 @@ public class ProductoController {
     private final ProductoService productoService;
     private final StorageService storageService;
     private final MimeTypeDetector mimeTypeDetector;
+    private final StockService stockService;
 
     @Operation(summary = "Se crea un producto nuevo")
     @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
@@ -746,5 +747,157 @@ public class ProductoController {
         productoService.deleteById(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Se agrega un producto en stock")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Se han agregado los productos en stock",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetStockDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "producto": {
+                                                                                "id": 1,
+                                                                                "nombre": "Pantalonichi waperrimo",
+                                                                                "categoria": "Pantalones",
+                                                                                "precioUnidad": 12.23,
+                                                                                "imagen": null
+                                                                            },
+                                                                            "almacenero": {
+                                                                                "username": "pedritxauq123",
+                                                                                "nombreCompleto": "Pedro López Guzmán",
+                                                                                "avatar": "",
+                                                                                "roles": [
+                                                                                    "ADMIN",
+                                                                                    "ALMACENERO"
+                                                                                ]
+                                                                            },
+                                                                            "cantidad": 50
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado el producto",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado el producto con ID: -1",
+                                                                            "instance": "/api/producto/almacenero/addStock"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Uno de los datos no es válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Bad Request",
+                                                                            "status": 400,
+                                                                            "detail": "Error de validación",
+                                                                            "instance": "/api/producto/almacenero/addStock",
+                                                                            "invalid-params": [
+                                                                                {
+                                                                                    "object": "createStockDto",
+                                                                                    "message": "debe ser mayor que o igual a 1",
+                                                                                    "field": "cantidad",
+                                                                                    "rejectedValue": 0
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "Malformed protected header JSON: Unable to deserialize: Unexpected end-of-input: expected close marker for Object (start marker at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 1])\\n at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 27]",
+                                                                            "instance": "/api/producto/almacenero/addStock"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PostMapping("/almacenero/addStock")
+    public ResponseEntity<GetStockDto> agregarAStock(@AuthenticationPrincipal Almacenero almacenero,
+                                                     @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                                             description = "ID del producto y cantidad",
+                                                             required = true,
+                                                             content = {
+                                                                     @Content(
+                                                                             mediaType = "application/json",
+                                                                             schema = @Schema(implementation = CreateStockDto.class),
+                                                                             examples = {
+                                                                                     @ExampleObject(
+                                                                                             value = """
+                                                                                                        {
+                                                                                                            "idProducto": 1,
+                                                                                                            "cantidad": 50
+                                                                                                        }
+                                                                                                     """
+                                                                                     )
+                                                                             }
+                                                                     )
+                                                             }
+                                                     )
+                                                     @RequestBody @Validated CreateStockDto stockDto) {
+
+        Stock stock = stockService.create(almacenero, stockDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(
+                        GetStockDto.of(stock, productoService.getImageUrl(stock.getProducto().getImagen()))
+                );
     }
 }
