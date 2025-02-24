@@ -4,8 +4,11 @@ import com.salesianostriana.dam.delight_nook.dto.producto.CreateProductoDto;
 import com.salesianostriana.dam.delight_nook.dto.producto.EditProductoDto;
 import com.salesianostriana.dam.delight_nook.dto.producto.GetProductoDetailsDto;
 import com.salesianostriana.dam.delight_nook.dto.producto.GetProductoDto;
+import com.salesianostriana.dam.delight_nook.model.Producto;
 import com.salesianostriana.dam.delight_nook.service.ProductoService;
 import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
+import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
+import com.salesianostriana.dam.delight_nook.util.files.utils.MimeTypeDetector;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -15,8 +18,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,10 +28,11 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +44,8 @@ description = "Controlador para gestionar productos")
 public class ProductoController {
 
     private final ProductoService productoService;
-
+    private final StorageService storageService;
+    private final MimeTypeDetector mimeTypeDetector;
 
     @Operation(summary = "Se crea un producto nuevo")
     @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
@@ -185,9 +190,11 @@ public class ProductoController {
             )
             @RequestBody @Validated CreateProductoDto productoDto) {
 
+        Producto producto = productoService.create(productoDto);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
-                        GetProductoDetailsDto.of(productoService.create(productoDto))
+                        GetProductoDetailsDto.of(producto, productoService.getImageUrl(producto.getImagen()))
                 );
     }
 
@@ -443,6 +450,161 @@ public class ProductoController {
             example = "1")
             @PathVariable Long id) {
 
-        return GetProductoDetailsDto.of(productoService.edit(productoDto, id));
+        Producto producto = productoService.edit(productoDto, id);
+
+        return GetProductoDetailsDto.of(producto, productoService.getImageUrl(producto.getImagen()));
+    }
+
+    @Operation(summary = "Se cambia la imagen de un producto")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se cambia la imagen correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetProductoDetailsDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "nombre": "Pantalonichi waperrimo",
+                                                                            "precioUnidad": 12.23,
+                                                                            "descripcion": "Un pantalón to wapo pa ti pa tos",
+                                                                            "imagen": "http://localhost:8080/api/producto/download/Captura%20de%20pantalla%202024-12-14%20174244_937913.png",
+                                                                            "categoria": "Pantalones",
+                                                                            "proveedor": "Niños de Bangliadesh"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado el producto",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado el producto con ID: 1",
+                                                                            "instance": "/api/producto/admin/editImage/1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/producto/admin/editImage/1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "413",
+                            description = "El tamaño del archivo es muy grande",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Payload Too Large",
+                                                                            "status": 413,
+                                                                            "detail": "Maximum upload size exceeded",
+                                                                            "instance": "/api/producto/admin/editImage/1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PutMapping("/admin/editImage/{id}")
+    public GetProductoDetailsDto editImage(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Imagen a incluir",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = "multipart/form-data",
+                                    schema = @Schema(implementation = MultipartFile.class)
+                            )
+                    }
+            )
+            @RequestPart("image") MultipartFile file,
+                                           @Parameter(in = ParameterIn.PATH,
+                                           description = "ID del producto",
+                                           schema = @Schema(type = "long"),
+                                           example = "1")
+                                           @PathVariable Long id) {
+
+        Producto producto = productoService.changeImage(file, id);
+
+        return GetProductoDetailsDto.of(producto, productoService.getImageUrl(producto.getImagen()));
+    }
+
+
+    @Operation(summary = "Se ve la imagen de un producto")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se muestra la imagen correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "image/jpeg",
+                                            schema = @Schema(implementation = Resource.class)
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping("/download/{id:.+}")
+    public ResponseEntity<Resource> getFile(@PathVariable String id) {
+
+        Resource resource = storageService.loadAsResource(id);
+
+        String mimeType = mimeTypeDetector.getMimeType(resource);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", mimeType)
+                .body(resource);
     }
 }

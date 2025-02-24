@@ -10,11 +10,16 @@ import com.salesianostriana.dam.delight_nook.query.ProductoSpecificationBuilder;
 import com.salesianostriana.dam.delight_nook.repository.CategoriaRepository;
 import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
 import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
+import com.salesianostriana.dam.delight_nook.util.files.model.FileMetadata;
+import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
+import com.salesianostriana.dam.delight_nook.util.files.utils.MimeTypeDetector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -24,7 +29,7 @@ public class ProductoService {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
-
+    private final StorageService storageService;
 
     public Producto create(CreateProductoDto productoDto) {
 
@@ -77,6 +82,30 @@ public class ProductoService {
                     return productoRepository.save(producto);
                 })
                 .orElseThrow(() -> new ProductoNoEncontradoException("No se ha encontrado un producto con ID: %d".formatted(id)));
+    }
+
+    public Producto changeImage(MultipartFile file, Long id) {
+
+        return productoRepository.findById(id)
+                .map(producto -> {
+                    FileMetadata fileMetadata = storageService.store(file);
+
+                    producto.setImagen(fileMetadata.getId());
+
+                    return productoRepository.save(producto);
+                })
+                .orElseThrow(() -> new ProductoNoEncontradoException("No se ha encontrado el producto con ID: %d".formatted(id)));
+    }
+
+    public String getImageUrl(String filename) {
+
+        if(filename.isEmpty())
+            return null;
+
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/producto/download/")
+                .path(filename)
+                .toUriString();
     }
 
 

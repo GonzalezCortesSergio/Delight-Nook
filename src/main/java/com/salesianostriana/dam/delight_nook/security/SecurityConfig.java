@@ -74,7 +74,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/caja/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/categoria/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/producto/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/usuario/auth/**", "/error", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/usuario/auth/**", "/error", "/swagger-ui/**", "/v3/api-docs/**", "/api/producto/download/**").permitAll()
                 .anyRequest().authenticated()
         );
 
