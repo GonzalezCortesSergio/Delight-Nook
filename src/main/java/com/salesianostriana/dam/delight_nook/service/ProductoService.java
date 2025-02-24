@@ -30,6 +30,7 @@ public class ProductoService {
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final StorageService storageService;
+    private final StockService stockService;
 
     public Producto create(CreateProductoDto productoDto) {
 
@@ -115,6 +116,8 @@ public class ProductoService {
     }
 
     public void deleteById(Long id) {
+
+        stockService.deleteById(id);
 
         productoRepository.deleteById(id);
     }

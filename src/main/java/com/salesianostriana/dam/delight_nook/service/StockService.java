@@ -45,4 +45,9 @@ public class StockService {
 
         return stockRepository.save(nuevo);
     }
+
+    @Transactional
+    public void deleteById(Long idProducto) {
+        stockRepository.findByProductoId(idProducto).ifPresent(stockRepository::delete);
+    }
 }
