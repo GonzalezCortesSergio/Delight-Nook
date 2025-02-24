@@ -10,8 +10,6 @@ public record CreateProductoDto(
         double precioUnidad,
         @NotBlank
         String descripcion,
-        @NotBlank
-        String imagen,
         Long categoriaId,
         @NotBlank
         String proveedor

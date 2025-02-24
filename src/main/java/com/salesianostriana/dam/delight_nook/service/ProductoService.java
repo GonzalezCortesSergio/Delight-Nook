@@ -23,7 +23,7 @@ public class ProductoService {
                         .nombre(productoDto.nombre())
                         .precioUnidad(productoDto.precioUnidad())
                         .descripcion(productoDto.descripcion())
-                        .imagen(productoDto.imagen())
+                        .imagen("")
                         .categoria(
                                 categoriaRepository.findById(productoDto.categoriaId())
                                         .orElseThrow(
@@ -34,4 +34,6 @@ public class ProductoService {
                         .build()
         );
     }
+
+
 }
