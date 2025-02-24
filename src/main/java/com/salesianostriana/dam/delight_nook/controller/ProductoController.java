@@ -436,7 +436,12 @@ public class ProductoController {
                             )
                     }
             )
-            @RequestBody @Validated EditProductoDto productoDto, @PathVariable Long id) {
+            @RequestBody @Validated EditProductoDto productoDto,
+            @Parameter(in = ParameterIn.PATH,
+            description = "ID del producto a editar",
+            schema = @Schema(type = "long"),
+            example = "1")
+            @PathVariable Long id) {
 
         return GetProductoDetailsDto.of(productoService.edit(productoDto, id));
     }
