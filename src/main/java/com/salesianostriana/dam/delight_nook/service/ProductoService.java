@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.delight_nook.service;
 
 import com.salesianostriana.dam.delight_nook.dto.producto.CreateProductoDto;
+import com.salesianostriana.dam.delight_nook.dto.producto.EditProductoDto;
 import com.salesianostriana.dam.delight_nook.dto.producto.GetProductoDto;
 import com.salesianostriana.dam.delight_nook.error.CategoriaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
@@ -58,6 +59,24 @@ public class ProductoService {
 
         return result.map(GetProductoDto::of);
 
+    }
+
+    public Producto edit(EditProductoDto productoDto, Long id) {
+
+        return productoRepository.findById(id)
+                .map(producto -> {
+
+                    producto.setPrecioUnidad(productoDto.precioUnidad());
+                    producto.setDescripcion(productoDto.descripcion());
+                    producto.setProveedor(producto.getProveedor());
+                    producto.setCategoria(categoriaRepository.findById(
+                            productoDto.idCategoria()
+                    )
+                            .orElseThrow(() -> new CategoriaNotFoundException("No se ha encontrado la categoría con ID: %d".formatted(productoDto.idCategoria()))));
+
+                    return productoRepository.save(producto);
+                })
+                .orElseThrow(() -> new ProductoNoEncontradoException("No se ha encontrado un producto con ID: %d".formatted(id)));
     }
 
 
