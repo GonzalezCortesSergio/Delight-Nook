@@ -108,5 +108,11 @@ public class ProductoService {
                 .toUriString();
     }
 
+    public Producto findById(Long id) {
+
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new ProductoNoEncontradoException("No se ha encontrado el producto con ID: %d".formatted(id)));
+    }
+
 
 }
