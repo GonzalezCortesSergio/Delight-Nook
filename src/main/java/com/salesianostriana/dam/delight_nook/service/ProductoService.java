@@ -114,5 +114,10 @@ public class ProductoService {
                 .orElseThrow(() -> new ProductoNoEncontradoException("No se ha encontrado el producto con ID: %d".formatted(id)));
     }
 
+    public void deleteById(Long id) {
+
+        productoRepository.deleteById(id);
+    }
+
 
 }
