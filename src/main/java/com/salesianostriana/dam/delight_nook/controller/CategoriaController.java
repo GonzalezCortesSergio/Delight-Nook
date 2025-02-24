@@ -3,7 +3,6 @@ package com.salesianostriana.dam.delight_nook.controller;
 import com.salesianostriana.dam.delight_nook.dto.categoria.CreateCategoriaHijaDto;
 import com.salesianostriana.dam.delight_nook.dto.categoria.GetCategoriaDetailsDto;
 import com.salesianostriana.dam.delight_nook.dto.categoria.GetCategoriaDto;
-import com.salesianostriana.dam.delight_nook.model.Categoria;
 import com.salesianostriana.dam.delight_nook.security.validation.annotation.UniqueCategoryName;
 import com.salesianostriana.dam.delight_nook.service.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -515,7 +514,12 @@ public class CategoriaController {
             }
     )
     @GetMapping("/{id}")
-    public GetCategoriaDetailsDto findById(@PathVariable Long id) {
+    public GetCategoriaDetailsDto findById(
+            @Parameter(in = ParameterIn.PATH,
+            description = "ID de la categoría",
+            schema = @Schema(type = "long"),
+            example = "1")
+            @PathVariable Long id) {
 
         return GetCategoriaDetailsDto.of(categoriaService.findById(id));
     }
