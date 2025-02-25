@@ -3,6 +3,7 @@ package com.salesianostriana.dam.delight_nook.controller;
 import com.salesianostriana.dam.delight_nook.dto.producto.ProductoCantidadDto;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDetailsDto;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDto;
+import com.salesianostriana.dam.delight_nook.dto.venta.GetVentasCajaDto;
 import com.salesianostriana.dam.delight_nook.model.Venta;
 import com.salesianostriana.dam.delight_nook.service.VentaService;
 import com.salesianostriana.dam.delight_nook.user.model.Cajero;
@@ -701,4 +702,235 @@ public class VentaController {
 
         return GetVentaDetailsDto.of(ventaService.findById(idVenta));
     }
+
+    @Operation(summary = "Se muestran las ventas realizadas en una caja")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se encunetran ventas en esa caja",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetVentasCajaDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "result": {
+                                                                                "content": [
+                                                                                    {
+                                                                                        "id": "50561ca9-1c51-4762-8ba3-5baa968a62d8",
+                                                                                        "precioFinal": 36.69,
+                                                                                        "fechaVenta": "25-02-2025 19:45:51"
+                                                                                    },
+                                                                                    {
+                                                                                        "id": "f0bd3692-fa61-45ac-a0d8-70c19d0ba3d8",
+                                                                                        "precioFinal": 36.69,
+                                                                                        "fechaVenta": "25-02-2025 19:46:05"
+                                                                                    }
+                                                                                ],
+                                                                                "pageable": {
+                                                                                    "pageNumber": 0,
+                                                                                    "pageSize": 10,
+                                                                                    "sort": {
+                                                                                        "empty": true,
+                                                                                        "sorted": false,
+                                                                                        "unsorted": true
+                                                                                    },
+                                                                                    "offset": 0,
+                                                                                    "paged": true,
+                                                                                    "unpaged": false
+                                                                                },
+                                                                                "last": true,
+                                                                                "totalElements": 2,
+                                                                                "totalPages": 1,
+                                                                                "first": true,
+                                                                                "size": 10,
+                                                                                "number": 0,
+                                                                                "sort": {
+                                                                                    "empty": true,
+                                                                                    "sorted": false,
+                                                                                    "unsorted": true
+                                                                                },
+                                                                                "numberOfElements": 2,
+                                                                                "empty": false
+                                                                            },
+                                                                            "totalRecaudado": 73.38
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Ventas no encontradas",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "Ventas no encontradas",
+                                                                            "instance": "/api/venta/admin/listar/2"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/venta/admin/listar/2"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping("/admin/listar/{idCaja}")
+    public GetVentasCajaDto findByCajaId(
+            @Parameter(in = ParameterIn.PATH,
+            description = "ID de la caja",
+            schema = @Schema(type = "long"),
+            example = "1")
+            @PathVariable Long idCaja, @PageableDefault Pageable pageable) {
+
+        Page<Venta> result = ventaService.findAllVentasCaja(idCaja, pageable);
+
+        return GetVentasCajaDto.of(result);
+    }
+
+    @Operation(summary = "Se muestran los detalles de una venta")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se encuentra la venta correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetVentaDetailsDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "00f29824-4ba9-4051-8572-7ea42d36f3a3",
+                                                                            "nombreCajero": "Manolo López Guzmán",
+                                                                            "caja": {
+                                                                                "id": 1,
+                                                                                "nombre": "Caja 1",
+                                                                                "dineroCaja": 195.44
+                                                                            },
+                                                                            "lineasVenta": [
+                                                                                {
+                                                                                    "id": "7a9dc86f-e472-4fb8-974e-3d0be61e68c1",
+                                                                                    "producto": {
+                                                                                        "id": 1,
+                                                                                        "nombre": "Pantalonichi waperrimo",
+                                                                                        "categoria": "Pantalones",
+                                                                                        "precioUnidad": 12.23
+                                                                                    },
+                                                                                    "cantidad": 3,
+                                                                                    "subTotal": 36.69
+                                                                                }
+                                                                            ],
+                                                                            "precioFinal": 36.69,
+                                                                            "fechaVenta": "25-02-2025 17:57:17"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado una venta",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado la venta",
+                                                                            "instance": "/api/venta/admin/detalles/00f29824-4ba8-4051-8572-7ea42d36f3a3"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No tienes permiso para ver esta venta",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "No authorization",
+                                                                            "status": 403,
+                                                                            "detail": "Access Denied",
+                                                                            "instance": "/api/venta/admin/detalles/00f29824-4ba9-4051-8572-7ea42d36f3a3"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping("/admin/detalles/{idVenta}")
+    public GetVentaDetailsDto findByIdAdmin(
+            @Parameter(in = ParameterIn.PATH,
+                    description = "ID de la venta",
+                    schema = @Schema(type = "uuid"),
+                    example = "00f29824-4ba9-4051-8572-7ea42d36f3a3")
+            @PathVariable UUID idVenta) {
+
+        return GetVentaDetailsDto.of(ventaService.findById(idVenta));
+    }
+
 }
