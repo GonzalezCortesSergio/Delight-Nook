@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @SuperBuilder
-@Where(clause = "deleted=false")
+@SQLRestriction("deleted=false")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario implements UserDetails {
 
