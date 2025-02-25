@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,4 +27,12 @@ public interface VentaRepository extends JpaRepository<Venta, UUID> {
             AND v.caja.id = :idCaja
             """)
     Page<Venta> findVentaByCajeroNombreCompleto(String nombreCompleto, Long idCaja, Pageable pageable);
+
+    @Query("""
+            SELECT v
+            FROM Venta v
+            WHERE v.caja.id = :cajaId
+            AND v.fechaVenta <= :dia
+            """)
+    Page<Venta> findAllByCajaId(Long cajaId, LocalDateTime dia, Pageable pageable);
 }

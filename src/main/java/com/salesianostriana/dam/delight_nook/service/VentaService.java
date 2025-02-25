@@ -2,6 +2,7 @@ package com.salesianostriana.dam.delight_nook.service;
 
 import com.salesianostriana.dam.delight_nook.dto.producto.ProductoCantidadDto;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDto;
+import com.salesianostriana.dam.delight_nook.dto.venta.GetVentasCajaDto;
 import com.salesianostriana.dam.delight_nook.error.BadRequestException;
 import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -184,5 +186,15 @@ public class VentaService {
 
         return ventaRepository.findById(idVenta)
                 .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la venta"));
+    }
+
+    public Page<Venta> findAllVentasCaja(Long idCaja, Pageable pageable) {
+
+        Page<Venta> result = ventaRepository.findAllByCajaId(idCaja, LocalDateTime.now().plusDays(1L), pageable);
+
+        if(result.isEmpty())
+            throw new EntityNotFoundException("Ventas no encontradas");
+
+        return result;
     }
 }

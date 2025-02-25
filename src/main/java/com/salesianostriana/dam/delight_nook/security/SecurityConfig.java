@@ -76,6 +76,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/producto/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/producto/almacenero/**").hasRole("ALMACENERO")
                 .requestMatchers("/api/producto/cajero/**").hasRole("CAJERO")
+                .requestMatchers(HttpMethod.GET, "/api/venta/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/venta/**").hasRole("CAJERO")
                 .requestMatchers(HttpMethod.POST, "/api/caja/**").permitAll()
                 .requestMatchers("/api/usuario/auth/**", "/error", "/swagger-ui/**", "/v3/api-docs/**", "/api/producto/download/**").permitAll()
