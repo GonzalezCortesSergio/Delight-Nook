@@ -2,10 +2,13 @@ package com.salesianostriana.dam.delight_nook.service;
 
 import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.CajaOcupadaException;
+import com.salesianostriana.dam.delight_nook.model.Caja;
 import com.salesianostriana.dam.delight_nook.model.Gestiona;
 import com.salesianostriana.dam.delight_nook.repository.CajaRepository;
 import com.salesianostriana.dam.delight_nook.repository.GestionaRepository;
+import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshTokenRepository;
 import com.salesianostriana.dam.delight_nook.user.model.Cajero;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ public class GestionaService {
 
     private final GestionaRepository gestionaRepository;
     private final CajaRepository cajaRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     @Transactional
@@ -54,5 +58,23 @@ public class GestionaService {
 
         return gestionaRepository.save(nueva);
 
+    }
+
+    @Transactional
+    public void cerrarSesion(Cajero cajero) {
+
+        Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+
+        gestionaRepository.findByCajeroUsernameAndCajaId(cajero.getUsername(), caja.getId())
+                .map(gestiona -> {
+                    gestiona.setFechaDejaGestionar(LocalDateTime.now());
+                    refreshTokenRepository.deleteByUsuario(cajero);
+
+                    return gestionaRepository.save(gestiona);
+                })
+                .orElseThrow(() -> new RuntimeException("Error inesperado"));
     }
 }
