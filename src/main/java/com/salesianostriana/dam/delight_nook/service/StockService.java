@@ -1,6 +1,6 @@
 package com.salesianostriana.dam.delight_nook.service;
 
-import com.salesianostriana.dam.delight_nook.dto.producto.CreateStockDto;
+import com.salesianostriana.dam.delight_nook.dto.producto.ProductoCantidadDto;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
 import com.salesianostriana.dam.delight_nook.model.Stock;
 import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
@@ -23,7 +23,7 @@ public class StockService {
     private final UsuarioRepository usuarioRepository;
 
     @Transactional
-    public Stock create(Almacenero almacenero, CreateStockDto stockDto) {
+    public Stock create(Almacenero almacenero, ProductoCantidadDto stockDto) {
         Optional<Stock> optionalStock = stockRepository.findByProductoId(stockDto.idProducto());
 
         if(optionalStock.isPresent()) {

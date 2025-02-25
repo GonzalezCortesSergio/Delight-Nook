@@ -25,6 +25,9 @@ public class GestionaService {
     @Transactional
     public Gestiona create(Cajero cajero, Long idCaja) {
 
+        if(!cajaRepository.findByCajeroSesion(cajero.getUsername()).isEmpty())
+            throw new CajaOcupadaException("Ya estás ocupando una caja, cierra sesión");
+
         Optional<Gestiona> optionalGestiona = gestionaRepository.findByCajeroUsernameAndCajaId(cajero.getUsername(), idCaja);
 
         if(optionalGestiona.isPresent()) {
