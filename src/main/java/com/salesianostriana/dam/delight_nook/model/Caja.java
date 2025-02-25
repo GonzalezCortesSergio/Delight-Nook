@@ -1,14 +1,14 @@
 package com.salesianostriana.dam.delight_nook.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.Where;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -30,6 +30,12 @@ public class Caja {
     private String nombre;
 
     private boolean deleted;
+
+    @OneToMany(
+            mappedBy = "caja"
+    )
+    @Builder.Default
+    private List<Venta> ventas = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {

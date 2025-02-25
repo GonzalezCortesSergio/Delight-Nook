@@ -877,7 +877,7 @@ public class ProductoController {
                                                              content = {
                                                                      @Content(
                                                                              mediaType = "application/json",
-                                                                             schema = @Schema(implementation = CreateStockDto.class),
+                                                                             schema = @Schema(implementation = ProductoCantidadDto.class),
                                                                              examples = {
                                                                                      @ExampleObject(
                                                                                              value = """
@@ -891,7 +891,7 @@ public class ProductoController {
                                                                      )
                                                              }
                                                      )
-                                                     @RequestBody @Validated CreateStockDto stockDto) {
+                                                     @RequestBody @Validated ProductoCantidadDto stockDto) {
 
         Stock stock = stockService.create(almacenero, stockDto);
 
@@ -899,5 +899,132 @@ public class ProductoController {
                 .body(
                         GetStockDto.of(stock, productoService.getImageUrl(stock.getProducto().getImagen()))
                 );
+    }
+
+    @Operation(summary = "Se muestran los productos que se encuentran en stock")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se muestran los productos correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = Page.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "content": [
+                                                                                {
+                                                                                    "id": 1,
+                                                                                    "nombre": "Pantalonichi waperrimo",
+                                                                                    "categoria": "Pantalones",
+                                                                                    "precioUnidad": 12.23
+                                                                                }
+                                                                            ],
+                                                                            "pageable": {
+                                                                                "pageNumber": 0,
+                                                                                "pageSize": 10,
+                                                                                "sort": {
+                                                                                    "empty": true,
+                                                                                    "sorted": false,
+                                                                                    "unsorted": true
+                                                                                },
+                                                                                "offset": 0,
+                                                                                "paged": true,
+                                                                                "unpaged": false
+                                                                            },
+                                                                            "last": true,
+                                                                            "totalPages": 1,
+                                                                            "totalElements": 1,
+                                                                            "size": 10,
+                                                                            "number": 0,
+                                                                            "sort": {
+                                                                                "empty": true,
+                                                                                "sorted": false,
+                                                                                "unsorted": true
+                                                                            },
+                                                                            "first": true,
+                                                                            "numberOfElements": 1,
+                                                                            "empty": false
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se han encontrado productos",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se han encontrado productos",
+                                                                            "instance": "/api/producto/cajero/list"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/producto/cajero/list"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping("/cajero/list")
+    public Page<GetProductoDto> searchStock(
+            @Parameter(in = ParameterIn.QUERY,
+            description = "Filtro de productos",
+            schema = @Schema(type = "string"),
+            example="precioUnidad<20,proveedor:Ban")
+            @RequestParam(required = false, name = "search") String search, @PageableDefault Pageable pageable) {
+
+        List<SearchCriteria> params = new ArrayList<>();
+
+        if(search != null) {
+            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+            Matcher matcher = pattern.matcher(search + ",");
+
+            while (matcher.find()) {
+                params.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+            }
+        }
+
+        return productoService.searchStock(params, pageable);
     }
 }
