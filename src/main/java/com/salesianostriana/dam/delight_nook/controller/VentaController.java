@@ -19,10 +19,9 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/venta")
@@ -191,5 +190,142 @@ public class VentaController {
                 .body(
                         GetVentaDetailsDto.of(venta)
                 );
+    }
+
+    @Operation(summary = "Se borra una linea de venta")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se ha borrado la línea de venta y hay más líneas de venta",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetVentaDetailsDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "b5c639b0-5f4b-41c2-a2a1-f985e23c917c",
+                                                                            "nombreCajero": "Manolo López Guzmán",
+                                                                            "caja": {
+                                                                                "id": 1,
+                                                                                "nombre": "Caja 1",
+                                                                                "dineroCaja": 158.75
+                                                                            },
+                                                                            "lineasVenta": [
+                                                                                {
+                                                                                    "id": "90769703-1652-4aef-999c-04d437bb8610",
+                                                                                    "producto": {
+                                                                                        "id": 1,
+                                                                                        "nombre": "Pantalonichi waperrimo",
+                                                                                        "categoria": "Pantalones",
+                                                                                        "precioUnidad": 12.23
+                                                                                    },
+                                                                                    "cantidad": 3,
+                                                                                    "subTotal": 36.69
+                                                                                }
+                                                                            ],
+                                                                            "precioFinal": 36.69
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Se ha borrado la línea de venta y se ha quedado vacía. Borrándose",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado la venta",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado la venta",
+                                                                            "instance": "/api/venta/removeProducto/90769703-1652-4aef-999c-04d437bb8610"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha iniciado sesión en una caja",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No has iniciado sesión en una caja para realizar esta operación",
+                                                                            "instance": "/api/venta/removeProducto/90769703-1652-4aef-999c-04d437bb8610"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "Malformed protected header JSON: Unable to deserialize: Unexpected character ('-' (code 45)): was expecting double-quote to start field name\\n at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 2]",
+                                                                            "instance": "/api/venta/removeProducto/90769703-1652-4aef-999c-04d437bb8610"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PutMapping("/removeProducto/{idLineaVenta}")
+    public ResponseEntity<?> removeLineaVenta(@AuthenticationPrincipal Cajero cajero,
+                                              @Parameter(in = ParameterIn.PATH,
+                                              description = "ID de la línea de venta",
+                                              schema = @Schema(type = "uuid"),
+                                              example = "90769703-1652-4aef-999c-04d437bb8610")
+                                              @PathVariable UUID idLineaVenta) {
+
+        Venta venta = ventaService.removeLineaVenta(cajero, idLineaVenta);
+
+        if(venta == null)
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(GetVentaDetailsDto.of(venta));
     }
 }

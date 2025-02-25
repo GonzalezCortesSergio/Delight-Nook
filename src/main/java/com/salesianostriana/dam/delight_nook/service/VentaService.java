@@ -12,12 +12,14 @@ import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
 import com.salesianostriana.dam.delight_nook.repository.StockRepository;
 import com.salesianostriana.dam.delight_nook.repository.VentaRepository;
 import com.salesianostriana.dam.delight_nook.user.model.Cajero;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +57,37 @@ public class VentaService {
 
         return ventaRepository.save(nueva);
 
+    }
+
+    @Transactional
+    public Venta removeLineaVenta(Cajero cajero, UUID idLineaVenta) {
+
+        Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+
+        Venta venta = ventaRepository.findVentaNotFinalizadaByCajaId(caja.getId())
+                .stream().findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la venta"));
+
+        venta.getLineasVenta().stream()
+                .filter(lineaVenta -> lineaVenta.getId().equals(idLineaVenta))
+                .findFirst()
+                .ifPresent(lineaVenta -> {
+                    lineaVenta.setProducto(null);
+                    venta.getLineasVenta().remove(lineaVenta);
+                });
+
+        if(venta.getLineasVenta().isEmpty()) {
+            venta.removeFromCaja(caja);
+            cajaRepository.save(caja);
+            ventaRepository.delete(venta);
+
+
+            return null;
+        }
+        return ventaRepository.save(venta);
     }
 
     private LineaVenta createLineaVenta(ProductoCantidadDto productoCantidadDto) {
