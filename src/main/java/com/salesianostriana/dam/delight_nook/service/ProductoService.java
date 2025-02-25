@@ -67,6 +67,20 @@ public class ProductoService {
 
     }
 
+    public Page<GetProductoDto> searchStock(List<SearchCriteria> searchCriteriaList, Pageable pageable) {
+
+        ProductoSpecificationBuilder productoSpecificationBuilder =
+                new ProductoSpecificationBuilder(searchCriteriaList);
+        Specification<Producto> where = productoSpecificationBuilder.build();
+
+        Page<Producto> result = productoRepository.findAllProductoStock(where, pageable);
+
+        if(result.isEmpty())
+            throw new ProductoNoEncontradoException("No se han encontrado productos");
+
+        return result.map(producto -> GetProductoDto.of(producto, getImageUrl(producto.getImagen())));
+    }
+
     public Producto edit(EditProductoDto productoDto, Long id) {
 
         return productoRepository.findById(id)
