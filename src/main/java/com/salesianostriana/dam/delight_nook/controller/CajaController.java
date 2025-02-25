@@ -32,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -615,5 +616,49 @@ public class CajaController {
                         UsuarioResponseDto.of(usuario, accessToken, refreshToken.getToken())
                 );
 
+    }
+
+    @Operation(summary = "Se cierra sesión de una caja")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Se cierra sesión correctamente",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No has iniciado sesión en una caja",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No has iniciado sesión en una caja para realizar esta operación",
+                                                                            "instance": "/api/caja/cerrarSesion"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PostMapping("/cerrarSesion")
+    public ResponseEntity<?> cerrarSesion(@AuthenticationPrincipal Cajero cajero) {
+
+        gestionaService.cerrarSesion(cajero);
+
+        return ResponseEntity.noContent().build();
     }
 }
