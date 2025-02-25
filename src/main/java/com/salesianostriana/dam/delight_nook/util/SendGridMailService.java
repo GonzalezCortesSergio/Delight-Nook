@@ -21,10 +21,9 @@ public class SendGridMailService {
 
     @Async
     public void sendMail(String to, String subject, String message) throws IOException {
-
         Email from = new Email("assper1122@gmail.com");
         Email emailTo = new Email(to);
-        Content content = new Content("text/plain", message);
+        Content content = new Content("text/html", message);
         Mail mail = new Mail(from, subject, emailTo, content);
 
         SendGrid sg = new SendGrid(sendgridApiKey);
