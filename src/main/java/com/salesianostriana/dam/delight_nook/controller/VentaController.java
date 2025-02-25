@@ -328,4 +328,127 @@ public class VentaController {
 
         return ResponseEntity.ok(GetVentaDetailsDto.of(venta));
     }
+
+    @Operation(summary = "Se finaliza la venta")
+    @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
+            name = "JWT-Auth-Token", content = @Content(schema = @Schema(type = "string")),
+            example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYTljMGY2OS00ZTRkLTQ1YjctOWFkMC01ZjU0MmI0YmZiMGUiLCJpYXQiOjE3Mzk5Njk5NTgsImV4cCI6MTczOTk3MDAxOH0.-fIz2zXh-aGZepekV2MZ5mxQMR2pJRrel1-c-XDIdmk")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se ha finalizado la venta correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetVentaDetailsDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "0e96b4fb-c223-49b6-9a42-6fba19ed3e72",
+                                                                            "nombreCajero": "Manolo López Guzmán",
+                                                                            "caja": {
+                                                                                "id": 1,
+                                                                                "nombre": "Caja 1",
+                                                                                "dineroCaja": 195.44
+                                                                            },
+                                                                            "lineasVenta": [
+                                                                                {
+                                                                                    "id": "2d753d2d-4853-496d-80d8-af28c55c0607",
+                                                                                    "producto": {
+                                                                                        "id": 1,
+                                                                                        "nombre": "Pantalonichi waperrimo",
+                                                                                        "categoria": "Pantalones",
+                                                                                        "precioUnidad": 12.23
+                                                                                    },
+                                                                                    "cantidad": 3,
+                                                                                    "subTotal": 36.69
+                                                                                }
+                                                                            ],
+                                                                            "precioFinal": 36.69,
+                                                                            "fechaVenta": "25-02-2025 14:20:21"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha iniciado sesión en una caja",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No has iniciado sesión en una caja para realizar esta operación",
+                                                                            "instance": "/api/venta/finalizar"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No se ha encontrado la venta",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado la venta",
+                                                                            "instance": "/api/venta/finalizar"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "Malformed protected header JSON: Unable to deserialize: Unexpected character ('-' (code 45)): was expecting double-quote to start field name\\n at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 2]",
+                                                                            "instance": "/api/venta/finalizar"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PutMapping("/finalizar")
+    public GetVentaDetailsDto finalizarVenta(@AuthenticationPrincipal Cajero cajero) {
+
+        return GetVentaDetailsDto.of(ventaService.finalizarVenta(cajero));
+    }
 }

@@ -6,6 +6,7 @@ import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
 import com.salesianostriana.dam.delight_nook.model.Caja;
 import com.salesianostriana.dam.delight_nook.model.LineaVenta;
+import com.salesianostriana.dam.delight_nook.model.Producto;
 import com.salesianostriana.dam.delight_nook.model.Venta;
 import com.salesianostriana.dam.delight_nook.repository.CajaRepository;
 import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -131,5 +133,32 @@ public class VentaService {
         }
 
         return ventaRepository.save(antigua);
+    }
+
+    @Transactional
+    public Venta finalizarVenta(Cajero cajero) {
+
+        Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+
+        Venta venta = ventaRepository.findVentaNotFinalizadaByCajaId(caja.getId())
+                .stream().findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la venta"));
+
+        venta.setFechaVenta(LocalDateTime.now());
+        venta.setFinalizada(true);
+
+        venta.getLineasVenta().forEach(lineaVenta -> {
+            stockRepository.findByProductoId(lineaVenta.getProducto().getId())
+                    .ifPresent(stock -> {
+                        stock.setCantidad(stock.getCantidad() - lineaVenta.getCantidad());
+                        stockRepository.save(stock);
+                    });
+        });
+        caja.setDineroCaja(caja.getDineroCaja() + venta.getPrecioFinal());
+
+        return ventaRepository.save(venta);
     }
 }
