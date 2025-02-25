@@ -114,7 +114,7 @@ public class ProductoService {
 
     public String getImageUrl(String filename) {
 
-        if(filename.isEmpty())
+        if(filename == null || filename.isEmpty())
             return null;
 
         return ServletUriComponentsBuilder.fromCurrentContextPath()
