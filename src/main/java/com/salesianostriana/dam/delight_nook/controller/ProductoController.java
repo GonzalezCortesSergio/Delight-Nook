@@ -877,7 +877,7 @@ public class ProductoController {
                                                              content = {
                                                                      @Content(
                                                                              mediaType = "application/json",
-                                                                             schema = @Schema(implementation = CreateStockDto.class),
+                                                                             schema = @Schema(implementation = ProductoCantidadDto.class),
                                                                              examples = {
                                                                                      @ExampleObject(
                                                                                              value = """
@@ -891,7 +891,7 @@ public class ProductoController {
                                                                      )
                                                              }
                                                      )
-                                                     @RequestBody @Validated CreateStockDto stockDto) {
+                                                     @RequestBody @Validated ProductoCantidadDto stockDto) {
 
         Stock stock = stockService.create(almacenero, stockDto);
 

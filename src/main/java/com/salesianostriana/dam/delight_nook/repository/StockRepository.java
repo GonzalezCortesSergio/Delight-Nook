@@ -15,4 +15,11 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
             WHERE p.id = :productoId
             """)
     Optional<Stock> findByProductoId(Long productoId);
+
+    @Query("""
+            SELECT s.cantidad
+            FROM Stock s
+            WHERE s.producto.id = :productoId
+            """)
+    Optional<Integer> cantidadProductosStock(Long productoId);
 }
