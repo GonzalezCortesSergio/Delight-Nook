@@ -58,15 +58,13 @@ public class VentaService {
     }
 
     private LineaVenta createLineaVenta(ProductoCantidadDto productoCantidadDto) {
-        if(productoCantidadDto.cantidad() < 0)
-            return null;
-        
+
         Optional<Integer> optionalCantidad = stockRepository.cantidadProductosStock(productoCantidadDto.idProducto());
 
-        if(optionalCantidad.isEmpty() || productoCantidadDto.cantidad() > optionalCantidad.get())
-            throw new BadRequestException("Estás intentando vender más productos de los que se encuentran en stock");
-
-
+        if(optionalCantidad.isEmpty())
+            throw new ProductoNoEncontradoException("El producto no se encuentra en stock");
+        if(optionalCantidad.get() < productoCantidadDto.cantidad())
+            throw new BadRequestException("No puedes vender una cantidad mayor a la que se encuentra en stock");
 
         return LineaVenta.builder()
                 .producto(
