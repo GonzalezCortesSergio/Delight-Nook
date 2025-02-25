@@ -72,7 +72,7 @@ public class UsuarioService {
             usuario = createUsuario(usuarioDto);
 
         try {
-            mailService.sendMail(usuario.getEmail(), "Activación de cuenta", usuario.getActivationToken());
+            mailService.sendMail(usuario.getEmail(), "Activación de cuenta", generateHtmlMessage(usuario.getActivationToken()));
         }catch (Exception e) {
 
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al enviar el email de activación");
@@ -180,5 +180,32 @@ public class UsuarioService {
 
     public void deleteByUsername(String username) {
         usuarioRepository.deleteByUsername(username);
+    }
+
+    private String generateHtmlMessage(String activationToken) {
+
+        StringBuilder contentBuilder = new StringBuilder();
+
+        contentBuilder.append("<!DOCTYPE html>");
+        contentBuilder.append("<html lang=\"es\">");
+        contentBuilder.append("<head>");
+        contentBuilder.append("<meta charset=\"UTF-8\">");
+        contentBuilder.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+        contentBuilder.append("<title>Bienvenido</title>");
+        contentBuilder.append("<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH\" crossorigin=\"anonymous\">");
+        contentBuilder.append("<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz\" crossorigin=\"anonymous\"></script>");
+        contentBuilder.append("</head>");
+        contentBuilder.append("<body class=\"bg-dark\">");
+        contentBuilder.append("<h1 class=\"text-center bg-info py-4\">¡¡¡Bienvenido a Delight-Nook!!!</h1>");
+        contentBuilder.append("<div class=\"mt-5\">");
+        contentBuilder.append("<h4 class=\"text-light text-center\">Para verificar su cuenta</h4>");
+        contentBuilder.append("</div>");
+        contentBuilder.append("<div class=\"text-center\">");
+        contentBuilder.append("<h4 class=\"text-light text-center\">Deberá proporcionar su contraseña, verificarla y este código: %s</h4>".formatted(activationToken));
+        contentBuilder.append("</div>");
+        contentBuilder.append("</body>");
+        contentBuilder.append("</html>");
+
+        return contentBuilder.toString();
     }
 }
