@@ -32,8 +32,7 @@ public class Caja {
     private boolean deleted;
 
     @OneToMany(
-            mappedBy = "caja",
-            cascade = CascadeType.PERSIST
+            mappedBy = "caja"
     )
     @Builder.Default
     private List<Venta> ventas = new ArrayList<>();

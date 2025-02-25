@@ -28,7 +28,8 @@ public class Venta {
 
     @OneToMany(fetch = FetchType.EAGER,
     mappedBy = "venta",
-    cascade = CascadeType.ALL)
+    cascade = CascadeType.ALL,
+    orphanRemoval = true)
     @Builder.Default
     private List<LineaVenta> lineasVenta = new ArrayList<>();
 
