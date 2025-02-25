@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.delight_nook.service;
 
 import com.salesianostriana.dam.delight_nook.dto.producto.ProductoCantidadDto;
+import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDto;
 import com.salesianostriana.dam.delight_nook.error.BadRequestException;
 import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
@@ -15,6 +16,8 @@ import com.salesianostriana.dam.delight_nook.repository.VentaRepository;
 import com.salesianostriana.dam.delight_nook.user.model.Cajero;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -160,5 +163,26 @@ public class VentaService {
         caja.setDineroCaja(caja.getDineroCaja() + venta.getPrecioFinal());
 
         return ventaRepository.save(venta);
+    }
+
+    public Page<GetVentaDto> findAllByCajeroAndCaja(Cajero cajero, Pageable pageable) {
+
+        Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+
+        Page<Venta> result = ventaRepository.findVentaByCajeroNombreCompleto(cajero.getNombreCompleto(), caja.getId(), pageable);
+
+        if(result.isEmpty())
+            throw new EntityNotFoundException("No se han encontrado ventas");
+
+        return result.map(GetVentaDto::of);
+    }
+
+    public Venta findById(UUID idVenta) {
+
+        return ventaRepository.findById(idVenta)
+                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la venta"));
     }
 }
