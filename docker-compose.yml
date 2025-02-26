@@ -39,6 +39,9 @@ services:
     environment:
       SECRET:
       SENDGRID_API_KEY:
+      SPRING_DATASOURCE_URL:
+      SPRING_DATASOURCE_USERNAME:
+      SPRING_DATASOURCE_PASSWORD:
 
     
 
