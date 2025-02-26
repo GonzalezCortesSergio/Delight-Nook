@@ -41,7 +41,7 @@ Este proyecto está dedicado para solucionar la gestión de dicha tienda. Gestio
         - SPRING_DATASOURCE_PASSWORD: Tendrá que proporcionar la contraseña del servidor en el que esté alojada su base de datos
 
 
-     - Ejecutar docker-compose up -d en la raíz del proyecto
+    - Ejecutar docker-compose up -d en la raíz del proyecto
 
 
 ## Datos a tener en cuenta
