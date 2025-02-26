@@ -2,9 +2,8 @@
 
 ### Instrucciones para iniciar el proyecto:
 
-- Ejecutar docker-compose up -d para iniciar la base de datos
-- Establecer las variables de entorno que se encuentran requeridas en los distintos ficheros application.properties
-- Arrancar el proyecto con mvn spring-boot:run
+- Darle valor a las variables de entorno del fichero docker-compose.yml
+- Ejecutar docker-compose up -d
 
 ### Datos a tener en cuenta
 
