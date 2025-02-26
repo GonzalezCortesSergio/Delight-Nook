@@ -19,12 +19,12 @@ public interface CajaRepository extends JpaRepository<Caja, Long> {
     @Query("""
             SELECT c
             FROM Caja c
-            WHERE EXISTS (
-                SELECT g.caja
+            WHERE c.id IN (
+                SELECT g.caja.id
                 FROM Gestiona g
                 WHERE g.cajero.username = :username
                 AND g.fechaDejaGestionar IS NULL
             )
             """)
-    List<Caja> findByCajeroSesion(String username);
+    Optional<Caja> findByCajeroSesion(String username);
 }

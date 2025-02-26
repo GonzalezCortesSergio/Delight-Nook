@@ -41,8 +41,6 @@ public class VentaService {
     public Venta create(Cajero cajero, ProductoCantidadDto productoCantidadDto) {
 
         Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
-                .stream()
-                .findFirst()
                 .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
 
         Optional<Venta> optionalVenta = ventaRepository.findVentaNotFinalizadaByCajaId(caja.getId())
@@ -57,6 +55,8 @@ public class VentaService {
                 .build();
 
         nueva.addToCaja(caja);
+
+        cajaRepository.save(caja);
 
         nueva.addLineaVenta(
                 createLineaVenta(productoCantidadDto)

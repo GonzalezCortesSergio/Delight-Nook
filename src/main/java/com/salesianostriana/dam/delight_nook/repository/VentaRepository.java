@@ -25,6 +25,7 @@ public interface VentaRepository extends JpaRepository<Venta, UUID> {
             FROM Venta v
             WHERE v.nombreCajero = :nombreCompleto
             AND v.caja.id = :idCaja
+            AND v.finalizada = true
             """)
     Page<Venta> findVentaByCajeroNombreCompleto(String nombreCompleto, Long idCaja, Pageable pageable);
 
