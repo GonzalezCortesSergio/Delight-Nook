@@ -92,7 +92,7 @@ class VentaServiceTest {
         verify(ventaRepository).save(any(Venta.class));
 
         assertNotNull(result);
-        assertEquals("Manolo López", result.getNombreCajero());
+        assertEquals("Manolo Fernández", result.getNombreCajero());
 
     }
 }
