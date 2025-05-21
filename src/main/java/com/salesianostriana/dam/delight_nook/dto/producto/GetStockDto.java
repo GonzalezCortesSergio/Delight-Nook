@@ -9,11 +9,11 @@ public record GetStockDto(
         int cantidad
 ) {
 
-    public static GetStockDto of (Stock stock, String imageUrl) {
+    public static GetStockDto of (Stock stock, String imageUrl, String avatarUrl) {
 
         return new GetStockDto(
                 GetProductoDto.of(stock.getProducto(), imageUrl),
-                UsuarioResponseDto.of(stock.getAlmacenero()),
+                UsuarioResponseDto.of(stock.getAlmacenero(), avatarUrl),
                 stock.getCantidad()
         );
     }

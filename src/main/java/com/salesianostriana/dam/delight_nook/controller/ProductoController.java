@@ -6,6 +6,7 @@ import com.salesianostriana.dam.delight_nook.model.Stock;
 import com.salesianostriana.dam.delight_nook.service.ProductoService;
 import com.salesianostriana.dam.delight_nook.service.StockService;
 import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
+import com.salesianostriana.dam.delight_nook.user.service.UsuarioService;
 import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
 import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
 import com.salesianostriana.dam.delight_nook.util.files.utils.MimeTypeDetector;
@@ -47,6 +48,7 @@ public class ProductoController {
     private final StorageService storageService;
     private final MimeTypeDetector mimeTypeDetector;
     private final StockService stockService;
+    private final UsuarioService usuarioService;
 
     @Operation(summary = "Se crea un producto nuevo")
     @Parameter(in = ParameterIn.HEADER, description = "Authorization token",
@@ -165,6 +167,7 @@ public class ProductoController {
     )
     @PostMapping("/admin/create")
     public ResponseEntity<GetProductoDetailsDto> create(
+            @RequestPart("image") MultipartFile file,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del producto a crear",
                     required = true,
@@ -189,9 +192,9 @@ public class ProductoController {
                             )
                     }
             )
-            @RequestBody @Validated CreateProductoDto productoDto) {
+            @RequestPart("producto") @Validated CreateProductoDto productoDto) {
 
-        Producto producto = productoService.create(productoDto);
+        Producto producto = productoService.create(file, productoDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
@@ -737,7 +740,7 @@ public class ProductoController {
             }
     )
     @DeleteMapping("/admin/borrar/{id}")
-    public ResponseEntity<?> deleteById(
+    public ResponseEntity<Void> deleteById(
             @Parameter(in = ParameterIn.PATH,
             description = "ID del producto a borrar",
             schema = @Schema(type = "long"),
@@ -897,7 +900,7 @@ public class ProductoController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
-                        GetStockDto.of(stock, productoService.getImageUrl(stock.getProducto().getImagen()))
+                        GetStockDto.of(stock, productoService.getImageUrl(stock.getProducto().getImagen()), usuarioService.getImageUrl(almacenero.getAvatar()))
                 );
     }
 

@@ -12,12 +12,12 @@ import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
 import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
 import com.salesianostriana.dam.delight_nook.util.files.model.FileMetadata;
 import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
-import com.salesianostriana.dam.delight_nook.util.files.utils.MimeTypeDetector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
@@ -32,14 +33,16 @@ public class ProductoService {
     private final StorageService storageService;
     private final StockService stockService;
 
-    public Producto create(CreateProductoDto productoDto) {
+    @Transactional
+    public Producto create(MultipartFile file, CreateProductoDto productoDto) {
 
+        FileMetadata fileMetadata = storageService.store(file);
         return productoRepository.save(
                 Producto.builder()
                         .nombre(productoDto.nombre())
                         .precioUnidad(productoDto.precioUnidad())
                         .descripcion(productoDto.descripcion())
-                        .imagen("")
+                        .imagen(fileMetadata.getId())
                         .categoria(
                                 categoriaRepository.findById(productoDto.categoriaId())
                                         .orElseThrow(
@@ -81,6 +84,7 @@ public class ProductoService {
         return result.map(producto -> GetProductoDto.of(producto, getImageUrl(producto.getImagen())));
     }
 
+    @Transactional
     public Producto edit(EditProductoDto productoDto, Long id) {
 
         return productoRepository.findById(id)
@@ -99,6 +103,7 @@ public class ProductoService {
                 .orElseThrow(() -> new ProductoNoEncontradoException("No se ha encontrado un producto con ID: %d".formatted(id)));
     }
 
+    @Transactional
     public Producto changeImage(MultipartFile file, Long id) {
 
         return productoRepository.findById(id)
@@ -129,6 +134,7 @@ public class ProductoService {
                 .orElseThrow(() -> new ProductoNoEncontradoException("No se ha encontrado el producto con ID: %d".formatted(id)));
     }
 
+    @Transactional
     public void deleteById(Long id) {
 
         stockService.deleteById(id);

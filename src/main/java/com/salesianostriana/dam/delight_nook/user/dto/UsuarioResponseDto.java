@@ -5,7 +5,6 @@ import com.salesianostriana.dam.delight_nook.user.model.UserRole;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public record UsuarioResponseDto(
@@ -19,28 +18,28 @@ public record UsuarioResponseDto(
         Set<String> roles
 ) {
 
-    public static UsuarioResponseDto of (Usuario usuario) {
+    public static UsuarioResponseDto of (Usuario usuario, String avatar) {
 
         return new UsuarioResponseDto(
                 usuario.getUsername(),
                 null,
                 null,
                 usuario.getNombreCompleto(),
-                usuario.getAvatar(),
+                avatar,
                 usuario.getRoles().stream()
                         .map(UserRole::toString)
                         .collect(Collectors.toSet())
         );
     }
 
-    public static UsuarioResponseDto of (Usuario usuario, String token, String refreshToken) {
+    public static UsuarioResponseDto of (Usuario usuario, String token, String refreshToken, String avatar) {
 
         return new UsuarioResponseDto(
                 usuario.getUsername(),
                 token,
                 refreshToken,
                 usuario.getNombreCompleto(),
-                usuario.getAvatar(),
+                avatar,
                 usuario.getRoles().stream()
                         .map(UserRole::toString)
                         .collect(Collectors.toSet())

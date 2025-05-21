@@ -12,6 +12,7 @@ import com.salesianostriana.dam.delight_nook.user.dto.LoginRequest;
 import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
 import com.salesianostriana.dam.delight_nook.user.model.Cajero;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
+import com.salesianostriana.dam.delight_nook.user.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -49,6 +50,7 @@ public class CajaController {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
     private final GestionaService gestionaService;
+    private final UsuarioService usuarioService;
 
 
     @Operation(summary = "Se crea una caja nueva")
@@ -420,7 +422,7 @@ public class CajaController {
             }
     )
     @DeleteMapping("/admin/borrar/{idCaja}")
-    public ResponseEntity<?> deleteById(
+    public ResponseEntity<Void> deleteById(
             @Parameter(in = ParameterIn.PATH,
             description = "ID de la caja a borrar",
             schema = @Schema(type = "long"),
@@ -613,7 +615,7 @@ public class CajaController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
-                        UsuarioResponseDto.of(usuario, accessToken, refreshToken.getToken())
+                        UsuarioResponseDto.of(usuario, accessToken, refreshToken.getToken(), usuarioService.getImageUrl(usuario.getAvatar()))
                 );
 
     }
@@ -655,7 +657,7 @@ public class CajaController {
             }
     )
     @PostMapping("/cerrarSesion")
-    public ResponseEntity<?> cerrarSesion(@AuthenticationPrincipal Cajero cajero) {
+    public ResponseEntity<Void> cerrarSesion(@AuthenticationPrincipal Cajero cajero) {
 
         gestionaService.cerrarSesion(cajero);
 
