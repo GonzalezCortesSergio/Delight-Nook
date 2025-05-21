@@ -12,8 +12,6 @@ public record CreateUsuarioDto(
         String nombreCompleto,
         @Email
         @NotBlank
-        String email,
-        @NotBlank
-        String avatar
+        String email
 ) {
 }

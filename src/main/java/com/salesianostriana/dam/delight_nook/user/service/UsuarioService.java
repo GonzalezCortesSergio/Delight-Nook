@@ -1,11 +1,9 @@
 package com.salesianostriana.dam.delight_nook.user.service;
 
-import com.salesianostriana.dam.delight_nook.error.BadRequestException;
 import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
 import com.salesianostriana.dam.delight_nook.user.dto.ValidateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.error.ActivationExpiredException;
-import com.salesianostriana.dam.delight_nook.user.error.BorradoPropioException;
 import com.salesianostriana.dam.delight_nook.user.error.UsuarioNotFoundException;
 import com.salesianostriana.dam.delight_nook.user.error.UsuarioSinRolException;
 import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
@@ -14,19 +12,18 @@ import com.salesianostriana.dam.delight_nook.user.model.UserRole;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 import com.salesianostriana.dam.delight_nook.user.repository.UsuarioRepository;
 import com.salesianostriana.dam.delight_nook.util.SendGridMailService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import com.salesianostriana.dam.delight_nook.util.files.model.FileMetadata;
+import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -39,37 +36,40 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StorageService storageService;
     private final SendGridMailService mailService;
 
     @Value("${jwt.verification.duration}")
     private int activationDuration;
 
-    private Usuario createUsuario(CreateUsuarioDto usuarioDto) {
+    private Usuario createUsuario(FileMetadata fileMetadata, CreateUsuarioDto usuarioDto) {
 
         return usuarioRepository.save(Usuario.builder()
                 .username(usuarioDto.username())
                 .email(usuarioDto.email())
                 .nombreCompleto(usuarioDto.nombreCompleto())
-                .avatar(usuarioDto.avatar())
                 .roles(Set.of(UserRole.ADMIN))
                 .activationToken(generateRandomActivationCode())
+                .avatar(fileMetadata.getId())
                 .build());
     }
 
-    public Usuario saveUsuario(CreateUsuarioDto usuarioDto, String userRole) {
+    public Usuario saveUsuario(MultipartFile file, CreateUsuarioDto usuarioDto, String userRole) {
 
         Usuario usuario;
 
+        FileMetadata fileMetadata = storageService.store(file);
+
         if(userRole.equalsIgnoreCase("almacenero")) {
-            usuario = createAlmacenero(usuarioDto);
+            usuario = createAlmacenero(fileMetadata, usuarioDto);
         }
 
 
         else if(userRole.equalsIgnoreCase("cajero"))
-            usuario = createCajero(usuarioDto);
+            usuario = createCajero(fileMetadata, usuarioDto);
 
         else
-            usuario = createUsuario(usuarioDto);
+            usuario = createUsuario(fileMetadata, usuarioDto);
 
         try {
             mailService.sendMail(usuario.getEmail(), "Activación de cuenta", generateHtmlMessage(usuario.getActivationToken()));
@@ -82,30 +82,30 @@ public class UsuarioService {
 
     }
 
-    private Almacenero createAlmacenero(CreateUsuarioDto usuarioDto) {
+    private Almacenero createAlmacenero(FileMetadata fileMetadata, CreateUsuarioDto usuarioDto) {
 
         return usuarioRepository.save(
                 Almacenero.builder()
                         .username(usuarioDto.username())
                         .email(usuarioDto.email())
                         .nombreCompleto(usuarioDto.nombreCompleto())
-                        .avatar(usuarioDto.avatar())
                         .roles(Set.of(UserRole.ALMACENERO))
                         .activationToken(generateRandomActivationCode())
+                        .avatar(fileMetadata.getId())
                         .build()
         );
     }
 
-    private Cajero createCajero(CreateUsuarioDto usuarioDto) {
+    private Cajero createCajero(FileMetadata fileMetadata, CreateUsuarioDto usuarioDto) {
 
         return usuarioRepository.save(
                 Cajero.builder()
                         .username(usuarioDto.username())
                         .email(usuarioDto.email())
                         .nombreCompleto(usuarioDto.nombreCompleto())
-                        .avatar(usuarioDto.avatar())
                         .roles(Set.of(UserRole.CAJERO))
                         .activationToken(generateRandomActivationCode())
+                        .avatar(fileMetadata.getId())
                         .build()
         );
     }
@@ -149,7 +149,7 @@ public class UsuarioService {
         if(result.isEmpty())
             throw new UsuarioNotFoundException("No se ha encontrado ningún usuario");
 
-        return result.map(UsuarioResponseDto::of);
+        return result.map(usuario -> UsuarioResponseDto.of(usuario, getImageUrl(usuario.getAvatar())));
     }
 
     public Usuario addRoleAdmin(String username) {
@@ -207,5 +207,16 @@ public class UsuarioService {
         contentBuilder.append("</html>");
 
         return contentBuilder.toString();
+    }
+
+    public String getImageUrl(String filename) {
+
+        if(filename == null || filename.isEmpty())
+            return null;
+
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/usuario/download/")
+                .path(filename)
+                .toUriString();
     }
 }
