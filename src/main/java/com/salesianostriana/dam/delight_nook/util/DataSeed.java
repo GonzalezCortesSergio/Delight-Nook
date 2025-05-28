@@ -34,7 +34,7 @@ public class DataSeed {
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
                 .nombreCompleto("admin")
-                .avatar("admin.png")
+                .avatar("")
                 .email("admin@admin.com")
                 .roles(Set.of(UserRole.ADMIN))
                 .enabled(true)
