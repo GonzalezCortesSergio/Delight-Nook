@@ -143,7 +143,6 @@ public class UsuarioController {
     )
     @PostMapping("/admin/auth/register")
     public ResponseEntity<UsuarioResponseDto> register(
-            @RequestPart("image") MultipartFile file,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del usuario a crear",
                     required = true,
@@ -166,14 +165,14 @@ public class UsuarioController {
                             )
                     }
             )
-            @RequestPart("usuario") @Validated CreateUsuarioDto usuarioDto,
+            @RequestBody @Validated CreateUsuarioDto usuarioDto,
             @Parameter(in = ParameterIn.QUERY,
             description = "Distintivo del usuario a crear",
             schema = @Schema(type = "string"),
             example = "almacenero")
             @RequestParam(defaultValue = "user", required = false) String userRole) {
 
-        Usuario usuario = usuarioService.saveUsuario(file, usuarioDto, userRole);
+        Usuario usuario = usuarioService.saveUsuario(usuarioDto, userRole);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar())));

@@ -12,7 +12,6 @@ import com.salesianostriana.dam.delight_nook.user.model.UserRole;
 import com.salesianostriana.dam.delight_nook.user.model.Usuario;
 import com.salesianostriana.dam.delight_nook.user.repository.UsuarioRepository;
 import com.salesianostriana.dam.delight_nook.util.SendGridMailService;
-import com.salesianostriana.dam.delight_nook.util.files.model.FileMetadata;
 import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -42,7 +40,7 @@ public class UsuarioService {
     @Value("${jwt.verification.duration}")
     private int activationDuration;
 
-    private Usuario createUsuario(FileMetadata fileMetadata, CreateUsuarioDto usuarioDto) {
+    private Usuario createUsuario(CreateUsuarioDto usuarioDto) {
 
         return usuarioRepository.save(Usuario.builder()
                 .username(usuarioDto.username())
@@ -50,26 +48,22 @@ public class UsuarioService {
                 .nombreCompleto(usuarioDto.nombreCompleto())
                 .roles(Set.of(UserRole.ADMIN))
                 .activationToken(generateRandomActivationCode())
-                .avatar(fileMetadata.getId())
                 .build());
     }
 
-    public Usuario saveUsuario(MultipartFile file, CreateUsuarioDto usuarioDto, String userRole) {
+    public Usuario saveUsuario(CreateUsuarioDto usuarioDto, String userRole) {
 
         Usuario usuario;
-
-        FileMetadata fileMetadata = storageService.store(file);
-
         if(userRole.equalsIgnoreCase("almacenero")) {
-            usuario = createAlmacenero(fileMetadata, usuarioDto);
+            usuario = createAlmacenero(usuarioDto);
         }
 
 
         else if(userRole.equalsIgnoreCase("cajero"))
-            usuario = createCajero(fileMetadata, usuarioDto);
+            usuario = createCajero(usuarioDto);
 
         else
-            usuario = createUsuario(fileMetadata, usuarioDto);
+            usuario = createUsuario(usuarioDto);
 
         try {
             mailService.sendMail(usuario.getEmail(), "Activación de cuenta", generateHtmlMessage(usuario.getActivationToken()));
@@ -82,7 +76,7 @@ public class UsuarioService {
 
     }
 
-    private Almacenero createAlmacenero(FileMetadata fileMetadata, CreateUsuarioDto usuarioDto) {
+    private Almacenero createAlmacenero(CreateUsuarioDto usuarioDto) {
 
         return usuarioRepository.save(
                 Almacenero.builder()
@@ -91,12 +85,11 @@ public class UsuarioService {
                         .nombreCompleto(usuarioDto.nombreCompleto())
                         .roles(Set.of(UserRole.ALMACENERO))
                         .activationToken(generateRandomActivationCode())
-                        .avatar(fileMetadata.getId())
                         .build()
         );
     }
 
-    private Cajero createCajero(FileMetadata fileMetadata, CreateUsuarioDto usuarioDto) {
+    private Cajero createCajero(CreateUsuarioDto usuarioDto) {
 
         return usuarioRepository.save(
                 Cajero.builder()
@@ -105,7 +98,6 @@ public class UsuarioService {
                         .nombreCompleto(usuarioDto.nombreCompleto())
                         .roles(Set.of(UserRole.CAJERO))
                         .activationToken(generateRandomActivationCode())
-                        .avatar(fileMetadata.getId())
                         .build()
         );
     }
