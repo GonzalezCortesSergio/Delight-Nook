@@ -1,0 +1,22 @@
+.fondo {
+    background-color: #E7C3B3;
+    width: 100%;
+    height: 100vh;
+}
+
+.pantalla {
+    margin-top: 1.2%;
+    margin-left: 2%;
+    width: 85%;
+    height: 95vh;
+    background-color: #ECE9E2;
+    border-radius: 7px;
+}
+
+img {
+    background-color: transparent;
+    width: 150px;
+    height: 110px;
+    margin-top: 1%;
+    margin-left: 1.5%;
+}
