@@ -45,6 +45,7 @@ export class LoginCajeroPageComponent implements OnInit{
           if(res.roles.includes("CAJERO")) {
             localStorage.setItem("token", res.token);
             localStorage.setItem("refreshToken", res.refreshToken);
+            localStorage.setItem("role", "CAJERO");
 
             this.router.navigateByUrl("/cajero/home");
           }
