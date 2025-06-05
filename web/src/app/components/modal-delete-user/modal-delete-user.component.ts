@@ -18,6 +18,8 @@ export class ModalDeleteUserComponent {
   @Input()
   username: string | null = null;
 
+  error = false;
+
   borrarUsuario() {
     this.usuarioService.deleteByUsername(this.username!)
     .subscribe({
@@ -29,6 +31,10 @@ export class ModalDeleteUserComponent {
 
         if(errorResponse.status == 401) {
           this.refrescarToken();
+        }
+
+        if(errorResponse.status == 403) {
+          this.error = true;
         }
       }
     })

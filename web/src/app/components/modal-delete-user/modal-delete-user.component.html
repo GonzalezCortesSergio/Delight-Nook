@@ -8,3 +8,7 @@
 
     <button class="btn btn-info w-25" (click)="closeModal()">No</button>
 </div>
+
+@if (error) {
+    <h4 class="bg-danger py-3 text-center text-light">El usuario no se puede borrar a sí mismo</h4>
+}
