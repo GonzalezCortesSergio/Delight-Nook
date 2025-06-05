@@ -50,6 +50,7 @@ export class LoginPageComponent {
 
           localStorage.setItem("token", res.token);
           localStorage.setItem("refreshToken", res.refreshToken);
+          localStorage.setItem("role", "ADMIN");
 
           this.router.navigateByUrl("/admin/home");
         }
@@ -78,6 +79,7 @@ export class LoginPageComponent {
 
           localStorage.setItem("token", res.token);
           localStorage.setItem("refreshToken", res.refreshToken);
+          localStorage.setItem("role", "ALMACENERO");
 
           this.router.navigateByUrl("/almacenero/home");
         }

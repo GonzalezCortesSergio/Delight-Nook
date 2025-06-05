@@ -8,12 +8,14 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginCajeroPageComponent } from './pages/login-cajero-page/login-cajero-page.component';
+import { AdminHomePageComponent } from './pages/admin-home-page/admin-home-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
-    LoginCajeroPageComponent
+    LoginCajeroPageComponent,
+    AdminHomePageComponent
   ],
   imports: [
     BrowserModule,

@@ -28,4 +28,14 @@ export class UsuarioService {
       }
     );
   }
+
+  cerrarSesion() {
+    return this.http.get(`${this.baseUrl}/auth/logout`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+  }
 }
