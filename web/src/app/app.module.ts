@@ -9,13 +9,15 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginCajeroPageComponent } from './pages/login-cajero-page/login-cajero-page.component';
 import { AdminHomePageComponent } from './pages/admin-home-page/admin-home-page.component';
+import { UsuariosListPageComponent } from './pages/usuarios-list-page/usuarios-list-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
     LoginCajeroPageComponent,
-    AdminHomePageComponent
+    AdminHomePageComponent,
+    UsuariosListPageComponent
   ],
   imports: [
     BrowserModule,

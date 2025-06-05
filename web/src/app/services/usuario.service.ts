@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest, Usuario } from '../models/usuario';
+import { LoginRequest, Usuario, UsuarioResponse } from '../models/usuario';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -29,6 +29,15 @@ export class UsuarioService {
     );
   }
 
+  findAll(page: number): Observable<UsuarioResponse> {
+    return this.http.get<UsuarioResponse>(`${this.baseUrl}/admin/listado?size=6&page=${page}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+  }
   cerrarSesion() {
     return this.http.get(`${this.baseUrl}/auth/logout`,
       {
