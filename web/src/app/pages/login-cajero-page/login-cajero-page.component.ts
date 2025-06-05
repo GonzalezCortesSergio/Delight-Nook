@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Caja } from '../../models/caja';
 import { ErrorResponse } from '../../models/error';
 import { LoginRequest } from '../../models/usuario';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-login-cajero-page',
@@ -70,7 +71,7 @@ export class LoginCajeroPageComponent implements OnInit{
   }
 
   private iniciarSesionAnonimo() {
-    this.usuarioService.iniciarSesion(this.toLoginRequest("admin", "admin"))
+    this.usuarioService.iniciarSesion(this.toLoginRequest(environment.anonymousUsername, environment.anonymousPassword))
     .subscribe({
       next: res => {
         localStorage.setItem("token", res.token);
