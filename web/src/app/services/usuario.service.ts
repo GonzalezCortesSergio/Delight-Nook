@@ -47,4 +47,14 @@ export class UsuarioService {
       }
     );
   }
+
+  deleteByUsername(username: string) {
+    return this.http.delete(`${this.baseUrl}/admin/delete/${username}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+  }
 }

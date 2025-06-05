@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { Router } from '@angular/router';
 import { Usuario, UsuarioResponse } from '../../models/usuario';
 import { ErrorResponse } from '../../models/error';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDeleteUserComponent } from '../../components/modal-delete-user/modal-delete-user.component';
 
 @Component({
   selector: 'app-usuarios-list-page',
@@ -12,6 +14,8 @@ import { ErrorResponse } from '../../models/error';
 export class UsuariosListPageComponent implements OnInit{
 
   constructor(private usuarioService: UsuarioService, private router: Router) { }
+
+  private modalService = inject(NgbModal);
 
   usuarios: UsuarioResponse | null = null;
 
@@ -58,5 +62,16 @@ export class UsuariosListPageComponent implements OnInit{
 
   cambiarUsuarios() {
     this.cargarUsuarios();
+  }
+
+  openModalDelete(username: string) {
+
+    const modalRef = this.modalService.open(ModalDeleteUserComponent);
+
+    modalRef.componentInstance.username = username;
+
+    modalRef.closed.subscribe(() => {
+      this.cargarUsuarios();
+    })
   }
 }

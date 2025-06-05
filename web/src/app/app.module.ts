@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginCajeroPageComponent } from './pages/login-cajero-page/login-cajero-page.component';
 import { AdminHomePageComponent } from './pages/admin-home-page/admin-home-page.component';
 import { UsuariosListPageComponent } from './pages/usuarios-list-page/usuarios-list-page.component';
+import { ModalDeleteUserComponent } from './components/modal-delete-user/modal-delete-user.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { UsuariosListPageComponent } from './pages/usuarios-list-page/usuarios-l
     LoginPageComponent,
     LoginCajeroPageComponent,
     AdminHomePageComponent,
-    UsuariosListPageComponent
+    UsuariosListPageComponent,
+    ModalDeleteUserComponent
   ],
   imports: [
     BrowserModule,
