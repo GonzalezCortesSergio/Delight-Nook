@@ -15,7 +15,7 @@ export class LoginCajeroPageComponent implements OnInit{
 
   constructor(private usuarioService: UsuarioService, private cajaService: CajaService, private router: Router) { }
 
-  page = 1;
+  page = 0;
 
   cajas: Caja[] = [];
 
@@ -53,9 +53,19 @@ export class LoginCajeroPageComponent implements OnInit{
           }
         },
         error: err => {
-          
+          const errorResponse: ErrorResponse = err.error;
+
+          this.errorMessage = errorResponse.detail;
+
+          for(const invalidParam of errorResponse["invalid-params"]) {
+            this.errorMessage+=`, ${invalidParam.field} ${invalidParam.message}`;
+          }
         }
       })
+    }
+
+    else {
+      this.errorMessage = "Debe indicar la caja en la que iniciar sesión";
     }
   }
 
@@ -70,10 +80,10 @@ export class LoginCajeroPageComponent implements OnInit{
   }
 
   private cargarCajas() {
-    this.cajaService.findAll(this.page - 1)
+    this.cajaService.findAll(this.page)
     .subscribe({
       next: res => {
-        this.cajas.concat(res.content);
+        this.cajas = this.cajas.concat(res.content);
         this.page++;
         this.cargarCajas();
       },
@@ -85,5 +95,9 @@ export class LoginCajeroPageComponent implements OnInit{
 
   private toLoginRequest(username: string, password: string) {
     return new LoginRequest(username, password);
+  }
+
+  typePassword(): string {
+    return this.showPassword ? "text" : "password"
   }
 }
