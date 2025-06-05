@@ -7,6 +7,12 @@ export interface Usuario {
     roles: string[];
 }
 
+export interface UsuarioResponse {
+    content: Usuario[];
+    totalElements: number;
+    size: number;
+}
+
 export class LoginRequest {
     private username: string;
     private password: string;
