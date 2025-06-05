@@ -1,0 +1,37 @@
+<h2 class="display-6 text-center mt-3">Iniciar sesión en una caja</h2>
+
+<i class="bi bi-arrow-left" routerLink="/login"></i>
+
+<div class="formulario">
+    
+    <div class="caja">
+        <h3>Indique en qué caja quiere iniciar sesión</h3>
+        <select class="form-select w-50" [(ngModel)]="idCaja">
+            <option [value]="-1">Escoja una caja</option>
+            @for (caja of cajas; track $index) {
+                <option [value]="caja.id">{{caja.nombre}}</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <input [(ngModel)]="username" class="form-control w-50" type="text" placeholder="Nombre de usuario" />
+    </div>
+    
+    <div class="mb-3 mt-5">
+        <input [(ngModel)]="password" class="form-control w-50" [type]="typePassword()" placeholder="Contraseña" />
+    </div>
+    
+    <div class="mb-3">
+        <label for="show-password" class="me-1">Mostrar contraseña</label>
+        <input id="show-password" name="show-password" class="show-password" type="checkbox" [(ngModel)]="showPassword" />
+    </div>
+
+    <div class="mt-3">
+        <button class="btn btn-dark w-50" (click)="iniciarSesion()">Iniciar sesión</button>
+    </div>
+    
+    @if (errorMessage) {
+        <p class="mt-3 text-light text-center py-3 bg-danger w-50">{{errorMessage}}</p>
+    }
+</div>
