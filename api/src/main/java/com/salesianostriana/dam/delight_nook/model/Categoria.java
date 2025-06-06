@@ -25,7 +25,9 @@ public class Categoria {
     @Column(nullable = false, unique = true)
     private String nombre;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     private Categoria categoriaPadre;
 
     @OneToMany(
