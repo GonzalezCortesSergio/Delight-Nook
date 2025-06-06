@@ -14,7 +14,7 @@
                     <h4 class="card-title text-center">{{usuario.username}}</h4>
                 </div>
                 <div class="d-flex justify-content-between m-2">
-                    <button class="btn btn-info">Ver más</button>
+                    <button class="btn btn-info" (click)="openModalDetails(usuario)">Ver más</button>
                     <button class="btn btn-danger" (click)="openModalDelete(usuario.username)">Borrar</button>
                 </div>
             </div>

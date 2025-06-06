@@ -1,0 +1,24 @@
+<div class="row p-5">
+
+    <img [src]="getImagen()" class="w-25 col-6" />
+
+    <div class="m-3 col-6">
+        <h3>{{usuario?.username}}</h3>
+    </div>
+
+    <div class="col-12 mt-3">
+        <p class="">Nombre completo: <strong>{{usuario?.nombreCompleto}}</strong></p>
+        <p>
+            Roles: 
+            @for (role of usuario?.roles; track $index) {
+                <strong>{{role}} </strong>
+            }
+        </p>
+        @if(notAdmin()) {
+            <button class="btn btn-info" (click)="addRoleAdmin()">Añadir rol de admin</button>
+        }
+        @if(isAdmin()) {
+            <button class="btn btn-danger" (click)="removeRoleAdmin()">Quitar rol de admin</button>
+        }
+    </div>
+</div>

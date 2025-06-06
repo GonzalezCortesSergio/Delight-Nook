@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginRequest, Usuario, UsuarioResponse } from '../models/usuario';
 import { Observable } from 'rxjs';
@@ -32,18 +32,14 @@ export class UsuarioService {
   findAll(page: number): Observable<UsuarioResponse> {
     return this.http.get<UsuarioResponse>(`${this.baseUrl}/admin/listado?size=6&page=${page}`,
       {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
+        headers: this.createHeaders()
       }
     );
   }
   cerrarSesion() {
     return this.http.get(`${this.baseUrl}/auth/logout`,
       {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
+        headers: this.createHeaders()
       }
     );
   }
@@ -51,9 +47,33 @@ export class UsuarioService {
   deleteByUsername(username: string) {
     return this.http.delete(`${this.baseUrl}/admin/delete/${username}`,
       {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  addRoleAdmin(username: string): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.baseUrl}/admin/removeAdmin/${username}`,
+      null,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  removeRoleAdmin(username: string): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.baseUrl}/admin/removeAdmin/${username}`,
+      null,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  private createHeaders(): HttpHeaders {
+    return new HttpHeaders(
+      {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
       }
     );
   }
