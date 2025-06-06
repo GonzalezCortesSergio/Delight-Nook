@@ -34,15 +34,13 @@ public class ProductoService {
     private final StockService stockService;
 
     @Transactional
-    public Producto create(MultipartFile file, CreateProductoDto productoDto) {
+    public Producto create(CreateProductoDto productoDto) {
 
-        FileMetadata fileMetadata = storageService.store(file);
         return productoRepository.save(
                 Producto.builder()
                         .nombre(productoDto.nombre())
                         .precioUnidad(productoDto.precioUnidad())
                         .descripcion(productoDto.descripcion())
-                        .imagen(fileMetadata.getId())
                         .categoria(
                                 categoriaRepository.findById(productoDto.categoriaId())
                                         .orElseThrow(
@@ -92,7 +90,7 @@ public class ProductoService {
 
                     producto.setPrecioUnidad(productoDto.precioUnidad());
                     producto.setDescripcion(productoDto.descripcion());
-                    producto.setProveedor(producto.getProveedor());
+                    producto.setProveedor(productoDto.proveedor());
                     producto.setCategoria(categoriaRepository.findById(
                             productoDto.idCategoria()
                     )

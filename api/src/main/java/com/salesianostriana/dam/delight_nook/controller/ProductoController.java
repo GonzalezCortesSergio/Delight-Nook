@@ -167,7 +167,6 @@ public class ProductoController {
     )
     @PostMapping("/admin/create")
     public ResponseEntity<GetProductoDetailsDto> create(
-            @RequestPart("image") MultipartFile file,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Datos del producto a crear",
                     required = true,
@@ -192,9 +191,9 @@ public class ProductoController {
                             )
                     }
             )
-            @RequestPart("producto") @Validated CreateProductoDto productoDto) {
+            @RequestBody @Validated CreateProductoDto productoDto) {
 
-        Producto producto = productoService.create(file, productoDto);
+        Producto producto = productoService.create(productoDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(

@@ -40,7 +40,9 @@ public class Producto {
 
     private boolean deleted;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     private Categoria categoria;
 
     private String proveedor;

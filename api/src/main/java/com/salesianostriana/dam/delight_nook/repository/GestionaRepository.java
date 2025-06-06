@@ -12,7 +12,8 @@ public interface GestionaRepository extends JpaRepository<Gestiona, GestionaPK> 
     @Query("""
             SELECT g
             FROM Gestiona g
-            WHERE g.cajero.username = :username
+            LEFT JOIN g.cajero c
+            WHERE c.username = :username
             AND g.caja.id = :cajaId
             """)
     Optional<Gestiona> findByCajeroUsernameAndCajaId(String username, Long cajaId);

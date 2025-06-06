@@ -31,12 +31,6 @@ public class Caja {
 
     private boolean deleted;
 
-    @OneToMany(
-            mappedBy = "caja"
-    )
-    @Builder.Default
-    private List<Venta> ventas = new ArrayList<>();
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
