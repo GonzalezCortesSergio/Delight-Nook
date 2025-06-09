@@ -19,7 +19,7 @@ export class ModalDetailsUserComponent {
   @Input()
   usuario: Usuario | null = null;
 
-  error: boolean = false;
+  errorMessage: string | null = null;
 
   getImagen(): string {
     return this.usuario?.avatar ? this.usuario.avatar : "profile-default-icon.png";
@@ -83,7 +83,7 @@ export class ModalDetailsUserComponent {
         }
         
         if(errorResponse.status == 403) {
-          this.error = true;
+          this.errorMessage = "No puede deshabilitar su propio perfil";
         }
       }
     })
@@ -100,6 +100,10 @@ export class ModalDetailsUserComponent {
 
         if(errorResponse.status == 401) {
           this.refrescarToken(() => this.enableUser());
+        }
+
+        if(errorResponse.status == 400) {
+          this.errorMessage = errorResponse.detail;
         }
       }
     })

@@ -1,0 +1,25 @@
+<h2 class="display-6 text-center mt-3">Cajas</h2>
+
+<i class="bi bi-arrow-left" routerLink="/admin/home"></i>
+
+<button class="add-caja" routerLink="/admin/alta/caja">Agrega caja <i class="bi bi-plus-circle"></i></button>
+<div class="contenido row mx-auto">
+
+    @for (caja of cajas?.content; track $index) {
+        
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">{{caja.nombre}}</h4>
+                </div>
+                <p class="text-center">Dinero en la caja: {{caja.dineroCaja}}€</p>
+                <div class="d-flex justify-content-between m-2">
+                    <button class="btn btn-wintery" (click)="openModalEditMoney(caja.id)">Cambiar dinero caja</button>
+                    <button class="btn btn-metal-pink" (click)="openModalDelete(caja)">Borrar</button>
+                </div>
+            </div>
+            
+        </div>
+    }
+    <ngb-pagination class="d-flex justify-content-center paginacion" [collectionSize]="cajas!.totalElements" [pageSize]="cajas!.size" [(page)]="pagina" (pageChange)="cambiarCajas()" />
+</div>
