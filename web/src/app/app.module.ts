@@ -12,6 +12,7 @@ import { AdminHomePageComponent } from './pages/admin/admin-home-page/admin-home
 import { UsuariosListPageComponent } from './pages/admin/usuarios-list-page/usuarios-list-page.component';
 import { ModalDeleteUserComponent } from './components/admin/modal-delete-user/modal-delete-user.component';
 import { ModalDetailsUserComponent } from './components/admin/modal-details-user/modal-details-user.component';
+import { RegisterUsuarioPageComponent } from './pages/admin/register-usuario-page/register-usuario-page.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { ModalDetailsUserComponent } from './components/admin/modal-details-user
     AdminHomePageComponent,
     UsuariosListPageComponent,
     ModalDeleteUserComponent,
-    ModalDetailsUserComponent
+    ModalDetailsUserComponent,
+    RegisterUsuarioPageComponent
   ],
   imports: [
     BrowserModule,
