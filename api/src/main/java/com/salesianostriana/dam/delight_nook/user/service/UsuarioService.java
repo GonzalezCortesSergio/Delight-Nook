@@ -174,6 +174,15 @@ public class UsuarioService {
         usuarioRepository.deleteByUsername(username);
     }
 
+    public Usuario disable(String username) {
+        return usuarioRepository.findFirstByUsername(username)
+                .map(usuario -> {
+                    usuario.setEnabled(false);
+                    return usuarioRepository.save(usuario);
+                })
+                .orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
+    }
+
     private String generateHtmlMessage(String activationToken) {
 
         StringBuilder contentBuilder = new StringBuilder();

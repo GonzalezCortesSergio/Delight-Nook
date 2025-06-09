@@ -929,6 +929,39 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Un usuario cierra sesión")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "El usuario cierra sesión correctamente",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "El token no es válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 170529 milliseconds ago at 2025-02-20T17:31:07.000Z. Current time: 2025-02-20T17:33:57.529Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/auth/logout"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
     @GetMapping("/auth/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal Usuario usuario) {
         refreshTokenService.cerrarSesion(usuario);
@@ -946,5 +979,92 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", mimeType)
                 .body(resource);
+    }
+
+    @Operation(summary = "Se deshabilita un usuario")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se deshabilita el usuario correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "c2f7ec8b-d98a-4f67-8430-f7655a323445",
+                                                                            "username": "Usuario_1",
+                                                                            "nombreCompleto": "Usuario 1",
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ],
+                                                                            "enabled": false
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "El token no es válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 170529 milliseconds ago at 2025-02-20T17:31:07.000Z. Current time: 2025-02-20T17:33:57.529Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/admin/disable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "El usuario no tiene permiso para realizar esta acción",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "No authorization",
+                                                                            "status": 403,
+                                                                            "detail": "Forbidden",
+                                                                            "instance": "/api/usuario/admin/disable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PreAuthorize("#username != authentication.principal.username")
+    @PatchMapping("/admin/disable/{username}")
+    public UsuarioResponseDto disable(
+            @Parameter(in = ParameterIn.PATH,
+            example = "Usuario_1")
+            @PathVariable String username) {
+        Usuario usuario = usuarioService.disable(username);
+        return UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar()));
     }
 }

@@ -1,9 +1,6 @@
 package com.salesianostriana.dam.delight_nook.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -22,16 +19,19 @@ public class LineaVenta {
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     private Producto producto;
 
     private int cantidad;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     private Venta venta;
 
     public double getSubTotal() {
-
         return producto.getPrecioUnidad() * cantidad;
     }
 
