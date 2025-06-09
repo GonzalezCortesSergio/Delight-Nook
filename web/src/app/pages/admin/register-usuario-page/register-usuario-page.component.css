@@ -1,0 +1,29 @@
+.formulario {
+    margin-top: 7%;
+    margin-left: 34%;
+}
+
+input {
+
+    background-color: #CFC4C4;
+}
+
+select {
+    background-color: #CFC4C4;
+}
+
+p {
+    border-radius: 3px;
+}
+
+.alert-created {
+
+    width: 25%;
+    margin-left: 75%;
+    margin-top: 5.2%;
+}
+
+i {
+    font-size: 40pt;
+    margin-left: 4%;
+}

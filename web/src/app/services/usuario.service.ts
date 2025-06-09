@@ -1,7 +1,7 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest, Usuario, UsuarioResponse } from '../models/usuario';
+import { CreateUsuario, LoginRequest, Usuario, UsuarioResponse } from '../models/usuario';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -88,6 +88,16 @@ export class UsuarioService {
       }
     )
   }
+
+  registrarUsuario(createUsuario: CreateUsuario, role: string) {
+    return this.http.post(`${this.baseUrl}/admin/auth/register?userRole=${role}`,
+      createUsuario,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+  
   private createHeaders(): HttpHeaders {
     return new HttpHeaders(
       {
