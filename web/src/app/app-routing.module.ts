@@ -5,6 +5,7 @@ import { LoginCajeroPageComponent } from './pages/login-cajero-page/login-cajero
 import { AdminHomePageComponent } from './pages/admin/admin-home-page/admin-home-page.component';
 import { UsuariosListPageComponent } from './pages/admin/usuarios-list-page/usuarios-list-page.component';
 
+
 const routes: Routes = [
 
   {path: "login", component: LoginPageComponent},

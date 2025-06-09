@@ -13,6 +13,7 @@ import { UsuariosListPageComponent } from './pages/admin/usuarios-list-page/usua
 import { ModalDeleteUserComponent } from './components/admin/modal-delete-user/modal-delete-user.component';
 import { ModalDetailsUserComponent } from './components/admin/modal-details-user/modal-details-user.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
