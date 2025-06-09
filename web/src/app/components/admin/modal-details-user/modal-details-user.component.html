@@ -27,7 +27,7 @@
             <button class="btn btn-info text-light ms-5" (click)="enableUser()">Habilitar usuario</button>
         }
     </div>
-    @if(error) {
-        <h4 class="bg-danger py-3 mt-3 text-light">No puedes deshabilitar tu perfil</h4>
+    @if(errorMessage) {
+        <h4 class="bg-danger py-3 mt-3 text-light">{{errorMessage}}</h4>
     }
 </div>

@@ -13,6 +13,9 @@ import { UsuariosListPageComponent } from './pages/admin/usuarios-list-page/usua
 import { ModalDeleteUserComponent } from './components/admin/modal-delete-user/modal-delete-user.component';
 import { ModalDetailsUserComponent } from './components/admin/modal-details-user/modal-details-user.component';
 import { RegisterUsuarioPageComponent } from './pages/admin/register-usuario-page/register-usuario-page.component';
+import { CajasListPageComponent } from './pages/admin/cajas-list-page/cajas-list-page.component';
+import { ModalDeleteCajaComponent } from './components/admin/modal-delete-caja/modal-delete-caja.component';
+import { ModalEditCajaComponent } from './components/admin/modal-edit-caja/modal-edit-caja.component';
 
 
 @NgModule({
@@ -24,7 +27,10 @@ import { RegisterUsuarioPageComponent } from './pages/admin/register-usuario-pag
     UsuariosListPageComponent,
     ModalDeleteUserComponent,
     ModalDetailsUserComponent,
-    RegisterUsuarioPageComponent
+    RegisterUsuarioPageComponent,
+    CajasListPageComponent,
+    ModalDeleteCajaComponent,
+    ModalEditCajaComponent
   ],
   imports: [
     BrowserModule,
