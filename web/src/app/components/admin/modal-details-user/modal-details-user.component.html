@@ -15,19 +15,19 @@
             }
         </p>
         @if(notAdmin()) {
-            <button class="btn btn-info text-light" (click)="addRoleAdmin()">Añadir rol de admin</button>
+            <button class="btn btn-wintery" (click)="addRoleAdmin()">Añadir rol de admin</button>
         }
         @if(isAdmin()) {
-            <button class="btn btn-danger" (click)="removeRoleAdmin()">Quitar rol de admin</button>
+            <button class="btn btn-metal-pink" (click)="removeRoleAdmin()">Quitar rol de admin</button>
         }
 
         @if(usuario?.enabled) {
-            <button class="btn btn-danger ms-5" (click)="disableUser()">Deshabilitar usuario</button>
+            <button class="btn btn-metal-pink ms-5" (click)="disableUser()">Deshabilitar usuario</button>
         }@else {
-            <button class="btn btn-info text-light ms-5" (click)="enableUser()">Habilitar usuario</button>
+            <button class="btn btn-wintery ms-5" (click)="enableUser()">Habilitar usuario</button>
         }
     </div>
     @if(errorMessage) {
-        <h4 class="bg-danger py-3 mt-3 text-light">{{errorMessage}}</h4>
+        <h4 class="bg-metal-pink py-3 mt-3 text-light">{{errorMessage}}</h4>
     }
 </div>
