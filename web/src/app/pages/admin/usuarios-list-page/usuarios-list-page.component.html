@@ -8,13 +8,13 @@
     @for (usuario of usuarios?.content; track $index) {
         
         <div class="col-4">
-            <div class="card">
+            <div class="card" [style]="colorCard(usuario)">
                 <img class="card-img-top w-25 mx-auto mt-2" [src]="getImagen(usuario)" onerror="'profile-default-icon.png'" alt="Foto de perfil de usuario" />
                 <div class="card-body">
                     <h4 class="card-title text-center">{{usuario.username}}</h4>
                 </div>
                 <div class="d-flex justify-content-between m-2">
-                    <button class="btn btn-info">Ver más</button>
+                    <button class="btn btn-info text-light" (click)="openModalDetails(usuario)">Ver más</button>
                     <button class="btn btn-danger" (click)="openModalDelete(usuario.username)">Borrar</button>
                 </div>
             </div>

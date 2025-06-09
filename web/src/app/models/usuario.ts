@@ -5,6 +5,7 @@ export interface Usuario {
     nombreCompleto: string;
     avatar: string;
     roles: string[];
+    enabled: boolean
 }
 
 export interface UsuarioResponse {

@@ -1,8 +1,8 @@
 import { Component, inject, Input } from '@angular/core';
-import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioService } from '../../../services/usuario.service';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ErrorResponse } from '../../models/error';
+import { ErrorResponse } from '../../../models/error';
 
 @Component({
   selector: 'app-modal-delete-user',

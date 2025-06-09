@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioService } from '../../../services/usuario.service';
 import { Router } from '@angular/router';
-import { Usuario, UsuarioResponse } from '../../models/usuario';
-import { ErrorResponse } from '../../models/error';
+import { Usuario, UsuarioResponse } from '../../../models/usuario';
+import { ErrorResponse } from '../../../models/error';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalDeleteUserComponent } from '../../components/modal-delete-user/modal-delete-user.component';
+import { ModalDeleteUserComponent } from '../../../components/admin/modal-delete-user/modal-delete-user.component';
+import { ModalDetailsUserComponent } from '../../../components/admin/modal-details-user/modal-details-user.component';
 
 @Component({
   selector: 'app-usuarios-list-page',
@@ -64,6 +65,15 @@ export class UsuariosListPageComponent implements OnInit{
     this.cargarUsuarios();
   }
 
+  openModalDetails(usuario: Usuario) {
+    const modalRef = this.modalService.open(ModalDetailsUserComponent);
+
+    modalRef.componentInstance.usuario = usuario;
+
+    modalRef.closed.subscribe(() => {
+      this.cargarUsuarios();
+    })
+  }
   openModalDelete(username: string) {
 
     const modalRef = this.modalService.open(ModalDeleteUserComponent);
@@ -73,5 +83,9 @@ export class UsuariosListPageComponent implements OnInit{
     modalRef.closed.subscribe(() => {
       this.cargarUsuarios();
     })
+  }
+
+  colorCard(usuario: Usuario): string {
+    return usuario.enabled ? "background-color: white;" : "background-color: rgb(200, 200, 200);"
   }
 }
