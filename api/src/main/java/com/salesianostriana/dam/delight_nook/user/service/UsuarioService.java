@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.delight_nook.user.service;
 
+import com.salesianostriana.dam.delight_nook.error.BadRequestException;
 import com.salesianostriana.dam.delight_nook.user.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.delight_nook.user.dto.UsuarioResponseDto;
 import com.salesianostriana.dam.delight_nook.user.dto.ValidateUsuarioDto;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,6 +38,8 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
     private final SendGridMailService mailService;
+
+    private static final String NOT_FOUND_MESSAGE = "No se ha encontrado el usuario: %s";
 
     @Value("${jwt.verification.duration}")
     private int activationDuration;
@@ -151,7 +155,7 @@ public class UsuarioService {
                     usuario.getRoles().add(UserRole.ADMIN);
 
                     return usuarioRepository.save(usuario);
-                }).orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
+                }).orElseThrow(() -> new UsuarioNotFoundException(NOT_FOUND_MESSAGE.formatted(username)));
     }
 
     public Usuario removeRoleAdmin(String username) {
@@ -167,7 +171,7 @@ public class UsuarioService {
 
                     return usuarioRepository.save(usuario);
                 })
-                .orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
+                .orElseThrow(() -> new UsuarioNotFoundException(NOT_FOUND_MESSAGE.formatted(username)));
     }
 
     public void deleteByUsername(String username) {
@@ -180,7 +184,19 @@ public class UsuarioService {
                     usuario.setEnabled(false);
                     return usuarioRepository.save(usuario);
                 })
-                .orElseThrow(() -> new UsuarioNotFoundException("No se ha encontrado el usuario: %s".formatted(username)));
+                .orElseThrow(() -> new UsuarioNotFoundException(NOT_FOUND_MESSAGE.formatted(username)));
+    }
+
+    public Usuario enable(String username) {
+        return usuarioRepository.findFirstByUsername(username)
+                .map(usuario -> {
+                    if(!StringUtils.hasText(usuario.getPassword()))
+                        throw new BadRequestException("El usuario no ha sido verificado todavía");
+
+                    usuario.setEnabled(true);
+                    return usuarioRepository.save(usuario);
+                })
+                .orElseThrow(() -> new UsuarioNotFoundException(NOT_FOUND_MESSAGE.formatted(username)));
     }
 
     private String generateHtmlMessage(String activationToken) {
