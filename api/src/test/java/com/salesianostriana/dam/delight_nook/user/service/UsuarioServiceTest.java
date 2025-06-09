@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -21,9 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest(classes = {UsuarioServiceTest.class})
 class UsuarioServiceTest {
-
-    private AutoCloseable closeable;
 
     @Mock
     private UsuarioRepository usuarioRepository;
@@ -44,17 +44,11 @@ class UsuarioServiceTest {
 
     @BeforeEach
     void setUp() {
-        closeable = MockitoAnnotations.openMocks(this);
-
         usuario = Usuario.builder()
                 .id(UUID.randomUUID())
                 .username("manolitox1998")
+                .password("1234")
                 .build();
-    }
-
-    @AfterEach
-    void tearDown() throws Exception{
-        closeable.close();
     }
 
     @Test
@@ -79,6 +73,20 @@ class UsuarioServiceTest {
                 () -> assertThrowsExactly(UsuarioNotFoundException.class, () -> usuarioService.disable("manolitox1998")),
                 () -> verify(usuarioRepository, times(1)).findFirstByUsername(anyString()),
                 () -> verify(usuarioRepository, times(0)).save(any(Usuario.class))
+        );
+    }
+
+    @Test
+    void testEnable() {
+        when(usuarioRepository.findFirstByUsername(anyString())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
+
+        Usuario result = usuarioService.enable("manolitox1998");
+
+        assertAll(
+                () -> assertNotNull(result),
+                () -> verify(usuarioRepository, times(1)).findFirstByUsername(anyString()),
+                () -> verify(usuarioRepository, times(1)).save(any(Usuario.class))
         );
     }
 }

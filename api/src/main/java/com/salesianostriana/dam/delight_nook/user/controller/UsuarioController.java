@@ -38,6 +38,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Locale;
+
 @RestController
 @RequestMapping("/api/usuario")
 @RequiredArgsConstructor
@@ -1066,5 +1068,92 @@ public class UsuarioController {
             @PathVariable String username) {
         Usuario usuario = usuarioService.disable(username);
         return UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar()));
+    }
+
+    @Operation(summary = "Se habilita un usuario que se ha deshabilitado previamente")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se ha habilitado correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "c2f7ec8b-d98a-4f67-8430-f7655a323445",
+                                                                            "username": "Usuario_1",
+                                                                            "nombreCompleto": "Usuario 1",
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ],
+                                                                            "enabled": true
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Usuario no encontrado",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado ningún usuario",
+                                                                            "instance": "/api/usuario/admin/enable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 170529 milliseconds ago at 2025-02-20T17:31:07.000Z. Current time: 2025-02-20T17:33:57.529Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/admin/enable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PatchMapping("/admin/enable/{username}")
+    public UsuarioResponseDto enable(
+            @Parameter(in = ParameterIn.PATH,
+            example = "Usuario_1")
+            @PathVariable String username
+    ) {
+      Usuario usuario = usuarioService.enable(username);
+      return UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar()));
     }
 }
