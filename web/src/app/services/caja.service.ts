@@ -15,7 +15,7 @@ export class CajaService {
 
 
   findAll(page: number): Observable<CajaResponse> {
-    return this.http.get<CajaResponse>(`${this.baseUrl}/admin/listar?page=${page}`,
+    return this.http.get<CajaResponse>(`${this.baseUrl}/admin/listar?size=6&page=${page}`,
       {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`

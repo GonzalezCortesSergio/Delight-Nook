@@ -5,6 +5,7 @@ import { LoginCajeroPageComponent } from './pages/login-cajero-page/login-cajero
 import { AdminHomePageComponent } from './pages/admin/admin-home-page/admin-home-page.component';
 import { UsuariosListPageComponent } from './pages/admin/usuarios-list-page/usuarios-list-page.component';
 import { RegisterUsuarioPageComponent } from './pages/admin/register-usuario-page/register-usuario-page.component';
+import { CajasListPageComponent } from './pages/admin/cajas-list-page/cajas-list-page.component';
 
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: "cajero/login", component: LoginCajeroPageComponent},
   {path: "admin/home", component: AdminHomePageComponent},
   {path: "admin/usuarios", component: UsuariosListPageComponent},
+  {path: "admin/cajas", component: CajasListPageComponent},
   {path: "admin/alta/usuario", component: RegisterUsuarioPageComponent},
   {path: "", pathMatch: "full", redirectTo: "/login"}
 ];
