@@ -6,7 +6,6 @@ import com.salesianostriana.dam.delight_nook.model.Stock;
 import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
 import com.salesianostriana.dam.delight_nook.repository.StockRepository;
 import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
-import com.salesianostriana.dam.delight_nook.user.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ public class StockService {
 
     private final StockRepository stockRepository;
     private final ProductoRepository productoRepository;
-    private final UsuarioRepository usuarioRepository;
 
     @Transactional
     public Stock create(Almacenero almacenero, ProductoCantidadDto stockDto) {

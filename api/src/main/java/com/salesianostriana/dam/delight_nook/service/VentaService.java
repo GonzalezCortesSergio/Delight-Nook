@@ -2,13 +2,11 @@ package com.salesianostriana.dam.delight_nook.service;
 
 import com.salesianostriana.dam.delight_nook.dto.producto.ProductoCantidadDto;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDto;
-import com.salesianostriana.dam.delight_nook.dto.venta.GetVentasCajaDto;
 import com.salesianostriana.dam.delight_nook.error.BadRequestException;
 import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
 import com.salesianostriana.dam.delight_nook.model.Caja;
 import com.salesianostriana.dam.delight_nook.model.LineaVenta;
-import com.salesianostriana.dam.delight_nook.model.Producto;
 import com.salesianostriana.dam.delight_nook.model.Venta;
 import com.salesianostriana.dam.delight_nook.repository.CajaRepository;
 import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
@@ -22,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,11 +34,14 @@ public class VentaService {
     private final ProductoRepository productoRepository;
     private final StockRepository stockRepository;
 
+    private static final String CAJA_NO_OCUPADA_POR_USUARIO = "No has iniciado sesión en una caja para realizar esta operación";
+    private static final String VENTA_NOT_FOUND = "No se ha encontrado la venta";
+
     @Transactional
     public Venta create(Cajero cajero, ProductoCantidadDto productoCantidadDto) {
 
         Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
-                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+                .orElseThrow(() -> new CajaNotFoundException(CAJA_NO_OCUPADA_POR_USUARIO));
 
         Optional<Venta> optionalVenta = ventaRepository.findVentaNotFinalizadaByCajaId(caja.getId())
                 .stream().findFirst();
@@ -52,11 +52,8 @@ public class VentaService {
 
         Venta nueva = Venta.builder()
                 .nombreCajero(cajero.getNombreCompleto())
+                .caja(caja)
                 .build();
-
-        nueva.addToCaja(caja);
-
-        cajaRepository.save(caja);
 
         nueva.addLineaVenta(
                 createLineaVenta(productoCantidadDto)
@@ -72,11 +69,11 @@ public class VentaService {
         Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+                .orElseThrow(() -> new CajaNotFoundException(CAJA_NO_OCUPADA_POR_USUARIO));
 
         Venta venta = ventaRepository.findVentaNotFinalizadaByCajaId(caja.getId())
                 .stream().findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la venta"));
+                .orElseThrow(() -> new EntityNotFoundException(VENTA_NOT_FOUND));
 
         venta.getLineasVenta().stream()
                 .filter(lineaVenta -> lineaVenta.getId().equals(idLineaVenta))
@@ -87,11 +84,7 @@ public class VentaService {
                 });
 
         if(venta.getLineasVenta().isEmpty()) {
-            venta.removeFromCaja(caja);
-            cajaRepository.save(caja);
             ventaRepository.delete(venta);
-
-
             return null;
         }
         return ventaRepository.save(venta);
@@ -146,22 +139,22 @@ public class VentaService {
         Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+                .orElseThrow(() -> new CajaNotFoundException(CAJA_NO_OCUPADA_POR_USUARIO));
 
         Venta venta = ventaRepository.findVentaNotFinalizadaByCajaId(caja.getId())
                 .stream().findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la venta"));
+                .orElseThrow(() -> new EntityNotFoundException(VENTA_NOT_FOUND));
 
         venta.setFechaVenta(LocalDateTime.now());
         venta.setFinalizada(true);
 
-        venta.getLineasVenta().forEach(lineaVenta -> {
+        venta.getLineasVenta().forEach(lineaVenta ->
             stockRepository.findByProductoId(lineaVenta.getProducto().getId())
                     .ifPresent(stock -> {
                         stock.setCantidad(stock.getCantidad() - lineaVenta.getCantidad());
                         stockRepository.save(stock);
-                    });
-        });
+                    })
+        );
         caja.setDineroCaja(caja.getDineroCaja() + venta.getPrecioFinal());
 
         return ventaRepository.save(venta);
@@ -172,7 +165,7 @@ public class VentaService {
         Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new CajaNotFoundException("No has iniciado sesión en una caja para realizar esta operación"));
+                .orElseThrow(() -> new CajaNotFoundException(CAJA_NO_OCUPADA_POR_USUARIO));
 
         Page<Venta> result = ventaRepository.findVentaByCajeroNombreCompleto(cajero.getNombreCompleto(), caja.getId(), pageable);
 
@@ -185,7 +178,7 @@ public class VentaService {
     public Venta findById(UUID idVenta) {
 
         return ventaRepository.findById(idVenta)
-                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la venta"));
+                .orElseThrow(() -> new EntityNotFoundException(VENTA_NOT_FOUND));
     }
 
     public Page<Venta> findAllVentasCaja(Long idCaja, Pageable pageable) {

@@ -27,7 +27,8 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
             SELECT c
             FROM Categoria c
             LEFT JOIN FETCH c.categoriasHijas
-            WHERE c.id = :aLong
+            LEFT JOIN FETCH c.categoriaPadre
+            WHERE c.id = :id
             """)
-    Optional<Categoria> findById(@Nullable Long aLong);
+    Optional<Categoria> findById(@Nullable Long id);
 }

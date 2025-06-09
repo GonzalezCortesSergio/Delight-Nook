@@ -18,12 +18,16 @@ public class Stock {
     @Id
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     @MapsId
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "almacenero_id")
     private Almacenero almacenero;
 

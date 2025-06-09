@@ -8,7 +8,6 @@ import com.salesianostriana.dam.delight_nook.repository.CajaRepository;
 import com.salesianostriana.dam.delight_nook.repository.GestionaRepository;
 import com.salesianostriana.dam.delight_nook.security.jwt.refresh.RefreshTokenRepository;
 import com.salesianostriana.dam.delight_nook.user.model.Cajero;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,7 @@ public class GestionaService {
     @Transactional
     public Gestiona create(Cajero cajero, Long idCaja) {
 
-        if(!cajaRepository.findByCajeroSesion(cajero.getUsername()).isEmpty())
+        if(cajaRepository.findByCajeroSesion(cajero.getUsername()).isPresent())
             throw new CajaOcupadaException("Ya estás ocupando una caja, cierra sesión");
 
         Optional<Gestiona> optionalGestiona = gestionaRepository.findByCajeroUsernameAndCajaId(cajero.getUsername(), idCaja);

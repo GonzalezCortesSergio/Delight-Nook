@@ -26,14 +26,16 @@ public class Venta {
 
     private String nombreCajero;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
     mappedBy = "venta",
     cascade = CascadeType.ALL,
     orphanRemoval = true)
     @Builder.Default
     private List<LineaVenta> lineasVenta = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     private Caja caja;
 
     private boolean finalizada;
@@ -47,20 +49,6 @@ public class Venta {
     public void addLineaVenta(LineaVenta lv) {
         lv.setVenta(this);
         lineasVenta.add(lv);
-    }
-
-    public void removeLineaVenta(LineaVenta lv) {
-        lineasVenta.remove(lv);
-    }
-
-    public void addToCaja(Caja caja) {
-        setCaja(caja);
-        caja.getVentas().add(this);
-    }
-
-    public void removeFromCaja(Caja caja) {
-        caja.getVentas().remove(this);
-        setCaja(null);
     }
 
     @Override
