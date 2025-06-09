@@ -19,6 +19,8 @@ export class ModalDetailsUserComponent {
   @Input()
   usuario: Usuario | null = null;
 
+  error: boolean = false;
+
   getImagen(): string {
     return this.usuario?.avatar ? this.usuario.avatar : "profile-default-icon.png";
   }
@@ -43,7 +45,7 @@ export class ModalDetailsUserComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.refrescarToken(() => this.addRoleAdmin());
         }
       }
     })
@@ -60,24 +62,56 @@ export class ModalDetailsUserComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.refrescarToken(() => this.removeRoleAdmin());
         }
       }
     })
   }
 
-  private refrescarToken() {
+  disableUser() {
+    this.usuarioService.disableUser(this.usuario!.username)
+    .subscribe({
+      next: () => {
+        this.activeModal.close();
+      },
+      error: err => {
+
+        const errorResponse: ErrorResponse = err.error;
+
+        if(errorResponse.status == 401) {
+          this.refrescarToken(() => this.disableUser());
+        }
+        
+        if(errorResponse.status == 403) {
+          this.error = true;
+        }
+      }
+    })
+  }
+
+  enableUser() {
+    this.usuarioService.enableUser(this.usuario!.username)
+    .subscribe({
+      next: () => {
+        this.activeModal.close();
+      },
+      error: err => {
+        const errorResponse: ErrorResponse = err.error;
+
+        if(errorResponse.status == 401) {
+          this.refrescarToken(() => this.enableUser());
+        }
+      }
+    })
+  }
+
+  private refrescarToken(method: () => void) {
     this.usuarioService.refreshToken()
     .subscribe({
       next: res => {
         localStorage.setItem("token", res.token);
         localStorage.setItem("refreshToken", res.refreshToken);
-
-        if(this.notAdmin())
-          this.addRoleAdmin();
-
-        if(this.isAdmin())
-          this.removeRoleAdmin();
+        method();
       },
       error: () => {
         localStorage.clear();

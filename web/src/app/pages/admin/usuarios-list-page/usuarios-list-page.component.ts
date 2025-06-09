@@ -84,4 +84,8 @@ export class UsuariosListPageComponent implements OnInit{
       this.cargarUsuarios();
     })
   }
+
+  colorCard(usuario: Usuario): string {
+    return usuario.enabled ? "background-color: white;" : "background-color: rgb(200, 200, 200);"
+  }
 }

@@ -53,7 +53,7 @@ export class UsuarioService {
   }
 
   addRoleAdmin(username: string): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.baseUrl}/admin/removeAdmin/${username}`,
+    return this.http.put<Usuario>(`${this.baseUrl}/admin/addAdmin/${username}`,
       null,
       {
         headers: this.createHeaders()
@@ -70,6 +70,23 @@ export class UsuarioService {
     );
   }
 
+  disableUser(username: string): Observable<Usuario> {
+    return this.http.patch<Usuario>(`${this.baseUrl}/admin/disable/${username}`,
+      null,
+      {
+        headers: this.createHeaders()
+      }
+    )
+  }
+
+  enableUser(username: string): Observable<Usuario> {
+    return this.http.patch<Usuario>(`${this.baseUrl}/admin/enable/${username}`,
+      null,
+      {
+        headers: this.createHeaders()
+      }
+    )
+  }
   private createHeaders(): HttpHeaders {
     return new HttpHeaders(
       {
