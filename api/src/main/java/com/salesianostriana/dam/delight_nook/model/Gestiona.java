@@ -22,12 +22,16 @@ public class Gestiona {
     @EmbeddedId
     private GestionaPK gestionaPK = new GestionaPK();
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     @MapsId("cajero_id")
     @JoinColumn(name = "cajero_id")
     private Cajero cajero;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     @MapsId("caja_id")
     @JoinColumn(name = "caja_id")
     private Caja caja;

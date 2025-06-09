@@ -29,7 +29,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,7 +37,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/usuario")
@@ -921,7 +922,7 @@ public class UsuarioController {
                     )
             }
     )
-    @PostAuthorize("#username != authentication.principal.username")
+    @PreAuthorize("#username != authentication.principal.username")
     @DeleteMapping("/admin/delete/{username}")
     public ResponseEntity<Void> deleteByUsername(@PathVariable String username) {
 
@@ -930,6 +931,39 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Un usuario cierra sesión")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "El usuario cierra sesión correctamente",
+                            content = @Content
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "El token no es válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 170529 milliseconds ago at 2025-02-20T17:31:07.000Z. Current time: 2025-02-20T17:33:57.529Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/auth/logout"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
     @GetMapping("/auth/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal Usuario usuario) {
         refreshTokenService.cerrarSesion(usuario);
@@ -947,5 +981,179 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", mimeType)
                 .body(resource);
+    }
+
+    @Operation(summary = "Se deshabilita un usuario")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se deshabilita el usuario correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "c2f7ec8b-d98a-4f67-8430-f7655a323445",
+                                                                            "username": "Usuario_1",
+                                                                            "nombreCompleto": "Usuario 1",
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ],
+                                                                            "enabled": false
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "El token no es válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 170529 milliseconds ago at 2025-02-20T17:31:07.000Z. Current time: 2025-02-20T17:33:57.529Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/admin/disable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "El usuario no tiene permiso para realizar esta acción",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "No authorization",
+                                                                            "status": 403,
+                                                                            "detail": "Forbidden",
+                                                                            "instance": "/api/usuario/admin/disable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PreAuthorize("#username != authentication.principal.username")
+    @PatchMapping("/admin/disable/{username}")
+    public UsuarioResponseDto disable(
+            @Parameter(in = ParameterIn.PATH,
+            example = "Usuario_1")
+            @PathVariable String username) {
+        Usuario usuario = usuarioService.disable(username);
+        return UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar()));
+    }
+
+    @Operation(summary = "Se habilita un usuario que se ha deshabilitado previamente")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se ha habilitado correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "c2f7ec8b-d98a-4f67-8430-f7655a323445",
+                                                                            "username": "Usuario_1",
+                                                                            "nombreCompleto": "Usuario 1",
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ],
+                                                                            "enabled": true
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Usuario no encontrado",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Entidad no encontrada",
+                                                                            "status": 404,
+                                                                            "detail": "No se ha encontrado ningún usuario",
+                                                                            "instance": "/api/usuario/admin/enable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 170529 milliseconds ago at 2025-02-20T17:31:07.000Z. Current time: 2025-02-20T17:33:57.529Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/admin/enable/Usuario_1"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @PatchMapping("/admin/enable/{username}")
+    public UsuarioResponseDto enable(
+            @Parameter(in = ParameterIn.PATH,
+            example = "Usuario_1")
+            @PathVariable String username
+    ) {
+      Usuario usuario = usuarioService.enable(username);
+      return UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar()));
     }
 }

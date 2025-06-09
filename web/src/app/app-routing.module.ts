@@ -1,7 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { LoginCajeroPageComponent } from './pages/login-cajero-page/login-cajero-page.component';
+import { AdminHomePageComponent } from './pages/admin-home-page/admin-home-page.component';
+import { UsuariosListPageComponent } from './pages/usuarios-list-page/usuarios-list-page.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+
+  {path: "login", component: LoginPageComponent},
+  {path: "cajero/login", component: LoginCajeroPageComponent},
+  {path: "admin/home", component: AdminHomePageComponent},
+  {path: "admin/usuarios", component: UsuariosListPageComponent},
+  {path: "", pathMatch: "full", redirectTo: "/login"}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

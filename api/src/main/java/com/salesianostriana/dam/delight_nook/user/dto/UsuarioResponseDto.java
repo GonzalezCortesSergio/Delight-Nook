@@ -15,7 +15,8 @@ public record UsuarioResponseDto(
         String refreshToken,
         String nombreCompleto,
         String avatar,
-        Set<String> roles
+        Set<String> roles,
+        boolean enabled
 ) {
 
     public static UsuarioResponseDto of (Usuario usuario, String avatar) {
@@ -28,7 +29,8 @@ public record UsuarioResponseDto(
                 avatar,
                 usuario.getRoles().stream()
                         .map(UserRole::toString)
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toSet()),
+                usuario.isEnabled()
         );
     }
 
@@ -42,7 +44,8 @@ public record UsuarioResponseDto(
                 avatar,
                 usuario.getRoles().stream()
                         .map(UserRole::toString)
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toSet()),
+                usuario.isEnabled()
         );
     }
 }
