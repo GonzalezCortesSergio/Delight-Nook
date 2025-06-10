@@ -28,9 +28,11 @@ export class ModalEditCajaComponent {
 
 
   editarDinero() {
-    debugger;
     this.errorMessage = null;
 
+    if(this.dinero < 0) {
+      this.dinero*= -1;
+    }
     if (this.multiplicador != 0) {
 
       this.dinero *= this.multiplicador;
@@ -47,7 +49,8 @@ export class ModalEditCajaComponent {
               this.refrescarToken();
 
             else {
-              this.errorMessage = errorResponse.detail;
+              this.errorMessage = errorResponse["invalid-params"][0].message;
+              this.dinero = 0;
             }
           }
         });
@@ -64,6 +67,11 @@ export class ModalEditCajaComponent {
         next: res => {
           localStorage.setItem("token", res.token);
           localStorage.setItem("refreshToken", res.refreshToken);
+          this.editarDinero();
+        },
+        error: () => {
+          localStorage.clear();
+          this.router.navigateByUrl("/login");
         }
       });
   }
