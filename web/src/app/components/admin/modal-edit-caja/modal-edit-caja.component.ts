@@ -33,7 +33,6 @@ export class ModalEditCajaComponent {
     if(this.dinero < 0) {
       this.dinero*= -1;
     }
-
     if (this.multiplicador != 0) {
 
       this.dinero *= this.multiplicador;
