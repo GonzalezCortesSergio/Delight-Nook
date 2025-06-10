@@ -12,10 +12,14 @@
         </select>
     </div>
     <div class="mb-3">
-        <input class="form-control" type="number" placeholder="Indique el dinero que quiere abonar o extraer" step="0.01" [(ngModel)]="dinero"/>
+        <input class="form-control" type="number" min="0" placeholder="Indique el dinero que quiere abonar o extraer" step="0.01" [(ngModel)]="dinero"/>
     </div>
 
     <div class="mb-2">
         <button class="btn btn-dark w-100" (click)="editarDinero()">Editar dinero</button>
     </div>
+
+    @if (errorMessage) {
+        <h5 class="bg-metal-pink text-center">{{errorMessage}}</h5>
+    }
 </div>
