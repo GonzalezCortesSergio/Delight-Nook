@@ -36,3 +36,15 @@ export class CreateUsuario {
         this.email = email;
     }
 }
+
+export class ValidateUsuario {
+    private password: string;
+    private verifyPassword: string;
+    private activationToken: string;
+
+    constructor(password: string, verifyPassword: string, activationToken: string) {
+        this.password = password;
+        this.verifyPassword = verifyPassword;
+        this.activationToken = activationToken;
+    }
+}
