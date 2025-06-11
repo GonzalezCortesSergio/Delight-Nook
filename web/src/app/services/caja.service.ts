@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CajaResponse, EditCaja } from '../models/caja';
+import { Caja, CajaResponse, EditCaja } from '../models/caja';
 import { LoginRequest, Usuario } from '../models/usuario';
 
 @Injectable({
@@ -12,6 +12,8 @@ export class CajaService {
   constructor(private http: HttpClient) { }
 
   private baseUrl = "http://localhost:8080/api/caja";
+
+  private cajaDetails: Caja | null = null;
 
 
   findAll(page: number): Observable<CajaResponse> {
@@ -45,5 +47,13 @@ export class CajaService {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       );
-    }
+  }
+
+  setCajaDetails(caja: Caja) {
+    this.cajaDetails = caja;
+  }
+
+  getCajaDetails() {
+    return this.cajaDetails;
+  }
 }
