@@ -35,6 +35,11 @@ public class CajaService {
         return result.map(GetCajaDto::of);
     }
 
+    public Caja findById(Long id) {
+        return cajaRepository.findById(id)
+                .orElseThrow(() -> new CajaNotFoundException("No se ha encontrado la caja con ID: %d".formatted(id)));
+    }
+
     public Caja editDineroCaja(EditCajaDto editCajaDto) {
 
         return cajaRepository.findById(editCajaDto.id())
