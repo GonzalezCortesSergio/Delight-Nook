@@ -1,0 +1,42 @@
+
+@if(errorMessage) {
+    <i class="bi bi-arrow-left" style="position: relative; top: 9%;" routerLink="/admin/cajas"></i>
+    <h2 class="display-6 text-center py-5 bg-metal-pink">{{errorMessage}}</h2>
+    
+}
+
+@else {
+    <h2 class="display-6 text-center mt-3">{{caja?.nombre}}</h2>
+    <i class="bi bi-arrow-left" routerLink="/admin/cajas"></i>
+    <h6 class="title-ventas">Ventas realizadas en la caja:</h6>
+
+    @if(!notFound) {
+        <div class="ventas">
+        @for (venta of ventas?.content; track $index) {
+            <div class="bg-light info-venta w-100 d-flex justify-content-between">
+                <h4 class="ms-3">
+                    Venta realizada el {{getFecha(venta)}} a las {{getHora(venta)}}
+                </h4>
+                <div class="d-flex justify-content-between">
+                    <h4 class="me-5">Precio final: {{venta.precioFinal}}€</h4>
+                    <button class="btn btn-wintery me-3">Ver más</button>
+                </div>
+            </div>
+        }
+        <ngb-pagination class="d-flex justify-content-center paginacion" [collectionSize]="ventas!.page.totalElements" [pageSize]="ventas!.page.size" [(page)]="page" (pageChange)="cambiarVentas()" />
+        </div>
+    }
+    @else {
+        <h2 class="display-6 text-center py-5 bg-metal-pink mt-5">No se han encontrado ventas en esta caja</h2>
+    }
+
+    <div class="info-caja d-flex justify-content-between" [style]="marginInfoCaja()">
+        <div class="d-flex justify-content-around">
+            <h3 class="me-5 ms-3">Dinero de la caja: {{caja?.dineroCaja}}€</h3>
+            <button class="btn btn-wintery" (click)="openModalEditCaja(id)">Editar dinero</button>
+        </div>
+        @if(!notFound) {
+            <h3 class="me-5">Total recaudado: {{recaudado}}€</h3>
+        }
+    </div>
+}

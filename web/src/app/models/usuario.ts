@@ -1,3 +1,5 @@
+import { Page } from "./page.interface";
+
 export interface Usuario {
     username: string;
     token: string;
@@ -10,8 +12,7 @@ export interface Usuario {
 
 export interface UsuarioResponse {
     content: Usuario[];
-    totalElements: number;
-    size: number;
+    page: Page;
 }
 
 export class LoginRequest {

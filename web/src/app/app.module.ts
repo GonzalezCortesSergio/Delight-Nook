@@ -17,6 +17,7 @@ import { CajasListPageComponent } from './pages/admin/cajas-list-page/cajas-list
 import { ModalDeleteCajaComponent } from './components/admin/modal-delete-caja/modal-delete-caja.component';
 import { ModalEditCajaComponent } from './components/admin/modal-edit-caja/modal-edit-caja.component';
 import { VerifyUserPageComponent } from './pages/verify-user-page/verify-user-page.component';
+import { CajaDetailsPageComponent } from './pages/caja-details-page/caja-details-page.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { VerifyUserPageComponent } from './pages/verify-user-page/verify-user-pa
     CajasListPageComponent,
     ModalDeleteCajaComponent,
     ModalEditCajaComponent,
-    VerifyUserPageComponent
+    VerifyUserPageComponent,
+    CajaDetailsPageComponent
   ],
   imports: [
     BrowserModule,
