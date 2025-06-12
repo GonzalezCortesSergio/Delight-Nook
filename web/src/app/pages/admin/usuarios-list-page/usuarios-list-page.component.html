@@ -1,0 +1,25 @@
+<h2 class="display-6 text-center mt-3">Usuarios</h2>
+
+<i class="bi bi-arrow-left" routerLink="/admin/home"></i>
+
+<button class="add-user" routerLink="/admin/alta/usuario">Agrega usuario <i class="bi bi-plus-circle"></i></button>
+<div class="contenido row mx-auto">
+
+    @for (usuario of usuarios?.content; track $index) {
+        
+        <div class="col-4">
+            <div class="card" [style]="colorCard(usuario)">
+                <img class="card-img-top w-25 mx-auto mt-2" [src]="getImagen(usuario)" onerror="'profile-default-icon.png'" alt="Foto de perfil de usuario" />
+                <div class="card-body">
+                    <h4 class="card-title text-center">{{usuario.username}}</h4>
+                </div>
+                <div class="d-flex justify-content-between m-2">
+                    <button class="btn btn-wintery" (click)="openModalDetails(usuario)">Ver más</button>
+                    <button class="btn btn-metal-pink" (click)="openModalDelete(usuario.username)">Borrar</button>
+                </div>
+            </div>
+            
+        </div>
+    }
+    <ngb-pagination class="d-flex justify-content-center paginacion" [collectionSize]="usuarios!.totalElements" [pageSize]="usuarios!.size" [(page)]="pagina" (pageChange)="cambiarUsuarios()" />
+</div>

@@ -1,0 +1,25 @@
+<h3 class="text-center mt-3">Editar dinero de una caja</h3>
+
+<h6 class="text-center mt-5 mb-3 mx-auto">Para cambiar el dinero de la caja, deberá proporcionar la cantidad a extraer o a abonar en la caja</h6>
+
+
+<div class="mx-auto w-50 mt-2">
+    <div class="mb-3">
+        <select class="form-select" [(ngModel)]="multiplicador">
+            <option selected value="0">Seleccione un tipo de operación</option>
+            <option value="1">Abonar</option>
+            <option value="-1">Extraer</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <input class="form-control" type="number" min="0" placeholder="Indique el dinero que quiere abonar o extraer" step="0.01" [(ngModel)]="dinero"/>
+    </div>
+
+    <div class="mb-2">
+        <button class="btn btn-dark w-100" (click)="editarDinero()">Editar dinero</button>
+    </div>
+
+    @if (errorMessage) {
+        <h5 class="bg-metal-pink text-center">{{errorMessage}}</h5>
+    }
+</div>

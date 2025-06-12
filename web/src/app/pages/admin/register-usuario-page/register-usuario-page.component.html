@@ -1,0 +1,38 @@
+<h2 class="display-6 text-center mt-3">Registro de usuario</h2>
+
+<i class="bi bi-arrow-left" routerLink="/admin/usuarios"></i>
+
+<div class="formulario">
+
+    <div class="mb-5">
+        <input [(ngModel)]="username" class="form-control w-50" type="text" placeholder="Nombre de usuario" />
+    </div>
+
+    <div class="mb-5">
+        <input [(ngModel)]="nombreCompleto" class="form-control w-50" type="text"
+            placeholder="Nombre completo del usuario" />
+    </div>
+
+    <div class="mb-5">
+        <input [(ngModel)]="email" class="form-control w-50" type="email" placeholder="Email del usuario" />
+    </div>
+
+    <div class="mb-5">
+        <select class="form-select w-50" [(ngModel)]="role">
+            <option selected>Rol del usuario</option>
+            <option value="admin">Administrador</option>
+            <option value="almacenero">Almacenero</option>
+            <option value="cajero">Cajero</option>
+        </select>
+    </div>
+    @if (errorMessage) {
+        <p class="bg-danger py-2 w-50 text-center text-light">{{errorMessage}}</p>
+    }
+
+    <button class="btn btn-dark w-50" (click)="register()">Registrar usuario</button>
+</div>
+
+@if (created) {
+
+    <ngb-alert type="success" (closed)="closeValorationAlert()" class="alert-created">Se ha creado el usuario correctamente</ngb-alert>
+}

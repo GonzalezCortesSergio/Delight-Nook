@@ -1,2 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("../node_modules/bootstrap-icons/font/bootstrap-icons.css");
+
+.btn-wintery {
+    background-color: #B3D7E7;
+}
+
+.btn-wintery:hover {
+    background-color: #97b9c7;
+}
+
+.btn-metal-pink {
+    background-color: #E7B3BD;
+}
+
+.btn-metal-pink:hover {
+    background-color: #bb919a;
+}
+
+.bg-metal-pink {
+    background-color: #E7B3BD;
+}

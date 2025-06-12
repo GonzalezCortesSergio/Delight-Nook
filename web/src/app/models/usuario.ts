@@ -5,6 +5,7 @@ export interface Usuario {
     nombreCompleto: string;
     avatar: string;
     roles: string[];
+    enabled: boolean;
 }
 
 export interface UsuarioResponse {
@@ -20,5 +21,18 @@ export class LoginRequest {
     constructor(username: string, password: string) {
         this.username = username;
         this.password = password;
+    }
+}
+
+export class CreateUsuario {
+    private username: string;
+    private nombreCompleto: string;
+    private email: string;
+
+
+    constructor(username: string, nombreCompleto: string, email: string) {
+        this.username = username;
+        this.nombreCompleto = nombreCompleto;
+        this.email = email;
     }
 }
