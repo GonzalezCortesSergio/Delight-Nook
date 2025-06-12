@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CajaService } from '../../services/caja.service';
-import { Caja } from '../../models/caja';
-import { VentaService } from '../../services/venta.service';
-import { UsuarioService } from '../../services/usuario.service';
+import { CajaService } from '../../../services/caja.service';
+import { Caja } from '../../../models/caja';
+import { VentaService } from '../../../services/venta.service';
+import { UsuarioService } from '../../../services/usuario.service';
 import { Router } from '@angular/router';
-import { Venta, VentasResponse } from '../../models/venta';
-import { ErrorResponse } from '../../models/error';
+import { Venta, VentasResponse } from '../../../models/venta';
+import { ErrorResponse } from '../../../models/error';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalEditCajaComponent } from '../../components/admin/modal-edit-caja/modal-edit-caja.component';
-import { ModalDetailsVentaComponent } from '../../components/admin/modal-details-venta/modal-details-venta.component';
+import { ModalEditCajaComponent } from '../../../components/admin/modal-edit-caja/modal-edit-caja.component';
+import { ModalDetailsVentaComponent } from '../../../components/admin/modal-details-venta/modal-details-venta.component';
 
 @Component({
   selector: 'app-caja-details-page',

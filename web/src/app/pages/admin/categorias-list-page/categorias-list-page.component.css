@@ -1,0 +1,25 @@
+.contenido {
+    width: 75%;
+    height: 68vh;
+}
+
+.add-categoria {
+    color: white;
+    margin-left: 89%;
+    background-color:#e9a588;
+    border-radius: 5px;
+    height: 6vh;
+    border: none;
+    margin-bottom: -10%;
+
+}
+
+.bi-arrow-left {
+    font-size: 40pt;
+    margin-left: 4%;
+    margin-bottom: -5%;
+}
+
+.card {
+    height: 25vh;
+}
