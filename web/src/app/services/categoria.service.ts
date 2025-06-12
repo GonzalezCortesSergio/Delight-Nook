@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CategoriaResponse } from '../models/categoria';
+import { CategoriaDetails, CategoriaResponse } from '../models/categoria';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,14 @@ export class CategoriaService {
 
   findAll(page: number): Observable<CategoriaResponse> {
     return this.http.get<CategoriaResponse>(`${this.baseUrl}?page=${page}&size=6`,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  findById(id: number): Observable<CategoriaDetails> {
+    return this.http.get<CategoriaDetails>(`${this.baseUrl}/${id}`,
       {
         headers: this.createHeaders()
       }

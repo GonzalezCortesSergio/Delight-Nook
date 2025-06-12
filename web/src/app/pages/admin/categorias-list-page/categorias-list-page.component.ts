@@ -58,7 +58,7 @@ export class CategoriasListPageComponent implements OnInit{
   }
 
   openDetails(categoria: Categoria) {
-
+    this.router.navigateByUrl(`/admin/categorias/detalles/${categoria.id}`)
   }
   openModalDelete(categoria: Categoria) {
 
