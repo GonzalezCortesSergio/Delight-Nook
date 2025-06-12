@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,7 @@ import { ModalDeleteCajaComponent } from './components/admin/modal-delete-caja/m
 import { ModalEditCajaComponent } from './components/admin/modal-edit-caja/modal-edit-caja.component';
 import { VerifyUserPageComponent } from './pages/verify-user-page/verify-user-page.component';
 import { CajaDetailsPageComponent } from './pages/caja-details-page/caja-details-page.component';
+import { ModalCreateCajaComponent } from './components/admin/modal-create-caja/modal-create-caja.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { CajaDetailsPageComponent } from './pages/caja-details-page/caja-details
     ModalDeleteCajaComponent,
     ModalEditCajaComponent,
     VerifyUserPageComponent,
-    CajaDetailsPageComponent
+    CajaDetailsPageComponent,
+    ModalCreateCajaComponent
   ],
   imports: [
     BrowserModule,

@@ -6,6 +6,7 @@ import { Caja, CajaResponse } from '../../../models/caja';
 import { ErrorResponse } from '../../../models/error';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalDeleteCajaComponent } from '../../../components/admin/modal-delete-caja/modal-delete-caja.component';
+import { ModalCreateCajaComponent } from '../../../components/admin/modal-create-caja/modal-create-caja.component';
 
 @Component({
   selector: 'app-cajas-list-page',
@@ -71,6 +72,14 @@ export class CajasListPageComponent implements OnInit {
 
     modalRef.componentInstance.caja = caja;
     
+    modalRef.closed.subscribe(() => {
+      this.cargarCajas();
+    })
+  }
+
+  openModalCreate() {
+    const modalRef = this.modalService.open(ModalCreateCajaComponent);
+
     modalRef.closed.subscribe(() => {
       this.cargarCajas();
     })
