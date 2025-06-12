@@ -53,6 +53,14 @@ export class CajaService {
     );
   }
 
+  deleteCaja(id: number) {
+    return this.http.delete(`${this.baseUrl}/admin/borrar/${id}`,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
   private createHeaders(): HttpHeaders {
       return new HttpHeaders(
         {
