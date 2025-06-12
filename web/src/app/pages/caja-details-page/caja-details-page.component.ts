@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CajaService } from '../../services/caja.service';
 import { Caja } from '../../models/caja';
 import { VentaService } from '../../services/venta.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { Router } from '@angular/router';
-import { VentasResponse } from '../../models/venta';
+import { Venta, VentasResponse } from '../../models/venta';
 import { ErrorResponse } from '../../models/error';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalEditCajaComponent } from '../../components/admin/modal-edit-caja/modal-edit-caja.component';
 
 @Component({
   selector: 'app-caja-details-page',
@@ -15,6 +17,8 @@ import { ErrorResponse } from '../../models/error';
 export class CajaDetailsPageComponent implements OnInit{
 
   constructor(private cajaService: CajaService, private ventaService: VentaService, private usuarioService: UsuarioService, private router: Router) { }
+
+  private modalService = inject(NgbModal);
 
   caja: Caja | null = null;
 
@@ -28,19 +32,38 @@ export class CajaDetailsPageComponent implements OnInit{
 
   errorMessage: string | null = null;
 
-  ngOnInit(): void {
-    this.id = Number.parseInt(this.router.url.replace(/\D/g, ""));
-    this.caja = this.cajaService.getCajaDetails();
+  notFound = false;
 
-    if(this.caja && this.caja.id == this.id) {
-      this.cargarVentas();
-    }
-    else {
-      this.errorMessage = "Error al cargar la caja";
-    }
+  ngOnInit(): void {
+    this.id = Number.parseInt(this.router.url.replace(/\D/g, "")); 
+
+    this.cargarCaja();
   }
 
+  private cargarCaja() {
+    this.cajaService.findById(this.id)
+    .subscribe({
+      next: res => {
+        this.caja = res;
+        this.cargarVentas();
+      },
+      error: err => {
+        const errorResponse: ErrorResponse = err.error;
 
+        if(errorResponse.status == 401) {
+          this.refrescarToken(() => this.cargarCaja());
+        }
+
+        else if(errorResponse.status == 400) {
+          this.errorMessage = "El valor del ID no es válido";
+        }
+
+        else {
+          this.errorMessage = errorResponse.detail;
+        }
+      }
+    })
+  }
 
   private cargarVentas() {
     this.ventaService.getVentasPorCaja(this.caja!.id, this.page - 1)
@@ -53,24 +76,54 @@ export class CajaDetailsPageComponent implements OnInit{
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.refrescarToken(() => this.cargarVentas());
+        }
+
+        else if(errorResponse.status == 404) {
+          this.notFound = true;
         }
       }
     })
   }
 
-  private refrescarToken() {
+  cambiarVentas() {
+    this.cargarVentas();
+  }
+
+  private refrescarToken(method: Function) {
     this.usuarioService.refreshToken()
     .subscribe({
       next: res => {
         localStorage.setItem("token", res.token);
         localStorage.setItem("refreshToken", res.refreshToken);
-        this.cargarVentas();
+        method();
       },
       error: () => {
         localStorage.clear();
         this.router.navigateByUrl("/login");
       }
     })
+  }
+
+  openModalEditCaja(id: number) {
+    const modalRef = this.modalService.open(ModalEditCajaComponent);
+
+    modalRef.componentInstance.id = id;
+
+    modalRef.closed.subscribe(() => {
+      this.cargarCaja();
+    })
+  }
+
+  getFecha(venta: Venta) {
+    return venta.fechaVenta.split(" ")[0];
+  }
+
+  getHora(venta: Venta) {
+    return venta.fechaVenta.split(" ")[1];
+  }
+
+  marginInfoCaja(): string {
+    return this.notFound ? "margin-top: 17%;" : "";
   }
 }

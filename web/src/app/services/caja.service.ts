@@ -13,15 +13,18 @@ export class CajaService {
 
   private baseUrl = "http://localhost:8080/api/caja";
 
-  private cajaDetails: Caja | null = null;
-
-
   findAll(page: number): Observable<CajaResponse> {
     return this.http.get<CajaResponse>(`${this.baseUrl}/admin/listar?size=6&page=${page}`,
       {
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  findById(id: number): Observable<Caja> {
+    return this.http.get<Caja>(`${this.baseUrl}/admin/detalles/${id}`,
+      {
+        headers: this.createHeaders()
       }
     );
   }
@@ -47,13 +50,5 @@ export class CajaService {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       );
-  }
-
-  setCajaDetails(caja: Caja) {
-    this.cajaDetails = caja;
-  }
-
-  getCajaDetails() {
-    return this.cajaDetails;
   }
 }

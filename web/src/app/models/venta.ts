@@ -1,3 +1,5 @@
+import { Page } from "./page.interface";
+
 export interface VentasCajaResponse {
     result: VentasResponse;
     totalRecaudado: number;
@@ -5,8 +7,7 @@ export interface VentasCajaResponse {
 
 export interface VentasResponse {
     content: Venta[];
-    totalElements: number;
-    size: number;
+    page: Page;
 }
 
 export interface Venta {

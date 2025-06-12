@@ -1,7 +1,8 @@
+import { Page } from "./page.interface";
+
 export interface CajaResponse {
     content: Caja[];
-    size: number;
-    totalElements: number;
+    page: Page;
 }
 
 export interface Caja {
