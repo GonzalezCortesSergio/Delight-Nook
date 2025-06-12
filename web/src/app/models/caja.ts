@@ -20,3 +20,13 @@ export class EditCaja {
         this.dineroNuevo = dineroNuevo;
     }
 }
+
+export class CreateCaja {
+    private nombre: string;
+    private dineroCaja: number;
+
+    constructor(nombre: string, dineroCaja: number) {
+        this.nombre = nombre;
+        this.dineroCaja = dineroCaja;
+    }
+}

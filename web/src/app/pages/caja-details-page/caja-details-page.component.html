@@ -18,7 +18,7 @@
                     Venta realizada el {{getFecha(venta)}} a las {{getHora(venta)}}
                 </h4>
                 <div class="d-flex justify-content-between">
-                    <h4 class="me-5">Precio final: {{venta.precioFinal}}€</h4>
+                    <h4 class="me-5">Precio final: {{venta.precioFinal | number: "1.0-2"}}€</h4>
                     <button class="btn btn-wintery me-3">Ver más</button>
                 </div>
             </div>
@@ -32,11 +32,11 @@
 
     <div class="info-caja d-flex justify-content-between" [style]="marginInfoCaja()">
         <div class="d-flex justify-content-around">
-            <h3 class="me-5 ms-3">Dinero de la caja: {{caja?.dineroCaja}}€</h3>
+            <h3 class="me-5 ms-3">Dinero de la caja: {{caja?.dineroCaja | number: "1.0-2"}}€</h3>
             <button class="btn btn-wintery" (click)="openModalEditCaja(id)">Editar dinero</button>
         </div>
         @if(!notFound) {
-            <h3 class="me-5">Total recaudado: {{recaudado}}€</h3>
+            <h3 class="me-5">Total recaudado: {{recaudado | number}}€</h3>
         }
     </div>
 }
