@@ -64,6 +64,7 @@ export class CajasListPageComponent implements OnInit {
   openDetails(caja: Caja) {
     this.router.navigateByUrl(`/admin/cajas/detalles/${caja.id}`);
   }
+
   openModalDelete(caja: Caja) {
 
     const modalRef = this.modalService.open(ModalDeleteCajaComponent);

@@ -23,7 +23,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -274,6 +273,11 @@ public class CajaController {
     public Page<GetCajaDto> findAll(@PageableDefault Pageable pageable) {
 
         return cajaService.findAll(pageable);
+    }
+
+    @GetMapping("/admin/detalles/{id}")
+    public GetCajaDto findById(@PathVariable Long id) {
+        return GetCajaDto.of(cajaService.findById(id));
     }
 
     @Operation(summary = "Se agrega o quita dinero en la caja")
@@ -609,7 +613,7 @@ public class CajaController {
         String accessToken = jwtService.generateAccessToken(usuario);
         RefreshToken refreshToken = refreshTokenService.create(usuario);
 
-        if(usuario instanceof Cajero cajero) {
+        if (usuario instanceof Cajero cajero) {
             gestionaService.create(cajero, cajaId);
         }
 
