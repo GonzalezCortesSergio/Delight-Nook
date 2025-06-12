@@ -19,7 +19,7 @@
                 </h4>
                 <div class="d-flex justify-content-between">
                     <h4 class="me-5">Precio final: {{venta.precioFinal | number: "1.0-2"}}€</h4>
-                    <button class="btn btn-wintery me-3">Ver más</button>
+                    <button class="btn btn-wintery me-3" (click)="openModalDetailsVenta(venta.id)">Ver más</button>
                 </div>
             </div>
         }
