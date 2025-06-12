@@ -304,7 +304,7 @@ public class CategoriaController {
             }
     )
     @DeleteMapping("/admin/borrar/{id}")
-    public ResponseEntity<?> deleteById(
+    public ResponseEntity<Void> deleteById(
             @Parameter(in = ParameterIn.PATH,
             description = "ID de la categoría a borrar",
             schema = @Schema(type = "long"),
