@@ -6,15 +6,19 @@ import { AdminHomePageComponent } from './pages/admin/admin-home-page/admin-home
 import { UsuariosListPageComponent } from './pages/admin/usuarios-list-page/usuarios-list-page.component';
 import { RegisterUsuarioPageComponent } from './pages/admin/register-usuario-page/register-usuario-page.component';
 import { CajasListPageComponent } from './pages/admin/cajas-list-page/cajas-list-page.component';
+import { VerifyUserPageComponent } from './pages/verify-user-page/verify-user-page.component';
+import { CajaDetailsPageComponent } from './pages/caja-details-page/caja-details-page.component';
 
 
 const routes: Routes = [
 
   {path: "login", component: LoginPageComponent},
   {path: "cajero/login", component: LoginCajeroPageComponent},
+  {path: "usuario/validar", component: VerifyUserPageComponent},
   {path: "admin/home", component: AdminHomePageComponent},
   {path: "admin/usuarios", component: UsuariosListPageComponent},
   {path: "admin/cajas", component: CajasListPageComponent},
+  {path: "admin/cajas/detalles/:id", component: CajaDetailsPageComponent},
   {path: "admin/alta/usuario", component: RegisterUsuarioPageComponent},
   {path: "", pathMatch: "full", redirectTo: "/login"}
 ];

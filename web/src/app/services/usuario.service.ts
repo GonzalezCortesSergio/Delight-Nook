@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateUsuario, LoginRequest, Usuario, UsuarioResponse } from '../models/usuario';
+import { CreateUsuario, LoginRequest, Usuario, UsuarioResponse, ValidateUsuario } from '../models/usuario';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -94,6 +94,12 @@ export class UsuarioService {
       {
         headers: this.createHeaders()
       }
+    );
+  }
+
+  validarUsuario(validateUsuario: ValidateUsuario) {
+    return this.http.put(`${this.baseUrl}/auth/validate`,
+      validateUsuario
     );
   }
   

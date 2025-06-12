@@ -1,3 +1,5 @@
+import { Page } from "./page.interface";
+
 export interface Usuario {
     username: string;
     token: string;
@@ -10,8 +12,7 @@ export interface Usuario {
 
 export interface UsuarioResponse {
     content: Usuario[];
-    totalElements: number;
-    size: number;
+    page: Page;
 }
 
 export class LoginRequest {
@@ -34,5 +35,17 @@ export class CreateUsuario {
         this.username = username;
         this.nombreCompleto = nombreCompleto;
         this.email = email;
+    }
+}
+
+export class ValidateUsuario {
+    private password: string;
+    private verifyPassword: string;
+    private activationToken: string;
+
+    constructor(password: string, verifyPassword: string, activationToken: string) {
+        this.password = password;
+        this.verifyPassword = verifyPassword;
+        this.activationToken = activationToken;
     }
 }

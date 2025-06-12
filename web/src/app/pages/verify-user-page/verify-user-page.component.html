@@ -1,0 +1,30 @@
+<h2 class="display-6 text-center mt-3">Validación de su cuenta</h2>
+
+<h5 class="text-center mt-4">Proporcione su contraseña y el código adjuntado en su correo</h5>
+
+<div class="formulario">
+
+    <div class="mb-4">
+        <input [type]="typePassword()" class="form-control w-50" placeholder="Contraseña" [(ngModel)]="password" />
+    </div>
+    
+    <div class="mb-4">
+        <input [type]="typePassword()" class="form-control w-50" placeholder="Repetir contraseña" [(ngModel)]="verifyPassword" />
+    </div>
+    
+    <div class="mb-4">
+        <input type="text" class="form-control w-50" placeholder="Código de activación" [(ngModel)]="activationToken" />
+    </div>
+
+    <div class="mb-4">
+        <label for="show-password" class="me-1">Mostrar contraseña</label>
+        <input id="show-password" name="show-password" class="show-password" type="checkbox" [(ngModel)]="showPassword" />
+    </div>
+
+    <button class="btn btn-dark w-50" (click)="validarUsuario()">Valide su cuenta</button>
+
+</div>
+
+@if(errorMessage) {
+    <h5 class="bg-metal-pink w-50 text-center mx-auto py-3 mt-3 px-3">{{errorMessage}}</h5>
+}
