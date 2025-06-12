@@ -67,5 +67,9 @@ export class CajaService {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       );
+<<<<<<< HEAD
   }
+=======
+    }
+>>>>>>> develop-web
 }
