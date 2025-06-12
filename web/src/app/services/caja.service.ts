@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Caja, CajaResponse, EditCaja } from '../models/caja';
+import { Caja, CajaResponse, CreateCaja, EditCaja } from '../models/caja';
 import { LoginRequest, Usuario } from '../models/usuario';
 
 @Injectable({
@@ -38,6 +38,15 @@ export class CajaService {
   editDineroCaja(editCaja: EditCaja) {
     return this.http.put(`${this.baseUrl}/admin/editar`,
       editCaja,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  createCaja(createCaja: CreateCaja) {
+    return this.http.post(`${this.baseUrl}/admin/crear`,
+      createCaja,
       {
         headers: this.createHeaders()
       }
