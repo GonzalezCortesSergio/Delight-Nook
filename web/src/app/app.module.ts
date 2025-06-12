@@ -19,6 +19,7 @@ import { ModalEditCajaComponent } from './components/admin/modal-edit-caja/modal
 import { VerifyUserPageComponent } from './pages/verify-user-page/verify-user-page.component';
 import { CajaDetailsPageComponent } from './pages/caja-details-page/caja-details-page.component';
 import { ModalCreateCajaComponent } from './components/admin/modal-create-caja/modal-create-caja.component';
+import { ModalDetailsVentaComponent } from './components/admin/modal-details-venta/modal-details-venta.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { ModalCreateCajaComponent } from './components/admin/modal-create-caja/m
     ModalEditCajaComponent,
     VerifyUserPageComponent,
     CajaDetailsPageComponent,
-    ModalCreateCajaComponent
+    ModalCreateCajaComponent,
+    ModalDetailsVentaComponent
   ],
   imports: [
     BrowserModule,

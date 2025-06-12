@@ -8,6 +8,7 @@ import { Venta, VentasResponse } from '../../models/venta';
 import { ErrorResponse } from '../../models/error';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalEditCajaComponent } from '../../components/admin/modal-edit-caja/modal-edit-caja.component';
+import { ModalDetailsVentaComponent } from '../../components/admin/modal-details-venta/modal-details-venta.component';
 
 @Component({
   selector: 'app-caja-details-page',
@@ -124,6 +125,14 @@ export class CajaDetailsPageComponent implements OnInit{
   }
 
   marginInfoCaja(): string {
-    return this.notFound ? "margin-top: 17%;" : "";
+    return this.notFound ? "margin-top: 12%;" : "";
+  }
+
+  openModalDetailsVenta(id: string) {
+    const modalRef = this.modalService.open(ModalDetailsVentaComponent,
+      {size: "lg"}
+    );
+
+    modalRef.componentInstance.idVenta = id;
   }
 }
