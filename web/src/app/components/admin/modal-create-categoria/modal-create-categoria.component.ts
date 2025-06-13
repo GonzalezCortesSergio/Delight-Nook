@@ -103,7 +103,6 @@ export class ModalCreateCategoriaComponent implements OnInit{
     })
   }
 
-
   private toCreateCategoriaHija(): CreateCategoriaHija {
     return new CreateCategoriaHija(
       this.categoriaMadreId!,
