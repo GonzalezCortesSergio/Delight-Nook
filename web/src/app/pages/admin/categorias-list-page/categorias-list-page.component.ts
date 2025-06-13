@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CategoriaService } from '../../../services/categoria.service';
 import { Categoria, CategoriaResponse } from '../../../models/categoria';
 import { ErrorResponse } from '../../../models/error';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalCreateCategoriaComponent } from '../../../components/admin/modal-create-categoria/modal-create-categoria.component';
 
 @Component({
   selector: 'app-categorias-list-page',
@@ -13,6 +15,8 @@ import { Router } from '@angular/router';
 export class CategoriasListPageComponent implements OnInit{
 
   constructor(private categoriaService: CategoriaService, private usuarioService: UsuarioService, private router: Router) { }
+
+  private modalService = inject(NgbModal);
 
   page = 1;
 
@@ -54,7 +58,11 @@ export class CategoriasListPageComponent implements OnInit{
   }
 
   openModalCreate() {
+    const modalRef = this.modalService.open(ModalCreateCategoriaComponent);
 
+    modalRef.closed.subscribe(() => {
+      this.cargarCategorias();
+    })
   }
 
   openDetails(categoria: Categoria) {

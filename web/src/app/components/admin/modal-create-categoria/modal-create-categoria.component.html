@@ -1,0 +1,18 @@
+<h3 class="my-3 text-center">Registro de categoria</h3>
+
+<div class="mt-5 w-50 mx-auto">
+    <div class="mb-4">
+        <select class="form-select" [(ngModel)]="categoriaMadreId">
+            <option value="-1">Sin categoría madre</option>
+            @for (categoria of categorias; track $index) {
+                <option [value]="categoria.id">{{categoria.nombre}}</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <input class="form-control" placeholder="Nombre de la categoría" type="text" [(ngModel)]="categoriaNombre" />
+    </div>
+
+    <button class="btn btn-dark w-100 mb-5" (click)="createCategoria()">Registrar categoría</button>
+</div>

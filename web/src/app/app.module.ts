@@ -23,6 +23,7 @@ import { ModalDetailsVentaComponent } from './components/admin/modal-details-ven
 import { CategoriasListPageComponent } from './pages/admin/categorias-list-page/categorias-list-page.component';
 import { CategoriaDetailsPageComponent } from './pages/admin/categoria-details-page/categoria-details-page.component';
 import { ModalDeleteCategoriaComponent } from './components/admin/modal-delete-categoria/modal-delete-categoria.component';
+import { ModalCreateCategoriaComponent } from './components/admin/modal-create-categoria/modal-create-categoria.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { ModalDeleteCategoriaComponent } from './components/admin/modal-delete-c
     ModalDetailsVentaComponent,
     CategoriasListPageComponent,
     CategoriaDetailsPageComponent,
-    ModalDeleteCategoriaComponent
+    ModalDeleteCategoriaComponent,
+    ModalCreateCategoriaComponent
   ],
   imports: [
     BrowserModule,
