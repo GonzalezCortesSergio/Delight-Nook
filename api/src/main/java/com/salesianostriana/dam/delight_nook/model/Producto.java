@@ -1,16 +1,10 @@
 package com.salesianostriana.dam.delight_nook.model;
 
-import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.Fetch;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Objects;
 
@@ -40,31 +34,10 @@ public class Producto {
 
     private boolean deleted;
 
-    @ManyToOne(
-            fetch = FetchType.LAZY
-    )
+    @ManyToOne
     private Categoria categoria;
 
     private String proveedor;
-
-    public static Specification<Producto> filterByCategoria(SearchCriteria criteria) {
-
-        return ((root, query, criteriaBuilder) -> {
-
-            if(criteria.key().equalsIgnoreCase("categoria") && criteria.operation().equalsIgnoreCase(":")) {
-                /*Join<Producto, Categoria> joinCategoria = root.join("categoria", JoinType.INNER);
-                return criteriaBuilder.like(
-                        joinCategoria.get("nombre"), "%" +criteria.value() + "%");
-                        */
-                root.fetch("categoria");
-                return criteriaBuilder.like(
-                    root.get("categoria").get("nombre"), "%" + criteria.value().toString() + "%"
-                );
-            }
-
-            return null;
-        });
-    }
 
     @Override
     public final boolean equals(Object o) {
