@@ -14,7 +14,7 @@ export class AdminHomePageComponent implements OnInit{
   role = localStorage.getItem("role");
     
   ngOnInit(): void {
-    if(!this.role)
+    if(!this.role || this.role !== "ADMIN")
       this.router.navigateByUrl("/login");
   }
 
@@ -26,23 +26,9 @@ export class AdminHomePageComponent implements OnInit{
         this.router.navigateByUrl("/login");
       },
       error: () => {
-        this.refrescarToken();
+        this.usuarioService.refreshToken(() => this.cerrarSesion());
       }
     })
   }
 
-  refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.cerrarSesion();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    })
-  }
 }

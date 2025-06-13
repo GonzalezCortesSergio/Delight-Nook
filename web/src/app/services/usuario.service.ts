@@ -2,13 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateUsuario, LoginRequest, Usuario, UsuarioResponse, ValidateUsuario } from '../models/usuario';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   private baseUrl = "http://localhost:8080/api/usuario";
 
@@ -21,12 +22,23 @@ export class UsuarioService {
   }
 
 
-  refreshToken(): Observable<Usuario> {
-    return this.http.post<Usuario>(`${this.baseUrl}/auth/refresh/token`,
+  refreshToken(method: Function) {
+    this.http.post<Usuario>(`${this.baseUrl}/auth/refresh/token`,
       {
         "refreshToken": localStorage.getItem("refreshToken")
       }
-    );
+    )
+    .subscribe({
+      next: res => {
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("refreshToken", res.refreshToken);
+        method();
+      },
+      error: () => {
+        localStorage.clear();
+        this.router.navigateByUrl("/login");
+      }
+    });
   }
 
   findAll(page: number): Observable<UsuarioResponse> {

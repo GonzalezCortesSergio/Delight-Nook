@@ -52,7 +52,7 @@ export class CajaDetailsPageComponent implements OnInit{
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.cargarCaja());
+          this.usuarioService.refreshToken(() => this.cargarCaja());
         }
 
         else if(errorResponse.status == 400) {
@@ -77,7 +77,7 @@ export class CajaDetailsPageComponent implements OnInit{
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.cargarVentas());
+          this.usuarioService.refreshToken(() => this.cargarVentas());
         }
 
         else if(errorResponse.status == 404) {
@@ -91,20 +91,6 @@ export class CajaDetailsPageComponent implements OnInit{
     this.cargarVentas();
   }
 
-  private refrescarToken(method: Function) {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        method();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    })
-  }
 
   openModalEditCaja(id: number) {
     const modalRef = this.modalService.open(ModalEditCajaComponent);

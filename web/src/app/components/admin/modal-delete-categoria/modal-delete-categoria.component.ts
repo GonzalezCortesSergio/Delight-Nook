@@ -1,7 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { CategoriaService } from '../../../services/categoria.service';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router } from '@angular/router';
 import { Categoria } from '../../../models/categoria';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorResponse } from '../../../models/error';
@@ -13,7 +12,7 @@ import { ErrorResponse } from '../../../models/error';
 })
 export class ModalDeleteCategoriaComponent {
 
-  constructor(private categoriaService: CategoriaService, private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private categoriaService: CategoriaService, private usuarioService: UsuarioService) { }
 
   private activeModal = inject(NgbActiveModal);
 
@@ -30,7 +29,7 @@ export class ModalDeleteCategoriaComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.borrarCategoria());
         }
       } 
     });
@@ -40,18 +39,4 @@ export class ModalDeleteCategoriaComponent {
     this.activeModal.close();
   }
 
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.borrarCategoria();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    });
-  }
 }

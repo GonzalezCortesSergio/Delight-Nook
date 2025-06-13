@@ -1,8 +1,6 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { VentaService } from '../../../services/venta.service';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { VentaDetails } from '../../../models/venta';
 import { ErrorResponse } from '../../../models/error';
 
@@ -13,7 +11,7 @@ import { ErrorResponse } from '../../../models/error';
 })
 export class ModalDetailsVentaComponent implements OnInit{
 
-  constructor(private ventaService: VentaService, private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private ventaService: VentaService, private usuarioService: UsuarioService) { }
 
   @Input()
   idVenta: string | null = null;
@@ -35,25 +33,11 @@ export class ModalDetailsVentaComponent implements OnInit{
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.cargarVenta());
         }
       }
     })
   }
-  
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.cargarVenta();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    })
-  }
+
 
 }
