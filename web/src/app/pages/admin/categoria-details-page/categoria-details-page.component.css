@@ -1,0 +1,30 @@
+.mensaje-error {
+    margin-top: 12%;
+}
+
+.titulo-categorias-hijas {
+    margin-top: -2%;
+    margin-left: 79%;
+}
+
+.bi-arrow-left {
+    font-size: 40pt;
+    margin-left: 4%;
+}
+
+.contenido {
+    margin-top: 3%;
+    overflow: auto;
+    height: 63vh;
+    width: 90%;
+}
+
+.card {
+    height: 200px;
+}
+
+.no-categorias {
+    position: relative; 
+    top: 5.5%;
+    height: 20vh;
+}
