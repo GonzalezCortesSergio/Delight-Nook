@@ -6,12 +6,13 @@ import com.salesianostriana.dam.delight_nook.dto.producto.GetProductoDto;
 import com.salesianostriana.dam.delight_nook.error.CategoriaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
 import com.salesianostriana.dam.delight_nook.model.Producto;
-import com.salesianostriana.dam.delight_nook.query.ProductoSpecificationBuilder;
+import com.salesianostriana.dam.delight_nook.model.Stock;
+import com.salesianostriana.dam.delight_nook.query.ProductoFilterDTO;
 import com.salesianostriana.dam.delight_nook.repository.CategoriaRepository;
 import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
-import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
 import com.salesianostriana.dam.delight_nook.util.files.model.FileMetadata;
 import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,8 @@ public class ProductoService {
     private final CategoriaRepository categoriaRepository;
     private final StorageService storageService;
     private final StockService stockService;
+
+    private static final String NOT_FOUND_MESSAGE = "No se han encontrado productos";
 
     @Transactional
     public Producto create(CreateProductoDto productoDto) {
@@ -52,34 +53,35 @@ public class ProductoService {
         );
     }
 
-    public Page<GetProductoDto> search(List<SearchCriteria> searchCriteriaList, Pageable pageable) {
+    public Page<GetProductoDto> search(ProductoFilterDTO filterDTO, Pageable pageable) {
 
-        ProductoSpecificationBuilder productoSpecificationBuilder
-                = new ProductoSpecificationBuilder(searchCriteriaList);
+        Page<Producto> productos = productoRepository.findAll(filterDTO.obtainFilterSpecification(), pageable);
 
-        Specification<Producto> where = productoSpecificationBuilder.build();
+        if(productos.isEmpty())
+            throw new ProductoNoEncontradoException(NOT_FOUND_MESSAGE);
 
-        Page<Producto> result = productoRepository.findAll(where, pageable);
-
-        if(result.isEmpty())
-            throw new ProductoNoEncontradoException("No se han encontrado productos");
-
-        return result.map(producto -> GetProductoDto.of(producto, getImageUrl(producto.getImagen())));
-
+        return productos.map(producto -> GetProductoDto.of(producto, getImageUrl(producto.getImagen())));
     }
 
-    public Page<GetProductoDto> searchStock(List<SearchCriteria> searchCriteriaList, Pageable pageable) {
+    public Page<GetProductoDto> searchStock(ProductoFilterDTO filterDTO, Pageable pageable) {
 
-        ProductoSpecificationBuilder productoSpecificationBuilder =
-                new ProductoSpecificationBuilder(searchCriteriaList);
-        Specification<Producto> where = productoSpecificationBuilder.build();
+        Specification<Producto> specification = ((root, query, cb) -> {
 
-        Page<Producto> result = productoRepository.findAllProductoStock(where, pageable);
+            Subquery<Long> stockSubquery = query.subquery(Long.class);
+            Root<Stock> stockRoot = stockSubquery.from(Stock.class);
 
-        if(result.isEmpty())
-            throw new ProductoNoEncontradoException("No se han encontrado productos");
+            stockSubquery.select(stockRoot.get("producto").get("id"));
+            return cb.in(root.get("id")).value(stockSubquery);
+        });
 
-        return result.map(producto -> GetProductoDto.of(producto, getImageUrl(producto.getImagen())));
+        specification = specification.and(filterDTO.obtainFilterSpecification());
+
+        Page<Producto> productos = productoRepository.findAll(specification, pageable);
+
+        if(productos.isEmpty())
+            throw new ProductoNoEncontradoException(NOT_FOUND_MESSAGE);
+
+        return productos.map(producto -> GetProductoDto.of(producto, getImageUrl(producto.getImagen())));
     }
 
     @Transactional
