@@ -21,6 +21,8 @@ import { CajaDetailsPageComponent } from './pages/admin/caja-details-page/caja-d
 import { ModalCreateCajaComponent } from './components/admin/modal-create-caja/modal-create-caja.component';
 import { ModalDetailsVentaComponent } from './components/admin/modal-details-venta/modal-details-venta.component';
 import { CategoriasListPageComponent } from './pages/admin/categorias-list-page/categorias-list-page.component';
+import { CategoriaDetailsPageComponent } from './pages/admin/categoria-details-page/categoria-details-page.component';
+import { ModalDeleteCategoriaComponent } from './components/admin/modal-delete-categoria/modal-delete-categoria.component';
 
 
 @NgModule({
@@ -40,7 +42,9 @@ import { CategoriasListPageComponent } from './pages/admin/categorias-list-page/
     CajaDetailsPageComponent,
     ModalCreateCajaComponent,
     ModalDetailsVentaComponent,
-    CategoriasListPageComponent
+    CategoriasListPageComponent,
+    CategoriaDetailsPageComponent,
+    ModalDeleteCategoriaComponent
   ],
   imports: [
     BrowserModule,

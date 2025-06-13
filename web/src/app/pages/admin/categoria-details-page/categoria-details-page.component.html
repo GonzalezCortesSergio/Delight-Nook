@@ -1,0 +1,35 @@
+@if(errorMessage){
+    <i class="bi bi-arrow-left" routerLink="/admin/categorias" style="position: relative; top: 10.5%;"></i>
+    <h3 class="display-6 text-center bg-danger py-5 mensaje-error text-light">{{errorMessage}}</h3>
+}
+
+
+@else {
+    <h2 class="display-6 text-center mt-3">{{categoria!.categoria.nombre}}</h2>
+
+    <i class="bi bi-arrow-left" routerLink="/admin/categorias"></i>
+
+    <h4 class="titulo-categorias-hijas">Categorías hijas: </h4>
+
+
+    <div class="contenido row mx-auto">
+
+        @for (categoria of categoria!.categoriasHijas; track $index) {
+            <div class="col-4 mx-auto mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">{{categoria.nombre}}</h4>
+                    </div>
+                    <div class="d-flex justify-content-between m-2">
+                        <button class="btn btn-wintery" (click)="mostrarDetalles(categoria)">Ver más</button>
+                        <button class="btn btn-metal-pink" (click)="openModalDelete(categoria)">Borrar</button>
+                    </div>
+                </div>
+            </div>
+        }
+        @if(categoria!.categoriasHijas.length == 0) {
+            <h3 class="display-6 text-center bg-wintery py-5 no-categorias">Esta categoría no tiene categorías hijas</h3>
+        }
+</div>
+
+}
