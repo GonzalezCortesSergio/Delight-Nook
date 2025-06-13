@@ -14,3 +14,13 @@ export interface CategoriaDetails {
     categoria: Categoria;
     categoriasHijas: Categoria[];
 }
+
+export class CreateCategoriaHija {
+    private categoriaMadreId: number;
+    private categoriaNombre: string;
+
+    constructor(categoriaMadreId: number, categoriaNombre: string) {
+        this.categoriaMadreId = categoriaMadreId;
+        this.categoriaNombre = categoriaNombre;
+    }
+}
