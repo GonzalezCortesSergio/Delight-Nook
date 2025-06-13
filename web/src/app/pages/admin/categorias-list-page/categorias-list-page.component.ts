@@ -37,19 +37,8 @@ export class CategoriasListPageComponent implements OnInit{
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.cargarCategorias());
         }
-      }
-    })
-  }
-
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);    
-        this.cargarCategorias();  
       }
     })
   }

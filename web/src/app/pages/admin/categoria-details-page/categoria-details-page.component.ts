@@ -43,7 +43,7 @@ export class CategoriaDetailsPageComponent implements OnInit{
         console.log(errorResponse);
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.cargarCategoria());
         }
 
         else if(errorResponse.status == 400) {
@@ -53,17 +53,6 @@ export class CategoriaDetailsPageComponent implements OnInit{
         else {
           this.errorMessage = errorResponse.detail;
         }
-      }
-    })
-  }
-
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.cargarCategoria();
       }
     })
   }
