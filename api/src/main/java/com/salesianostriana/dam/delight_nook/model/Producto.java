@@ -40,31 +40,10 @@ public class Producto {
 
     private boolean deleted;
 
-    @ManyToOne(
-            fetch = FetchType.LAZY
-    )
+    @ManyToOne
     private Categoria categoria;
 
     private String proveedor;
-
-    public static Specification<Producto> filterByCategoria(SearchCriteria criteria) {
-
-        return ((root, query, criteriaBuilder) -> {
-
-            if(criteria.key().equalsIgnoreCase("categoria") && criteria.operation().equalsIgnoreCase(":")) {
-                /*Join<Producto, Categoria> joinCategoria = root.join("categoria", JoinType.INNER);
-                return criteriaBuilder.like(
-                        joinCategoria.get("nombre"), "%" +criteria.value() + "%");
-                        */
-                root.fetch("categoria");
-                return criteriaBuilder.like(
-                    root.get("categoria").get("nombre"), "%" + criteria.value().toString() + "%"
-                );
-            }
-
-            return null;
-        });
-    }
 
     @Override
     public final boolean equals(Object o) {

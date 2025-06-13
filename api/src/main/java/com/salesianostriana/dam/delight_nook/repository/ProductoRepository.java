@@ -29,11 +29,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Long>,
 
     @Override
     @Nonnull
-    @Query("""
-            SELECT p
-            FROM Producto p
-            LEFT JOIN FETCH p.categoria
-            """)
     Page<Producto> findAll(Specification<Producto> spec, @Nullable Pageable pageable);
 
     @Override

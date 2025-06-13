@@ -3,6 +3,7 @@ package com.salesianostriana.dam.delight_nook.controller;
 import com.salesianostriana.dam.delight_nook.dto.producto.*;
 import com.salesianostriana.dam.delight_nook.model.Producto;
 import com.salesianostriana.dam.delight_nook.model.Stock;
+import com.salesianostriana.dam.delight_nook.query.ProductoFilterDTO;
 import com.salesianostriana.dam.delight_nook.service.ProductoService;
 import com.salesianostriana.dam.delight_nook.service.StockService;
 import com.salesianostriana.dam.delight_nook.user.model.Almacenero;
@@ -308,26 +309,32 @@ public class ProductoController {
                     )
             }
     )
-    @GetMapping
+    @PostMapping
     public Page<GetProductoDto> buscar(
-            @Parameter(in = ParameterIn.QUERY,
-            description = "Valor de filtrado",
-            example = "precioUnidad<12,categoria:Pantalones")
-            @RequestParam(value = "search", required = false) String search, @PageableDefault Pageable pageable) {
-
-        List<SearchCriteria> params = new ArrayList<>();
-
-        if(search != null) {
-            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-            Matcher matcher = pattern.matcher(search + ",");
-
-            while (matcher.find()) {
-                params.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
-            }
-        }
-
-        return productoService.search(params, pageable);
-
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "DTO para filtrar los productos",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductoFilterDTO.class),
+                                    examples = {
+                                            @ExampleObject(
+                                                    value = """
+                                                                "nombre": "A",
+                                                                "categoria": "A",
+                                                                "proveedor": "",
+                                                                "precioMin": 0,
+                                                                "precioMax": 0
+                                                            """
+                                            )
+                                    }
+                            )
+                    }
+            )
+            @RequestBody @Validated ProductoFilterDTO filterDTO,
+            @PageableDefault Pageable pageable) {
+        return productoService.search(filterDTO, pageable);
     }
 
     @Operation(summary = "Se editan algunos valores de un producto")
@@ -1008,25 +1015,32 @@ public class ProductoController {
                     )
             }
     )
-    @GetMapping("/cajero/list")
+    @PostMapping("/cajero/list")
     public Page<GetProductoDto> searchStock(
-            @Parameter(in = ParameterIn.QUERY,
-            description = "Filtro de productos",
-            schema = @Schema(type = "string"),
-            example="precioUnidad<20,proveedor:Ban")
-            @RequestParam(required = false, name = "search") String search, @PageableDefault Pageable pageable) {
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "DTO para filtrar los productos",
+                    required = true,
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ProductoFilterDTO.class),
+                                    examples = {
+                                            @ExampleObject(
+                                                    value = """
+                                                                "nombre": "A",
+                                                                "categoria": "A",
+                                                                "proveedor": "",
+                                                                "precioMin": 0,
+                                                                "precioMax": 0
+                                                            """
+                                            )
+                                    }
+                            )
+                    }
+            )
+            @RequestBody ProductoFilterDTO filterDTO,
+            @PageableDefault Pageable pageable) {
 
-        List<SearchCriteria> params = new ArrayList<>();
-
-        if(search != null) {
-            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-            Matcher matcher = pattern.matcher(search + ",");
-
-            while (matcher.find()) {
-                params.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
-            }
-        }
-
-        return productoService.searchStock(params, pageable);
+        return productoService.searchStock(filterDTO, pageable);
     }
 }
