@@ -12,9 +12,7 @@ import com.salesianostriana.dam.delight_nook.repository.CategoriaRepository;
 import com.salesianostriana.dam.delight_nook.repository.ProductoRepository;
 import com.salesianostriana.dam.delight_nook.util.files.model.FileMetadata;
 import com.salesianostriana.dam.delight_nook.util.files.service.StorageService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,16 +67,16 @@ public class ProductoService {
 
         Specification<Producto> specification = ((root, query, cb) -> {
 
-            query.distinct(true);
-            CriteriaQuery<Producto> criteriaQuery = cb.createQuery(Producto.class);
+            Subquery<Long> stockSubquery = query.subquery(Long.class);
+            Root<Stock> stockRoot = stockSubquery.from(Stock.class);
 
-            CriteriaQuery<Stock> criteriaQueryStock = cb.createQuery(Stock.class);
-
-            criteriaQuery.select(root)
-                    .where(root.get("id")
-                            .in(criteriaQueryStock.select(root.get("producto").get("id"))));
+            stockSubquery.select(stockRoot.get("producto").get("id"));
+            return cb.in(root.get("id")).value(stockSubquery);
         });
-        Page<Producto> productos = productoRepository.findAllProductoStock(filterDTO.obtainFilterSpecification(), pageable);
+
+        specification = specification.and(filterDTO.obtainFilterSpecification());
+
+        Page<Producto> productos = productoRepository.findAll(specification, pageable);
 
         if(productos.isEmpty())
             throw new ProductoNoEncontradoException(NOT_FOUND_MESSAGE);

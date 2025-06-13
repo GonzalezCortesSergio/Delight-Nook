@@ -15,22 +15,6 @@ import java.util.Optional;
 public interface ProductoRepository extends JpaRepository<Producto, Long>,
         JpaSpecificationExecutor<Producto> {
 
-    @Query("""
-            SELECT p
-            FROM Producto p
-            LEFT JOIN FETCH p.categoria
-            WHERE p.id IN (
-                SELECT p.id
-                FROM Stock s
-                LEFT JOIN s.producto p
-            )
-            """)
-    Page<Producto> findAllProductoStock(Specification<Producto> specification, Pageable pageable);
-
-    @Override
-    @Nonnull
-    Page<Producto> findAll(Specification<Producto> spec, @Nullable Pageable pageable);
-
     @Override
     @Nonnull
     @Query("""

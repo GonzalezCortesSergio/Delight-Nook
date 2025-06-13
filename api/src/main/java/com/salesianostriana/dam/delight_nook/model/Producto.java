@@ -1,16 +1,10 @@
 package com.salesianostriana.dam.delight_nook.model;
 
-import com.salesianostriana.dam.delight_nook.util.SearchCriteria;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.Fetch;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Objects;
 
