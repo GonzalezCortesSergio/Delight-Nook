@@ -20,10 +20,8 @@ public class ProductoFilterDTO {
 
     private String proveedor;
 
-    @DecimalMin("0.01")
     private Double precioMin;
 
-    @DecimalMin("0.01")
     private Double precioMax;
 
     public Specification<Producto> obtainFilterSpecification() {
@@ -47,12 +45,12 @@ public class ProductoFilterDTO {
                         cb.like(root.get("proveedor"), this.proveedor + "%"));
             }
 
-            if(precioMin != null && precioMin != 0) {
+            if(precioMin != null && precioMin > 0) {
                 predicate = cb.and(predicate,
                         cb.greaterThanOrEqualTo(root.get("precioUnidad"), this.precioMin));
             }
 
-            if(precioMax != null && precioMax != 0) {
+            if(precioMax != null && precioMax > 0) {
                 predicate = cb.and(predicate,
                         cb.lessThanOrEqualTo(root.get("precioUnidad"), this.precioMax));
             }

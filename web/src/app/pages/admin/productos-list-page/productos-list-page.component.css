@@ -1,0 +1,17 @@
+.card {
+    height: 35vh;  
+}
+
+.cartas {
+    width: 35%;
+}
+
+.contenido {
+    width: 70%;
+    margin-top: 2%;
+    margin-left: -20%;
+}
+
+img {
+    width: 15%;
+}
