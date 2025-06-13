@@ -29,7 +29,6 @@ export class CategoriaService {
     );
   }
 
-
   private createHeaders(): HttpHeaders {
     return new HttpHeaders(
       {
