@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router } from '@angular/router';
 import { CreateUsuario } from '../../../models/usuario';
 import { ErrorResponse } from '../../../models/error';
 
@@ -10,7 +9,7 @@ import { ErrorResponse } from '../../../models/error';
   styleUrl: './register-usuario-page.component.css'
 })
 export class RegisterUsuarioPageComponent {
-  constructor(private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private usuarioService: UsuarioService) { }
 
   username = "";
   email = "";
@@ -39,7 +38,7 @@ export class RegisterUsuarioPageComponent {
           const errorResponse: ErrorResponse = err.error;
 
           if(errorResponse.status == 401) {
-            this.refrescarToken();
+            this.usuarioService.refreshToken(() => this.register());
           }
 
           if(errorResponse.status == 500) {
@@ -74,18 +73,5 @@ export class RegisterUsuarioPageComponent {
     this.created = false;
   }
 
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToke", res.refreshToken);
-        this.register();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    });
-  }
+
 }

@@ -1,6 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorResponse } from '../../../models/error';
 
@@ -11,7 +10,7 @@ import { ErrorResponse } from '../../../models/error';
 })
 export class ModalDeleteUserComponent {
 
-  constructor(private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private usuarioService: UsuarioService) { }
 
   private activeModal = inject(NgbActiveModal);
 
@@ -30,27 +29,12 @@ export class ModalDeleteUserComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.borrarUsuario());
         }
 
         if(errorResponse.status == 403) {
           this.error = true;
         }
-      }
-    })
-  }
-
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.borrarUsuario();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
       }
     })
   }

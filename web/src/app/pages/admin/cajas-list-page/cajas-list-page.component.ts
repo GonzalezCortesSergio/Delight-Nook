@@ -41,23 +41,8 @@ export class CajasListPageComponent implements OnInit {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.cargarCajas());
         }
-      }
-    })
-  }
-
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.cargarCajas();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
       }
     })
   }

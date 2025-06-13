@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CajaService } from '../../../services/caja.service';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateCaja } from '../../../models/caja';
 import { ErrorResponse } from '../../../models/error';
@@ -13,7 +12,7 @@ import { ErrorResponse } from '../../../models/error';
 })
 export class ModalCreateCajaComponent {
 
-  constructor(private cajaService: CajaService, private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private cajaService: CajaService, private usuarioService: UsuarioService) { }
 
   private activeModal = inject(NgbActiveModal);
 
@@ -34,7 +33,7 @@ export class ModalCreateCajaComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.crearCaja());
         }
 
         if(errorResponse.status == 400) {
@@ -57,16 +56,5 @@ export class ModalCreateCajaComponent {
       this.nombreCaja,
       this.dineroCaja
     );
-  }
-
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.crearCaja();
-      }
-    })
   }
 }

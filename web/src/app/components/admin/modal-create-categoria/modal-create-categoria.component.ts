@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CategoriaService } from '../../../services/categoria.service';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router } from '@angular/router';
 import { Categoria, CreateCategoriaHija } from '../../../models/categoria';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorResponse } from '../../../models/error';
@@ -13,7 +12,7 @@ import { ErrorResponse } from '../../../models/error';
 })
 export class ModalCreateCategoriaComponent implements OnInit{
 
-  constructor(private categoriaService: CategoriaService, private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private categoriaService: CategoriaService, private usuarioService: UsuarioService) { }
 
   private activeModal = inject(NgbActiveModal);
 
@@ -43,7 +42,7 @@ export class ModalCreateCategoriaComponent implements OnInit{
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.cargarCategorias());
+          this.usuarioService.refreshToken(() => this.cargarCategorias());
         }
       }
     })
@@ -69,7 +68,7 @@ export class ModalCreateCategoriaComponent implements OnInit{
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.createCategoriaBase());
+          this.usuarioService.refreshToken(() => this.createCategoriaBase());
         }
 
         if(errorResponse.status == 400) {
@@ -90,7 +89,7 @@ export class ModalCreateCategoriaComponent implements OnInit{
         console.log(errorResponse);
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.createCategoriaHija());
+          this.usuarioService.refreshToken(() => this.createCategoriaHija());
         }
 
         if(errorResponse.status == 400) {
@@ -103,22 +102,6 @@ export class ModalCreateCategoriaComponent implements OnInit{
       }
     })
   }
-
-  private refrescarToken(method: Function) {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        method();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    });  
-  }
-
 
   private toCreateCategoriaHija(): CreateCategoriaHija {
     return new CreateCategoriaHija(

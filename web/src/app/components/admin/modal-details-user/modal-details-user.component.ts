@@ -3,7 +3,6 @@ import { UsuarioService } from '../../../services/usuario.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Usuario } from '../../../models/usuario';
 import { ErrorResponse } from '../../../models/error';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-details-user',
@@ -12,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class ModalDetailsUserComponent {
 
-  constructor(private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private usuarioService: UsuarioService) { }
 
   activeModal = inject(NgbActiveModal);
 
@@ -45,7 +44,7 @@ export class ModalDetailsUserComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.addRoleAdmin());
+          this.usuarioService.refreshToken(() => this.addRoleAdmin());
         }
       }
     })
@@ -62,7 +61,7 @@ export class ModalDetailsUserComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.removeRoleAdmin());
+          this.usuarioService.refreshToken(() => this.removeRoleAdmin());
         }
       }
     })
@@ -79,7 +78,7 @@ export class ModalDetailsUserComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.disableUser());
+          this.usuarioService.refreshToken(() => this.disableUser());
         }
         
         if(errorResponse.status == 403) {
@@ -99,7 +98,7 @@ export class ModalDetailsUserComponent {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken(() => this.enableUser());
+          this.usuarioService.refreshToken(() => this.enableUser());
         }
 
         if(errorResponse.status == 400) {
@@ -109,18 +108,4 @@ export class ModalDetailsUserComponent {
     })
   }
 
-  private refrescarToken(method: () => void) {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        method();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    })
-  }
 }
