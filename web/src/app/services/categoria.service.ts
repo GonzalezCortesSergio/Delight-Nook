@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CategoriaDetails, CategoriaResponse } from '../models/categoria';
+import { CategoriaDetails, CategoriaResponse, CreateCategoriaHija } from '../models/categoria';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,24 @@ export class CategoriaService {
       }
     );
   }
+
+  createCategoria(nombre: string) {
+    return this.http.post(`${this.baseUrl}/admin/crear/${nombre}`,
+      null,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  createCategoriaHija(createCategoriaHija: CreateCategoriaHija) {
+    return this.http.post(`${this.baseUrl}/admin/crearHija`,
+      createCategoriaHija,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  } 
 
   private createHeaders(): HttpHeaders {
     return new HttpHeaders(
