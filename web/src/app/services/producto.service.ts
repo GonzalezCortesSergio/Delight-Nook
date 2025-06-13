@@ -1,0 +1,16 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ProductoResponse } from '../models/producto';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductoService {
+
+  constructor(private http: HttpClient) { }
+
+  findAll(page: number): Observable<ProductoResponse> {
+
+  }
+}
