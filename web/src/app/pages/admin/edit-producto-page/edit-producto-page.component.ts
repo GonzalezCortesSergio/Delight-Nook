@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ProductoService } from '../../../services/producto.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Router } from '@angular/router';
-import { ProductoDetails } from '../../../models/producto';
 import { ErrorResponse } from '../../../models/error';
 import { CategoriaService } from '../../../services/categoria.service';
 import { Categoria } from '../../../models/categoria';
@@ -17,9 +16,7 @@ export class EditProductoPageComponent {
   constructor(private productoService: ProductoService, private usuarioService: UsuarioService, private categoriaService: CategoriaService, private router: Router) { }
 
   id = 0;
-  
-  producto: ProductoDetails | null = null;
-  
+
   nombreProducto = "";
   
   precioUnitario = 0;
@@ -46,7 +43,11 @@ export class EditProductoPageComponent {
     this.productoService.findById(this.id)
     .subscribe({
       next: res => {
-        this.producto = res;
+        this.nombreProducto = res.nombre;
+        this.precioUnitario = res.precioUnidad;
+        this.descripcion = res.descripcion;
+        this.proveedor = res.proveedor;
+        this.categoriaId = res.categoria.id;
       },
       error: err => {
         const errorResponse: ErrorResponse = err.error;

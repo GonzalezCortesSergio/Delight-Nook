@@ -13,6 +13,7 @@ import { CategoriaDetailsPageComponent } from './pages/admin/categoria-details-p
 import { ProductosListPageComponent } from './pages/admin/productos-list-page/productos-list-page.component';
 import { ProductoDetailsPageComponent } from './pages/admin/producto-details-page/producto-details-page.component';
 import { RegisterProductoPageComponent } from './pages/admin/register-producto-page/register-producto-page.component';
+import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit-producto-page.component';
 
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
   {path: "admin/productos/detalles/:id", component: ProductoDetailsPageComponent},
   {path: "admin/alta/usuario", component: RegisterUsuarioPageComponent},
   {path: "admin/alta/producto", component: RegisterProductoPageComponent},
+  {path: "admin/editar/producto/:id", component: EditProductoPageComponent},
   {path: "", pathMatch: "full", redirectTo: "/login"}
 ];
 

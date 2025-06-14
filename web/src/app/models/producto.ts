@@ -1,3 +1,4 @@
+import { Categoria } from "./categoria";
 import { Page } from "./page.interface";
 
 export interface Producto {
@@ -34,7 +35,7 @@ export interface ProductoDetails {
   nombre: string;
   precioUnidad: number;
   descripcion: string;
-  categoria: string;
+  categoria: Categoria;
   proveedor: string;
   imagen: string;
 }
