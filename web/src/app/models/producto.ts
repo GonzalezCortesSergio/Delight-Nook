@@ -38,3 +38,19 @@ export interface ProductoDetails {
   proveedor: string;
   imagen: string;
 }
+
+export class CreateProducto {
+  private nombre: string;
+  private precioUnidad: number;
+  private descripcion: string;
+  private categoriaId: number;
+  private proveedor: string;
+
+  constructor(nombre: string, precioUnidad: number, descripcion: string, categoriaId: number, proveedor: string) {
+    this.nombre = nombre;
+    this.precioUnidad = precioUnidad;
+    this.descripcion = descripcion;
+    this.categoriaId = categoriaId;
+    this.proveedor = proveedor;
+  }
+}
