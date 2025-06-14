@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.delight_nook.dto.producto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.salesianostriana.dam.delight_nook.dto.categoria.GetCategoriaDto;
 import com.salesianostriana.dam.delight_nook.model.Producto;
 
 public record GetProductoDetailsDto(
@@ -9,7 +10,7 @@ public record GetProductoDetailsDto(
         String descripcion,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String imagen,
-        String categoria,
+        GetCategoriaDto categoria,
         String proveedor
 ) {
 
@@ -20,7 +21,7 @@ public record GetProductoDetailsDto(
                 producto.getPrecioUnidad(),
                 producto.getDescripcion(),
                 imageUrl,
-                producto.getCategoria().getNombre(),
+                GetCategoriaDto.of(producto.getCategoria()),
                 producto.getProveedor()
         );
     }
