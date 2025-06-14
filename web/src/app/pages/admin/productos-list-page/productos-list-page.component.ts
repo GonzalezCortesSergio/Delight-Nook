@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ProductoService } from '../../../services/producto.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Producto, ProductoFilter, ProductoResponse } from '../../../models/producto';
 import { ErrorResponse } from '../../../models/error';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDeleteProductoComponent } from '../../../components/admin/modal-delete-producto/modal-delete-producto.component';
 
 @Component({
   selector: 'app-productos-list-page',
@@ -13,6 +15,8 @@ import { Router } from '@angular/router';
 export class ProductosListPageComponent implements OnInit{
 
   constructor(private productoService: ProductoService, private usuarioService: UsuarioService, private router: Router) { }
+
+  private modalService = inject(NgbModal);
 
   productos: ProductoResponse | null = null;
 
@@ -66,7 +70,13 @@ export class ProductosListPageComponent implements OnInit{
   }
 
   openModalDelete(producto: Producto) {
+    const modalRef = this.modalService.open(ModalDeleteProductoComponent);
 
+    modalRef.componentInstance.producto = producto;
+
+    modalRef.closed.subscribe(() => {
+      this.cargarProductos();
+    })
   }
 
   private toProductoFilter() {

@@ -26,6 +26,7 @@ import { ModalDeleteCategoriaComponent } from './components/admin/modal-delete-c
 import { ModalCreateCategoriaComponent } from './components/admin/modal-create-categoria/modal-create-categoria.component';
 import { ProductosListPageComponent } from './pages/admin/productos-list-page/productos-list-page.component';
 import { ProductoDetailsPageComponent } from './pages/admin/producto-details-page/producto-details-page.component';
+import { ModalDeleteProductoComponent } from './components/admin/modal-delete-producto/modal-delete-producto.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { ProductoDetailsPageComponent } from './pages/admin/producto-details-pag
     ModalDeleteCategoriaComponent,
     ModalCreateCategoriaComponent,
     ProductosListPageComponent,
-    ProductoDetailsPageComponent
+    ProductoDetailsPageComponent,
+    ModalDeleteProductoComponent
   ],
   imports: [
     BrowserModule,
