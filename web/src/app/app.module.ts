@@ -30,6 +30,7 @@ import { ModalDeleteProductoComponent } from './components/admin/modal-delete-pr
 import { RegisterProductoPageComponent } from './pages/admin/register-producto-page/register-producto-page.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
