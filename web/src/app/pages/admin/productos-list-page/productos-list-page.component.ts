@@ -52,6 +52,11 @@ export class ProductosListPageComponent implements OnInit{
     this.cargarProductos();
   }
 
+  cambiarProductosConFiltro() {
+    this.page = 1;
+    this.cargarProductos();
+  }
+
   getImagen(producto: Producto): string {
     return producto.imagen ? producto.imagen : "product-development_8787075.png";
   } 
