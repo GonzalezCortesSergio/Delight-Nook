@@ -39,26 +39,26 @@
         <h4 class="text-center">Filtros:</h4>
         <div class="mb-3">
             <input class="form-control" type="text" placeholder="Nombre" [(ngModel)]="nombre"
-                (input)="cambiarProductos()" />
+                (input)="cambiarProductosConFiltro()" />
         </div>
         <div class="mb-3">
             <input class="form-control" type="text" placeholder="Categoría" [(ngModel)]="categoria"
-                (input)="cambiarProductos()" />
+                (input)="cambiarProductosConFiltro()" />
         </div>
         <div class="mb-3">
             <input class="form-control" type="text" placeholder="Proveedor" [(ngModel)]="proveedor"
-                (input)="cambiarProductos()" />
+                (input)="cambiarProductosConFiltro()" />
         </div>
         <div class="mb-3">
             <label class="form-label" for="precio-min">Precio mínimo:</label>
             <input id="precio-min" class="form-control" type="number" placeholder="Precio mínimo"
-                [(ngModel)]="precioMin" (input)="cambiarProductos()" />
+                [(ngModel)]="precioMin" (input)="cambiarProductosConFiltro()" />
         </div>
 
         <div class="mb-3">
             <label class="form-label" for="precio-max">Precio máximo:</label>
             <input id="precio-max" class="form-control" type="number" placeholder="Precio máximo"
-                [(ngModel)]="precioMax" (input)="cambiarProductos()" />
+                [(ngModel)]="precioMax" (input)="cambiarProductosConFiltro()" />
         </div>
 
     </div>
