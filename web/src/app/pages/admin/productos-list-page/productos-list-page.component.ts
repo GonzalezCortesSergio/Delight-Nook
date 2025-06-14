@@ -24,8 +24,6 @@ export class ProductosListPageComponent implements OnInit{
 
   page = 1;
 
-  errorMessage: string | null = null;
-
   ngOnInit(): void {
     this.cargarProductos();
   }
@@ -46,9 +44,6 @@ export class ProductosListPageComponent implements OnInit{
           this.usuarioService.refreshToken(() => this.cargarProductos());
         }
 
-        else {
-          this.errorMessage = errorResponse.detail;
-        }
       }
     })
   }
