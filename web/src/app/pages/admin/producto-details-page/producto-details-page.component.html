@@ -1,0 +1,30 @@
+@if(errorMessage) {
+
+    <i class="bi bi-arrow-left" style="position: relative; top: 10.7%;" routerLink="/admin/productos"></i>
+    <h2 class="display-6 text-center py-5 bg-metal-pink error-message">{{errorMessage}}</h2>
+}
+
+@else {
+    <h2 class="display-6 text-center mt-3">{{producto?.nombre}}</h2>
+
+    <i class="bi bi-arrow-left" routerLink="/admin/productos"></i>
+
+    <div class="imagen-con-proveedor ms-5 mt-5 w-25">
+        <img [src]="getImagen()" class="w-100" alt="Imagen del producto" />
+        <h4 class="text-center">Proveedor: {{producto?.proveedor}}</h4>
+    </div>
+
+    <div class="info">
+        <div class="d-flex justify-content-around mb">
+            <h5>Precio unitario: {{producto?.precioUnidad | number: "1.0-2"}}€</h5>
+            <h5>Categoria: {{producto?.categoria}}</h5>
+        </div>
+        <div class="mb-5">
+            <h5 class="text-center">Descripción:</h5>
+            <h5 class="text-center">{{producto?.descripcion}}</h5>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-wintery">Editar producto</button>
+        </div>
+    </div>
+}

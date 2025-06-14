@@ -29,3 +29,12 @@ export class ProductoFilter {
     this.precioMax = precioMax;
   }
 }
+
+export interface ProductoDetails {
+  nombre: string;
+  precioUnidad: number;
+  descripcion: string;
+  categoria: string;
+  proveedor: string;
+  imagen: string;
+}
