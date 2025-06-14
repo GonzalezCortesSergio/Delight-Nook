@@ -29,6 +29,14 @@ export class ProductoService {
     );
   }
 
+  deleteById(id: number) {
+    return this.http.delete(`${this.baseUrl}/admin/borrar/${id}`,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
   private createHeaders(): HttpHeaders {
     return new HttpHeaders({
       "Authorization": `Bearer ${localStorage.getItem("token")}`
