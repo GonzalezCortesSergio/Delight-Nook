@@ -10,6 +10,7 @@ import { VerifyUserPageComponent } from './pages/verify-user-page/verify-user-pa
 import { CajaDetailsPageComponent } from './pages/admin/caja-details-page/caja-details-page.component';
 import { CategoriasListPageComponent } from './pages/admin/categorias-list-page/categorias-list-page.component';
 import { CategoriaDetailsPageComponent } from './pages/admin/categoria-details-page/categoria-details-page.component';
+import { ProductosListPageComponent } from './pages/admin/productos-list-page/productos-list-page.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   {path: "admin/usuarios", component: UsuariosListPageComponent},
   {path: "admin/cajas", component: CajasListPageComponent},
   {path: "admin/categorias", component: CategoriasListPageComponent},
+  {path: "admin/productos", component: ProductosListPageComponent},
   {path: "admin/categorias/detalles/:id", component: CategoriaDetailsPageComponent},
   {path: "admin/cajas/detalles/:id", component: CajaDetailsPageComponent},
   {path: "admin/alta/usuario", component: RegisterUsuarioPageComponent},
