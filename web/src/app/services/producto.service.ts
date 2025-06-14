@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductoDetails, ProductoFilter, ProductoResponse } from '../models/producto';
+import { CreateProducto, ProductoDetails, ProductoFilter, ProductoResponse } from '../models/producto';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,15 @@ export class ProductoService {
 
   deleteById(id: number) {
     return this.http.delete(`${this.baseUrl}/admin/borrar/${id}`,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  createProducto(createProducto: CreateProducto) {
+    return this.http.post(`${this.baseUrl}/admin/create`,
+      createProducto,
       {
         headers: this.createHeaders()
       }
