@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductoFilter, ProductoResponse } from '../models/producto';
+import { ProductoDetails, ProductoFilter, ProductoResponse } from '../models/producto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,14 @@ export class ProductoService {
   findAll(page: number, productoFilter: ProductoFilter): Observable<ProductoResponse> {
     return this.http.post<ProductoResponse>(`${this.baseUrl}?page=${page}&size=4`,
       productoFilter,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  findById(id: number): Observable<ProductoDetails> {
+    return this.http.get<ProductoDetails>(`${this.baseUrl}/admin/details/${id}`,
       {
         headers: this.createHeaders()
       }
