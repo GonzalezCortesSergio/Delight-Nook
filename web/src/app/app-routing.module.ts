@@ -12,6 +12,7 @@ import { CategoriasListPageComponent } from './pages/admin/categorias-list-page/
 import { CategoriaDetailsPageComponent } from './pages/admin/categoria-details-page/categoria-details-page.component';
 import { ProductosListPageComponent } from './pages/admin/productos-list-page/productos-list-page.component';
 import { ProductoDetailsPageComponent } from './pages/admin/producto-details-page/producto-details-page.component';
+import { RegisterProductoPageComponent } from './pages/admin/register-producto-page/register-producto-page.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
   {path: "admin/cajas/detalles/:id", component: CajaDetailsPageComponent},
   {path: "admin/productos/detalles/:id", component: ProductoDetailsPageComponent},
   {path: "admin/alta/usuario", component: RegisterUsuarioPageComponent},
+  {path: "admin/alta/producto", component: RegisterProductoPageComponent},
   {path: "", pathMatch: "full", redirectTo: "/login"}
 ];
 
