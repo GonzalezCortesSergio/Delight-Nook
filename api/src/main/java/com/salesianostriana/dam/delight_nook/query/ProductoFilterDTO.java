@@ -21,7 +21,7 @@ public class ProductoFilterDTO {
     private String proveedor;
 
     private Double precioMin;
-
+  
     private Double precioMax;
 
     public Specification<Producto> obtainFilterSpecification() {
