@@ -1,7 +1,10 @@
 package com.salesianostriana.dam.delight_nook.query;
 
+import com.salesianostriana.dam.delight_nook.model.Categoria;
 import com.salesianostriana.dam.delight_nook.model.Producto;
 import com.salesianostriana.dam.delight_nook.security.validation.annotation.MinNotHigherThanMax;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.Getter;
@@ -32,19 +35,22 @@ public class ProductoFilterDTO {
             Predicate predicate = cb.and();
 
             if(StringUtils.hasText(this.nombre)) {
+                Expression<String> nameToLowerCase = cb.lower(root.get("nombre"));
                 predicate = cb.and(predicate,
-                        cb.like(root.get("nombre"), this.nombre + "%"));
+                        cb.like(nameToLowerCase, "%".concat(this.nombre.toLowerCase()).concat("%")));
             }
 
             if(StringUtils.hasText(this.categoria)) {
-                root.fetch("categoria");
+                Join<Producto, Categoria> joinCategoria = root.join("categoria");
+                Expression<String> categoriaNameToLowerCase = cb.lower(joinCategoria.get("nombre"));
                 predicate = cb.and(predicate,
-                        cb.like(root.get("categoria").get("nombre"), this.categoria + "%"));
+                        cb.like(categoriaNameToLowerCase, "%".concat(this.categoria).concat("%")));
             }
 
             if(StringUtils.hasText(this.proveedor)) {
+                Expression<String> proveedorToLowerCase = cb.lower(root.get("proveedor"));
                 predicate = cb.and(predicate,
-                        cb.like(root.get("proveedor"), this.proveedor + "%"));
+                        cb.like(proveedorToLowerCase, "%".concat(this.proveedor.toLowerCase()).concat("%")));
             }
 
             if(precioMin != null && precioMin != 0) {
