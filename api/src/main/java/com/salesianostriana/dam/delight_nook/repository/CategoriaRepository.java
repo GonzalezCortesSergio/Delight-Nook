@@ -14,13 +14,6 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
     boolean existsByNombre(String nombre);
 
-    @Query("""
-            SELECT c
-            FROM Categoria c
-            WHERE c.categoriaPadre IS NULL
-            """)
-    Page<Categoria> findAllCategoriaBase(Pageable pageable);
-
     @Override
     @Nonnull
     @Query("""
