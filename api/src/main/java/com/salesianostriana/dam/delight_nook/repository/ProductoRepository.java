@@ -14,14 +14,4 @@ import java.util.Optional;
 
 public interface ProductoRepository extends JpaRepository<Producto, Long>,
         JpaSpecificationExecutor<Producto> {
-
-    @Override
-    @Nonnull
-    @Query("""
-            SELECT p
-            FROM Producto p
-            LEFT JOIN FETCH p.categoria
-            WHERE p.id = :id
-            """)
-    Optional<Producto> findById(@Nullable Long id);
 }
