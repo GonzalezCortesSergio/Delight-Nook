@@ -124,7 +124,7 @@ export class VentaPageComponent implements OnInit {
     }
   }
 
-  finalizarVenta(id: string) {
+  finalizarVenta() {
     this.ventaService.finalizarVenta()
     .subscribe({
       next: res => {
@@ -135,7 +135,7 @@ export class VentaPageComponent implements OnInit {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.usuarioService.refreshToken(() => this.finalizarVenta(id));
+          this.usuarioService.refreshToken(() => this.finalizarVenta());
         }
       }
     })
