@@ -53,7 +53,7 @@ public class CategoriaService {
 
     public Page<GetCategoriaDto> findAllBase(Pageable pageable) {
 
-        Page<Categoria> result = categoriaRepository.findAllCategoriaBase(pageable);
+        Page<Categoria> result = categoriaRepository.findAll(pageable);
 
         if(result.isEmpty())
             throw new CategoriaNotFoundException("No se han encontrado categorías");
