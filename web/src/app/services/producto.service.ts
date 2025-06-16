@@ -55,6 +55,18 @@ export class ProductoService {
     );
   }
 
+  changeImage(file: File, id: number) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    return this.http.put(`${this.baseUrl}/admin/editImage/${id}`,
+      formData,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
   private createHeaders(): HttpHeaders {
     return new HttpHeaders({
       "Authorization": `Bearer ${localStorage.getItem("token")}`

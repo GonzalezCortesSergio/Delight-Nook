@@ -29,6 +29,7 @@ import { ProductoDetailsPageComponent } from './pages/admin/producto-details-pag
 import { ModalDeleteProductoComponent } from './components/admin/modal-delete-producto/modal-delete-producto.component';
 import { RegisterProductoPageComponent } from './pages/admin/register-producto-page/register-producto-page.component';
 import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit-producto-page.component';
+import { ModalChangeImageProductoComponent } from './components/admin/modal-change-image-producto/modal-change-image-producto.component';
 
 
 
@@ -57,7 +58,8 @@ import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit
     ProductoDetailsPageComponent,
     ModalDeleteProductoComponent,
     RegisterProductoPageComponent,
-    EditProductoPageComponent
+    EditProductoPageComponent,
+    ModalChangeImageProductoComponent
   ],
   imports: [
     BrowserModule,

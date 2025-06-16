@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ProductoService } from '../../../services/producto.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Router } from '@angular/router';
 import { ProductoDetails } from '../../../models/producto';
 import { ErrorResponse } from '../../../models/error';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalChangeImageProductoComponent } from '../../../components/admin/modal-change-image-producto/modal-change-image-producto.component';
 
 @Component({
   selector: 'app-producto-details-page',
@@ -13,6 +15,8 @@ import { ErrorResponse } from '../../../models/error';
 export class ProductoDetailsPageComponent implements OnInit {
 
   constructor(private productoService: ProductoService, private usuarioService: UsuarioService, private router: Router) { }
+
+  private modalService = inject(NgbModal);
 
   id = 0;
 
@@ -56,5 +60,15 @@ export class ProductoDetailsPageComponent implements OnInit {
 
   editProducto() {
     this.router.navigateByUrl(`/admin/editar/producto/${this.id}`);
+  }
+
+  openModalChangeImage() {
+    const modalRef = this.modalService.open(ModalChangeImageProductoComponent);
+
+    modalRef.componentInstance.id = this.id;
+
+    modalRef.closed.subscribe(() => {
+      this.cargarProducto();
+    }); 
   }
 }
