@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { VentaService } from '../../../services/venta.service';
 import { ProductoService } from '../../../services/producto.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { Categoria } from '../../../models/categoria';
 import { Producto, ProductoCantidad, ProductoFilter, ProductoResponse } from '../../../models/producto';
-import { LineaVenta, VentaDetails } from '../../../models/venta';
+import { LineaVenta, Venta, VentaDetails } from '../../../models/venta';
 import { ErrorResponse } from '../../../models/error';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDetailsVentaFinalizadaComponent } from '../../../components/cajero/modal-details-venta-finalizada/modal-details-venta-finalizada.component';
 
 @Component({
   selector: 'app-venta-page',
@@ -17,6 +19,8 @@ export class VentaPageComponent implements OnInit {
 
   constructor(private ventaService: VentaService, private productoService: ProductoService, 
   private usuarioService: UsuarioService, private categoriaService: CategoriaService) { }
+
+  private modalService = inject(NgbModal);
 
   page = 0;
 
@@ -70,7 +74,7 @@ export class VentaPageComponent implements OnInit {
 
   private cargarProductos() {
     this.errorMessage = null;
-    this.productoService.findAll(this.page - 1, new ProductoFilter(this.nombreProducto, this.categoria, "", 0, 0))
+    this.productoService.findAllStock(this.page - 1, new ProductoFilter(this.nombreProducto, this.categoria, "", 0, 0))
     .subscribe({
       next: res => {
         this.productos = res;
@@ -120,17 +124,18 @@ export class VentaPageComponent implements OnInit {
     }
   }
 
-  finalizarVenta() {
+  finalizarVenta(id: string) {
     this.ventaService.finalizarVenta()
     .subscribe({
-      next: () => {
+      next: res => {
+        this.openModalDetails(res);
         this.venta = null;
       },
       error: err => {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.usuarioService.refreshToken(() => this.finalizarVenta());
+          this.usuarioService.refreshToken(() => this.finalizarVenta(id));
         }
       }
     })
@@ -171,6 +176,14 @@ export class VentaPageComponent implements OnInit {
 
   private toProductoCantidad(idProducto: number, cantidad: number = 1) {
     return new ProductoCantidad(idProducto, cantidad);
+  }
+
+  private openModalDetails(venta: VentaDetails) {
+    const modalRef = this.modalService.open(ModalDetailsVentaFinalizadaComponent,
+      {size: "lg"}
+    );
+
+    modalRef.componentInstance.venta = venta;
   }
 
 }
