@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { VentaDetails, VentasCajaResponse } from '../models/venta';
+import { ProductoCantidad } from '../models/producto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,41 @@ export class VentaService {
       {
         headers: this.createHeaders()
       }
+    );
+  }
+
+  getVentaDetailsCajero(id: string): Observable<VentaDetails> {
+    return this.http.get<VentaDetails>(`${this.baseUrl}/detalles/${id}`,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  addProductoToVenta(productoCantidad: ProductoCantidad): Observable<VentaDetails> {
+    return this.http.post<VentaDetails>(`${this.baseUrl}/addProducto`,
+      productoCantidad,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  removeLineaVenta(id: string): Observable<VentaDetails> {
+    return this.http.put<VentaDetails>(`${this.baseUrl}/removeProducto/${id}`,
+      null,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  finalizarVenta(): Observable<VentaDetails> {
+    return this.http.put<VentaDetails>(`${this.baseUrl}/finalizar`,
+      null,
+      {
+        headers: this.createHeaders()
+      } 
     );
   }
 

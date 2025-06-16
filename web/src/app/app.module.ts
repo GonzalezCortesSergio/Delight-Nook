@@ -30,7 +30,10 @@ import { ModalDeleteProductoComponent } from './components/admin/modal-delete-pr
 import { RegisterProductoPageComponent } from './pages/admin/register-producto-page/register-producto-page.component';
 import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit-producto-page.component';
 import { ModalChangeImageProductoComponent } from './components/admin/modal-change-image-producto/modal-change-image-producto.component';
-
+import { NavbarCajeroComponent } from './components/cajero/navbar-cajero/navbar-cajero.component';
+import { VentaPageComponent } from './pages/cajero/venta-page/venta-page.component';
+import { AccessDeniedPageComponent } from './pages/access-denied-page/access-denied-page.component';
+import { ModalDetailsVentaFinalizadaComponent } from './components/cajero/modal-details-venta-finalizada/modal-details-venta-finalizada.component';
 
 
 @NgModule({
@@ -59,7 +62,11 @@ import { ModalChangeImageProductoComponent } from './components/admin/modal-chan
     ModalDeleteProductoComponent,
     RegisterProductoPageComponent,
     EditProductoPageComponent,
-    ModalChangeImageProductoComponent
+    ModalChangeImageProductoComponent,
+    NavbarCajeroComponent,
+    VentaPageComponent,
+    AccessDeniedPageComponent,
+    ModalDetailsVentaFinalizadaComponent
   ],
   imports: [
     BrowserModule,

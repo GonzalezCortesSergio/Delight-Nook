@@ -1,0 +1,78 @@
+.detalles-venta {
+    margin-top: -52%;
+    width: 25%;
+    margin-left: 12%;
+    height: 90vh;
+}
+
+.lineas-venta {
+    height: 65vh;
+    background-color: #EFEFEF;
+}
+
+.linea-venta {
+    height: 15vh;
+    background-color: #EFEFEF;
+    padding: 4%;
+    border-bottom: solid black 1px;
+}
+
+.contenido {
+    margin-top: -50%;
+    margin-left: 40%;
+}
+
+.filtro {
+    margin-left: 65%;
+    align-items: center;
+    margin-top: 5%;
+    width: 30%;
+}
+
+.productos {
+    width: 75%;
+    margin-left: 20%;
+}
+
+.card {
+    height: 25vh; 
+}
+
+img {
+    max-height: 10vh;
+}
+
+select {
+    height: 5.5vh;
+}
+
+i {
+    font-size: 15pt; 
+    font-weight: bold;
+}
+
+.footer-venta {
+    background-color: white;
+    height: 25vh;
+}
+
+.total {
+    padding-top: 10%;
+}
+
+button {
+    background-color: #544137;
+    color: white;
+    width: 60%;
+    margin-top: 4%;
+}
+
+button:hover {
+    background-color: #3d2f28;
+    color: white;
+}
+
+.error-message {
+    margin-right: 3%;
+    margin-top: 15%;
+}

@@ -21,6 +21,15 @@ export class ProductoService {
     );
   }
 
+  findAllStock(page: number, productoFilter: ProductoFilter): Observable<ProductoResponse> {
+    return this.http.post<ProductoResponse>(`${this.baseUrl}/cajero/list?page=${page}&size=4`,
+      productoFilter,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
   findById(id: number): Observable<ProductoDetails> {
     return this.http.get<ProductoDetails>(`${this.baseUrl}/admin/details/${id}`,
       {

@@ -14,25 +14,45 @@ import { ProductosListPageComponent } from './pages/admin/productos-list-page/pr
 import { ProductoDetailsPageComponent } from './pages/admin/producto-details-page/producto-details-page.component';
 import { RegisterProductoPageComponent } from './pages/admin/register-producto-page/register-producto-page.component';
 import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit-producto-page.component';
+import { VentaPageComponent } from './pages/cajero/venta-page/venta-page.component';
+import { roleGuard } from './role.guard';
+import { AccessDeniedPageComponent } from './pages/access-denied-page/access-denied-page.component';
 
 
 const routes: Routes = [
 
-  {path: "login", component: LoginPageComponent},
-  {path: "cajero/login", component: LoginCajeroPageComponent},
-  {path: "usuario/validar", component: VerifyUserPageComponent},
-  {path: "admin/home", component: AdminHomePageComponent},
-  {path: "admin/usuarios", component: UsuariosListPageComponent},
-  {path: "admin/cajas", component: CajasListPageComponent},
-  {path: "admin/categorias", component: CategoriasListPageComponent},
-  {path: "admin/productos", component: ProductosListPageComponent},
-  {path: "admin/categorias/detalles/:id", component: CategoriaDetailsPageComponent},
-  {path: "admin/cajas/detalles/:id", component: CajaDetailsPageComponent},
-  {path: "admin/productos/detalles/:id", component: ProductoDetailsPageComponent},
-  {path: "admin/alta/usuario", component: RegisterUsuarioPageComponent},
-  {path: "admin/alta/producto", component: RegisterProductoPageComponent},
-  {path: "admin/editar/producto/:id", component: EditProductoPageComponent},
-  {path: "", pathMatch: "full", redirectTo: "/login"}
+  { path: "login", component: LoginPageComponent },
+  { path: "login/cajero", component: LoginCajeroPageComponent },
+  { path: "usuario/validar", component: VerifyUserPageComponent },
+  { path: "access-denied", component: AccessDeniedPageComponent },
+  {
+    path: "admin",
+    canActivate: [roleGuard],
+    data: { roles: ["ADMIN"] },
+    children: [
+      { path: "home", component: AdminHomePageComponent },
+      { path: "usuarios", component: UsuariosListPageComponent },
+      { path: "cajas", component: CajasListPageComponent },
+      { path: "categorias", component: CategoriasListPageComponent },
+      { path: "productos", component: ProductosListPageComponent },
+      { path: "categorias/detalles/:id", component: CategoriaDetailsPageComponent },
+      { path: "cajas/detalles/:id", component: CajaDetailsPageComponent },
+      { path: "productos/detalles/:id", component: ProductoDetailsPageComponent },
+      { path: "alta/usuario", component: RegisterUsuarioPageComponent },
+      { path: "alta/producto", component: RegisterProductoPageComponent },
+      { path: "editar/producto/:id", component: EditProductoPageComponent }
+    ]
+  }
+  ,
+  {
+    path: "cajero",
+    canActivate: [roleGuard],
+    data: {roles: ["CAJERO"]},
+    children: [
+      { path: "venta", component: VentaPageComponent }
+    ]
+  },
+  { path: "", pathMatch: "full", redirectTo: "/login" }
 ];
 
 @NgModule({

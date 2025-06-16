@@ -2,9 +2,18 @@
 
 <i class="bi bi-arrow-left" routerLink="/admin/home"></i>
 
-<button class="add-producto" routerLink="/admin/alta/producto">Agrega producto <i class="bi bi-plus-circle"></i></button>
+<button class="add-producto" routerLink="/admin/alta/producto">Agrega producto <i
+        class="bi bi-plus-circle"></i></button>
 <div class="d-flex justify-content-around">
-    <div class="contenido row mx-auto">
+    
+    @if(errorMessage) {
+        <div class="contenido mx-auto">
+            <h5 class="text-center bg-metal-pink py-4 display-6 error-message">{{errorMessage}}</h5>
+        </div>
+    }
+
+    @else {
+        <div class="contenido row mx-auto">
 
         @for (producto of productos?.content; track $index) {
 
@@ -30,10 +39,11 @@
 
         </div>
         }
-        <ngb-pagination class="d-flex justify-content-center paginacion" [collectionSize]="productos!.page.totalElements"
-        [pageSize]="productos!.page.size" [(page)]="page" (pageChange)="cambiarProductos()" />
+        <ngb-pagination class="d-flex justify-content-center paginacion"
+            [collectionSize]="productos!.page.totalElements" [pageSize]="productos!.page.size" [(page)]="page"
+            (pageChange)="cambiarProductos()" />
     </div>
-    
+    }
 
     <div class="filtros me-5 mt-5">
         <h4 class="text-center">Filtros:</h4>
@@ -42,8 +52,12 @@
                 (input)="cambiarProductosConFiltro()" />
         </div>
         <div class="mb-3">
-            <input class="form-control" type="text" placeholder="Categoría" [(ngModel)]="categoria"
-                (input)="cambiarProductosConFiltro()" />
+            <select class="form-select" [(ngModel)]="categoria" (change)="cambiarProductosConFiltro()">
+                <option value="">Categoría</option>
+                @for(categoria of categorias; track $index) {
+                <option [value]="categoria.nombre">{{categoria.nombre}}</option>
+                }
+            </select>
         </div>
         <div class="mb-3">
             <input class="form-control" type="text" placeholder="Proveedor" [(ngModel)]="proveedor"

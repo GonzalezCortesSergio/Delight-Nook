@@ -56,7 +56,7 @@ export class ModalChangeImageProductoComponent {
 
   private fileValid(): boolean {
 
-    const validTypes = ["image/jpeg", "image/png", "image/webp"];
+    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
     return this.selectedFile != null && validTypes.includes(this.selectedFile.type);
     
