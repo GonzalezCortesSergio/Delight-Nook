@@ -14,3 +14,7 @@ textarea {
 select {
     background-color: #CFC4C4;
 }
+
+.error-message {
+    margin-top: 12%;
+}

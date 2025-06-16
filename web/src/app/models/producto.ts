@@ -55,3 +55,17 @@ export class CreateProducto {
     this.proveedor = proveedor;
   }
 }
+
+export class EditProducto {
+  private precioUnidad: number;
+  private descripcion: string;
+  private idCategoria: number;
+  private proveedor: string;
+
+  constructor(precioUnidad: number, descripcion: string, idCategoria: number, proveedor: string) {
+    this.precioUnidad = precioUnidad;
+    this.descripcion = descripcion;
+    this.idCategoria = idCategoria;
+    this.proveedor = proveedor;
+  }
+}

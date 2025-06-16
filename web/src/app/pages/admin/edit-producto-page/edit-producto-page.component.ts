@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ErrorResponse } from '../../../models/error';
 import { CategoriaService } from '../../../services/categoria.service';
 import { Categoria } from '../../../models/categoria';
+import { EditProducto } from '../../../models/producto';
 
 @Component({
   selector: 'app-edit-producto-page',
@@ -31,6 +32,8 @@ export class EditProductoPageComponent {
   page = 0;
   
   errorMessage: string | null = null;
+
+  notFound = false;
   
   ngOnInit(): void {
     this.id = Number.parseInt(this.router.url.replace(/\D/g, ""));
@@ -38,6 +41,32 @@ export class EditProductoPageComponent {
     this.cargarProducto();
 
     this.cargarCategorias();
+  }
+
+  editarProducto() {
+    this.errorMessage = null;
+
+    this.productoService.editProducto(this.toEditProducto(), this.id)
+    .subscribe({
+      next: () => {
+        this.router.navigateByUrl(`/admin/productos/detalles/${this.id}`);
+      },
+      error: err => {
+        const errorResponse: ErrorResponse = err.error;
+
+        if(errorResponse.status == 401) {
+          this.usuarioService.refreshToken(() => this.editarProducto());
+        }
+
+        if(errorResponse.status == 400) {
+          this.errorMessage = errorResponse.detail;
+
+          errorResponse["invalid-params"].forEach(param => {
+            this.errorMessage += `, ${param.field}: ${param.message}`;
+          })
+        }
+      }
+    })
   }
 
   private cargarProducto() {
@@ -57,10 +86,12 @@ export class EditProductoPageComponent {
         }
 
         if(errorResponse.status == 404) {
+          this.notFound = true;
           this.errorMessage = errorResponse.detail;
         }
 
         if(errorResponse.status == 400) {
+          this.notFound = true;
           this.errorMessage = "El valor del ID no es válido";
         }
       }
@@ -84,6 +115,15 @@ export class EditProductoPageComponent {
         }
       }
     })
+  }
+
+  private toEditProducto(): EditProducto {
+    return new EditProducto(
+      this.precioUnitario,
+      this.descripcion,
+      this.categoriaId,
+      this.proveedor
+    );
   }
   
 }
