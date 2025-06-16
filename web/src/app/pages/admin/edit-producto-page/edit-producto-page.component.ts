@@ -17,7 +17,6 @@ export class EditProductoPageComponent {
 
   id = 0;
 
-  nombreProducto = "";
   
   precioUnitario = 0;
   
@@ -37,13 +36,14 @@ export class EditProductoPageComponent {
     this.id = Number.parseInt(this.router.url.replace(/\D/g, ""));
   
     this.cargarProducto();
+
+    this.cargarCategorias();
   }
 
   private cargarProducto() {
     this.productoService.findById(this.id)
     .subscribe({
       next: res => {
-        this.nombreProducto = res.nombre;
         this.precioUnitario = res.precioUnidad;
         this.descripcion = res.descripcion;
         this.proveedor = res.proveedor;
