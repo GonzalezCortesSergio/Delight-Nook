@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateProducto, ProductoDetails, ProductoFilter, ProductoResponse } from '../models/producto';
+import { CreateProducto, EditProducto, ProductoDetails, ProductoFilter, ProductoResponse } from '../models/producto';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +40,15 @@ export class ProductoService {
   createProducto(createProducto: CreateProducto) {
     return this.http.post(`${this.baseUrl}/admin/create`,
       createProducto,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
+  editProducto(editProducto: EditProducto, id: number) {
+    return this.http.put(`${this.baseUrl}/admin/edit/${id}`,
+      editProducto,
       {
         headers: this.createHeaders()
       }

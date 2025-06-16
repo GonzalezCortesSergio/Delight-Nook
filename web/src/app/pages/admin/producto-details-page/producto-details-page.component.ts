@@ -53,4 +53,8 @@ export class ProductoDetailsPageComponent implements OnInit {
   getImagen() {
     return this.producto?.imagen ? this.producto.imagen : "product-development_8787075.png";
   }
+
+  editProducto() {
+    this.router.navigateByUrl(`/admin/editar/producto/${this.id}`);
+  }
 }

@@ -28,6 +28,7 @@ import { ProductosListPageComponent } from './pages/admin/productos-list-page/pr
 import { ProductoDetailsPageComponent } from './pages/admin/producto-details-page/producto-details-page.component';
 import { ModalDeleteProductoComponent } from './components/admin/modal-delete-producto/modal-delete-producto.component';
 import { RegisterProductoPageComponent } from './pages/admin/register-producto-page/register-producto-page.component';
+import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit-producto-page.component';
 
 
 
@@ -55,7 +56,8 @@ import { RegisterProductoPageComponent } from './pages/admin/register-producto-p
     ProductosListPageComponent,
     ProductoDetailsPageComponent,
     ModalDeleteProductoComponent,
-    RegisterProductoPageComponent
+    RegisterProductoPageComponent,
+    EditProductoPageComponent
   ],
   imports: [
     BrowserModule,
