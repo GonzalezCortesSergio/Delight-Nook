@@ -4,6 +4,7 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
+COPY uploads uploads
 RUN ./mvnw install -DskipTests
 
 FROM bellsoft/liberica-openjdk-alpine:17
@@ -16,4 +17,5 @@ ENV SENDGRID_API_KEY=
 
 WORKDIR /app
 COPY --from=build /workspace/app/target/*.jar /app/app.jar
+COPY --from=build /workspace/app/uploads /app/uploads
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
