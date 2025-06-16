@@ -31,6 +31,8 @@ import { RegisterProductoPageComponent } from './pages/admin/register-producto-p
 import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit-producto-page.component';
 import { ModalChangeImageProductoComponent } from './components/admin/modal-change-image-producto/modal-change-image-producto.component';
 import { NavbarCajeroComponent } from './components/cajero/navbar-cajero/navbar-cajero.component';
+import { VentaPageComponent } from './pages/cajero/venta-page/venta-page.component';
+import { AccessDeniedPageComponent } from './pages/access-denied-page/access-denied-page.component';
 
 
 
@@ -61,7 +63,9 @@ import { NavbarCajeroComponent } from './components/cajero/navbar-cajero/navbar-
     RegisterProductoPageComponent,
     EditProductoPageComponent,
     ModalChangeImageProductoComponent,
-    NavbarCajeroComponent
+    NavbarCajeroComponent,
+    VentaPageComponent,
+    AccessDeniedPageComponent
   ],
   imports: [
     BrowserModule,

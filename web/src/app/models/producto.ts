@@ -69,3 +69,13 @@ export class EditProducto {
     this.proveedor = proveedor;
   }
 }
+
+export class ProductoCantidad {
+  private idProducto: number;
+  private cantidad: number;
+
+  constructor(idProducto: number, cantidad: number) {
+    this.idProducto = idProducto;
+    this.cantidad = cantidad;
+  }
+}

@@ -1,5 +1,5 @@
 .card {
-    height: 35vh;  
+    height: 38vh;  
 }
 
 .cartas {
@@ -9,11 +9,12 @@
 
 .contenido {
     width: 70%;
-    margin-top: -7%;
+    margin-top: -10%;
 }
 
 img {
     width: 17%;
+    max-height: 10vh;
 }
 
 .bi-arrow-left {
@@ -38,4 +39,12 @@ img {
 
 input {
     background-color: #E7C3B3;
+}
+
+select {
+    background-color: #E7C3B3;
+}
+
+.error-message {
+    margin-top: 23%;
 }
