@@ -1,0 +1,30 @@
+<h3 class="text-center mt-3">Detalles de venta</h3>
+
+<div class="header-info d-flex justify-content-between">
+    <div class="fecha-venta ms-5">
+        <h5>Fecha de venta:</h5>
+        <h5>{{venta?.fechaVenta}}</h5>
+    </div>
+    <div class="cajero me-5">
+        <h5>Venta realizada por:</h5>
+        <h5>{{venta?.nombreCajero}}</h5>
+    </div>
+</div>
+
+
+<div class="body-info">
+    <h5>Lineas de venta:</h5>
+    <div class="lineas-venta">
+        @for (lineaVenta of venta?.lineasVenta; track $index) {
+            <div class="linea-venta d-flex justify-content-between">
+                <h4 class="ms-4">{{lineaVenta.producto.nombre}}</h4>
+                <h4>Cantidad: {{lineaVenta.cantidad}}</h4>
+                <h4 class="me-4">Sub total: {{lineaVenta.subTotal | number: "1.0-2"}}€</h4>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="footer-info mb-5">
+    <h3 class="text-center">Precio final: {{venta?.precioFinal | number: "1.0-2"}}€</h3>
+</div>

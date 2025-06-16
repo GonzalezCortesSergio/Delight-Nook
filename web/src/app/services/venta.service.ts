@@ -30,6 +30,14 @@ export class VentaService {
     );
   }
 
+  getVentaDetailsCajero(id: string): Observable<VentaDetails> {
+    return this.http.get<VentaDetails>(`${this.baseUrl}/detalles/${id}`,
+      {
+        headers: this.createHeaders()
+      }
+    );
+  }
+
   addProductoToVenta(productoCantidad: ProductoCantidad): Observable<VentaDetails> {
     return this.http.post<VentaDetails>(`${this.baseUrl}/addProducto`,
       productoCantidad,
@@ -48,8 +56,8 @@ export class VentaService {
     );
   }
 
-  finalizarVenta() {
-    return this.http.put(`${this.baseUrl}/finalizar`,
+  finalizarVenta(): Observable<VentaDetails> {
+    return this.http.put<VentaDetails>(`${this.baseUrl}/finalizar`,
       null,
       {
         headers: this.createHeaders()
