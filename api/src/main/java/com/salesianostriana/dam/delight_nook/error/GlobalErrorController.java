@@ -1,8 +1,6 @@
 package com.salesianostriana.dam.delight_nook.error;
 
 import com.salesianostriana.dam.delight_nook.error.dto.ApiValidationSubError;
-import com.salesianostriana.dam.delight_nook.user.error.BorradoPropioException;
-import com.salesianostriana.dam.delight_nook.user.error.UsuarioSinRolException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.java.Log;
