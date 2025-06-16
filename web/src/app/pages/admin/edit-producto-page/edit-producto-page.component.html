@@ -1,0 +1,44 @@
+
+@if(notFound) {
+    <i class="bi bi-arrow-left" style="position: relative; top: 10.7%;" routerLink="/admin/productos"></i>
+    <h2 class="display-6 text-center py-5 bg-metal-pink error-message">{{errorMessage}}</h2>
+}
+
+@else {
+    <h2 class="display-6 text-center mt-3">Registro de producto</h2>
+
+<i class="bi bi-arrow-left" [routerLink]="'/admin/productos/detalles/'+id"></i>
+
+<div class="w-25 mx-auto">
+    
+    <div class="mb-4">
+        <label for="precio-unitario" class="form-label">Precio unitario del producto:</label>
+        <input class="form-control" type="number" [(ngModel)]="precioUnitario" />
+    </div>
+    
+    <div class="mb-4">
+        <textarea class="form-control" placeholder="Breve descripción del producto" [(ngModel)]="descripcion" ></textarea>
+    </div>
+
+    <div class="mb-4">
+        <input class="form-control" placeholder="Nombre del proveedor del producto" [(ngModel)]="proveedor" />
+    </div>
+
+    <div class="mb-5">
+        <select class="form-select" [(ngModel)]="categoriaId" >
+            <option value="-1">Categoría del producto</option>
+            @for (categoria of categorias; track $index) {
+                <option [value]="categoria.id">{{categoria.nombre}}</option>
+            }
+        </select>
+    </div>
+
+    
+    <button class="w-100 btn btn-dark mb-3" (click)="editarProducto()">Editar producto</button>
+
+    </div>
+
+    @if(errorMessage) {
+        <h5 class="bg-metal-pink py-3 text-center">{{errorMessage}}</h5>
+    }
+}
