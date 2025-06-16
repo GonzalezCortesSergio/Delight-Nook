@@ -9,3 +9,7 @@
 <div class="text-center mb-5">
     <button class="btn btn-dark w-50" (click)="submitImage()" >Cambiar imagen</button>
 </div>
+
+@if(errorMessage) {
+    <h4 class="bg-metal-pink text-center py-3">{{errorMessage}}</h4>
+}

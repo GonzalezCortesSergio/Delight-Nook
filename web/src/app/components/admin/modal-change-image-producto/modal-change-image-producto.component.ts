@@ -18,6 +18,8 @@ export class ModalChangeImageProductoComponent {
 
   selectedFile: File | null = null;
 
+  errorMessage: string | null = null;
+
   private activeModal = inject(NgbActiveModal);
 
   changeFile(event: Event) {
@@ -45,6 +47,10 @@ export class ModalChangeImageProductoComponent {
           }
         }
       })
+    }
+
+    else {
+      this.errorMessage = "El formato de la imagen no es válido"
     }
   }
 
