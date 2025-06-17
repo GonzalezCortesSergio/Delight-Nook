@@ -1,0 +1,38 @@
+.contenido {
+    margin-top: -51%;
+    margin-left: 9%;
+}
+
+.contenido-ventas {
+    width: 80%;
+    height: 60vh;
+    background-color: white;
+    border-radius: 23px;
+    margin: 0 auto;
+}
+
+.contenido-caja {
+    width: 80%;
+    height: 25vh;
+    background-color: white;
+    border-radius: 26px;
+    margin: 0 auto;
+    margin-top: 2%;
+}
+
+.title-ventas {
+    margin-left: 85%;
+}
+
+.ventas {
+    width: 90%;
+    height: 50vh;
+    margin: 0 auto;
+}
+
+.info-venta {
+    margin: 2%;
+    height: 12vh;
+    border-radius: 8px;
+    align-items: center;
+}

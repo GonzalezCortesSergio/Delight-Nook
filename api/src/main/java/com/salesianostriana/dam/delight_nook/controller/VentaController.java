@@ -594,7 +594,7 @@ public class VentaController {
             }
     )
     @GetMapping("/listar")
-    public Page<GetVentaDto> findAllVentasByCajeroAndCaja(@AuthenticationPrincipal Cajero cajero,
+    public GetVentasCajaDto findAllVentasByCajeroAndCaja(@AuthenticationPrincipal Cajero cajero,
                                                           @PageableDefault Pageable pageable) {
 
         return ventaService.findAllByCajeroAndCaja(cajero, pageable);

@@ -27,10 +27,11 @@ public interface VentaRepository extends JpaRepository<Venta, UUID> {
     List<Venta> findVentaNotFinalizadaByCajaId(Long idCaja);
 
     @Query("""
-            SELECT v
+            SELECT DISTINCT v
             FROM Venta v
             LEFT JOIN FETCH v.lineasVenta lv
             LEFT JOIN FETCH lv.producto
+            LEFT JOIN FETCH v.caja
             WHERE v.nombreCajero = :nombreCompleto
             AND v.caja.id = :idCaja
             AND v.finalizada = true
@@ -38,7 +39,7 @@ public interface VentaRepository extends JpaRepository<Venta, UUID> {
     Page<Venta> findVentaByCajeroNombreCompleto(String nombreCompleto, Long idCaja, Pageable pageable);
 
     @Query("""
-            SELECT v
+            SELECT DISTINCT v
             FROM Venta v
             LEFT JOIN FETCH v.lineasVenta lv
             LEFT JOIN FETCH lv.producto

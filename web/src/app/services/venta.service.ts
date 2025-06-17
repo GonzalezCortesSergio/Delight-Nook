@@ -22,6 +22,12 @@ export class VentaService {
     );
   }
 
+  getVentasPorCajero(page: number): Observable<VentasCajaResponse> {
+    return this.http.get<VentasCajaResponse>(`${this.baseUrl}/listar?page=${page}&size=3`,
+      { headers: this.createHeaders() }
+    );
+  }
+
   getVentaDetails(id: string): Observable<VentaDetails> {
     return this.http.get<VentaDetails>(`${this.baseUrl}/admin/detalles/${id}`,
       {

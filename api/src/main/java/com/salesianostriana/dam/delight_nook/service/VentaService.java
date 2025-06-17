@@ -2,6 +2,7 @@ package com.salesianostriana.dam.delight_nook.service;
 
 import com.salesianostriana.dam.delight_nook.dto.producto.ProductoCantidadDto;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDto;
+import com.salesianostriana.dam.delight_nook.dto.venta.GetVentasCajaDto;
 import com.salesianostriana.dam.delight_nook.error.BadRequestException;
 import com.salesianostriana.dam.delight_nook.error.CajaNotFoundException;
 import com.salesianostriana.dam.delight_nook.error.ProductoNoEncontradoException;
@@ -160,7 +161,7 @@ public class VentaService {
         return ventaRepository.save(venta);
     }
 
-    public Page<GetVentaDto> findAllByCajeroAndCaja(Cajero cajero, Pageable pageable) {
+    public GetVentasCajaDto findAllByCajeroAndCaja(Cajero cajero, Pageable pageable) {
 
         Caja caja = cajaRepository.findByCajeroSesion(cajero.getUsername())
                 .stream()
@@ -172,7 +173,7 @@ public class VentaService {
         if(result.isEmpty())
             throw new EntityNotFoundException("No se han encontrado ventas");
 
-        return result.map(GetVentaDto::of);
+        return GetVentasCajaDto.of(result);
     }
 
     public Venta findById(UUID idVenta) {

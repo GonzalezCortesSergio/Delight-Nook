@@ -9,7 +9,7 @@ import { ErrorResponse } from '../../../models/error';
   templateUrl: './modal-details-venta.component.html',
   styleUrl: './modal-details-venta.component.css'
 })
-export class ModalDetailsVentaComponent implements OnInit{
+export class ModalDetailsVentaComponent implements OnInit {
 
   constructor(private ventaService: VentaService, private usuarioService: UsuarioService) { }
 
@@ -24,19 +24,39 @@ export class ModalDetailsVentaComponent implements OnInit{
 
 
   private cargarVenta() {
-    this.ventaService.getVentaDetails(this.idVenta!)
-    .subscribe({
-      next: res => {
-        this.venta = res;
-      },
-      error: err => {
-        const errorResponse: ErrorResponse = err.error;
+    const role = localStorage.getItem("role");
 
-        if(errorResponse.status == 401) {
-          this.usuarioService.refreshToken(() => this.cargarVenta());
-        }
-      }
-    })
+    if (role == "ADMIN") {
+      this.ventaService.getVentaDetails(this.idVenta!)
+        .subscribe({
+          next: res => {
+            this.venta = res;
+          },
+          error: err => {
+            const errorResponse: ErrorResponse = err.error;
+
+            if (errorResponse.status == 401) {
+              this.usuarioService.refreshToken(() => this.cargarVenta());
+            }
+          }
+        });
+    }
+
+    else {
+      this.ventaService.getVentaDetailsCajero(this.idVenta!)
+        .subscribe({
+          next: res => {
+            this.venta = res;
+          },
+          error: err => {
+            const errorResponse: ErrorResponse = err.error;
+
+            if (errorResponse.status == 401) {
+              this.usuarioService.refreshToken(() => this.cargarVenta());
+            }
+          }
+        });
+    }
   }
 
 
