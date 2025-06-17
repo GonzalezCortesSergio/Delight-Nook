@@ -1,0 +1,21 @@
+<app-navbar-cajero></app-navbar-cajero>
+
+<div class="contenido">
+    <h4 class="display-6 mt-3 text-center">Perfil de usuario</h4>
+
+    <div class="d-flex justify-content-between">
+        <div class="w-25 perfil-username">
+            <img [src]="getImagen()" alt="Imagen de perfil" />
+            <h4 class="text-center mt-4">{{usuario?.username}}</h4>
+        </div>
+
+        <div class="detalles-usuario">
+            <h4 class="text-center">Nombre completo: {{usuario?.nombreCompleto}}</h4>
+            <h4 class="text-center">Número de ventas: {{numVentas}}</h4>
+
+            <div class="text-center mt-5">
+                <button class="btn btn-metal-pink" (click)="logout()" >Cerrar sesión</button>
+            </div>
+        </div>
+    </div>
+</div>

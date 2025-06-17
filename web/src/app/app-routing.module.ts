@@ -17,6 +17,7 @@ import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit
 import { VentaPageComponent } from './pages/cajero/venta-page/venta-page.component';
 import { roleGuard } from './role.guard';
 import { AccessDeniedPageComponent } from './pages/access-denied-page/access-denied-page.component';
+import { ProfileDetailsPageComponent } from './pages/cajero/profile-details-page/profile-details-page.component';
 
 
 const routes: Routes = [
@@ -49,7 +50,8 @@ const routes: Routes = [
     canActivate: [roleGuard],
     data: {roles: ["CAJERO"]},
     children: [
-      { path: "venta", component: VentaPageComponent }
+      { path: "venta", component: VentaPageComponent },
+      { path: "detalles", component: ProfileDetailsPageComponent }
     ]
   },
   { path: "", pathMatch: "full", redirectTo: "/login" }

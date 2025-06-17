@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { VentaDetails, VentasCajaResponse } from '../models/venta';
+import { NumVentas, VentaDetails, VentasCajaResponse } from '../models/venta';
 import { ProductoCantidad } from '../models/producto';
 
 @Injectable({
@@ -61,7 +61,13 @@ export class VentaService {
       null,
       {
         headers: this.createHeaders()
-      } 
+      }
+    );
+  }
+
+  getNumVentasByCajero(): Observable<NumVentas> {
+    return this.http.get<NumVentas>(`${this.baseUrl}/cajero/num-ventas`,
+      { headers: this.createHeaders() }
     );
   }
 

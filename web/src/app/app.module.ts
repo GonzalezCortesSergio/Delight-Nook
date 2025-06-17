@@ -34,6 +34,7 @@ import { NavbarCajeroComponent } from './components/cajero/navbar-cajero/navbar-
 import { VentaPageComponent } from './pages/cajero/venta-page/venta-page.component';
 import { AccessDeniedPageComponent } from './pages/access-denied-page/access-denied-page.component';
 import { ModalDetailsVentaFinalizadaComponent } from './components/cajero/modal-details-venta-finalizada/modal-details-venta-finalizada.component';
+import { ProfileDetailsPageComponent } from './pages/cajero/profile-details-page/profile-details-page.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { ModalDetailsVentaFinalizadaComponent } from './components/cajero/modal-
     NavbarCajeroComponent,
     VentaPageComponent,
     AccessDeniedPageComponent,
-    ModalDetailsVentaFinalizadaComponent
+    ModalDetailsVentaFinalizadaComponent,
+    ProfileDetailsPageComponent
   ],
   imports: [
     BrowserModule,
