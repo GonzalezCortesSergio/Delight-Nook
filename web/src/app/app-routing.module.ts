@@ -18,6 +18,7 @@ import { VentaPageComponent } from './pages/cajero/venta-page/venta-page.compone
 import { roleGuard } from './role.guard';
 import { AccessDeniedPageComponent } from './pages/access-denied-page/access-denied-page.component';
 import { ProfileDetailsPageComponent } from './pages/cajero/profile-details-page/profile-details-page.component';
+import { CajaVentasPageComponent } from './pages/cajero/caja-ventas-page/caja-ventas-page.component';
 
 
 const routes: Routes = [
@@ -51,7 +52,8 @@ const routes: Routes = [
     data: {roles: ["CAJERO"]},
     children: [
       { path: "venta", component: VentaPageComponent },
-      { path: "detalles", component: ProfileDetailsPageComponent }
+      { path: "detalles/caja", component: CajaVentasPageComponent },
+      { path: "detalles/perfil", component: ProfileDetailsPageComponent }
     ]
   },
   { path: "", pathMatch: "full", redirectTo: "/login" }

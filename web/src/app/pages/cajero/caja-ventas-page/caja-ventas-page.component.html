@@ -1,0 +1,36 @@
+<app-navbar-cajero></app-navbar-cajero>
+<div class="contenido">
+    <div class="contenido-ventas">
+        <h4 class="display-6 text-center">Ventas</h4>
+
+        <div class="ventas">
+        @for (venta of ventas?.result?.content; track $index) {
+            <div class="bg-light info-venta w-100 d-flex justify-content-between">
+                <h4 class="ms-3">
+                    Venta realizada el {{getFecha(venta)}} a las {{getHora(venta)}}
+                </h4>
+                <div class="d-flex justify-content-between">
+                    <h4 class="me-5">Precio final: {{venta.precioFinal | number: "1.0-2"}}€</h4>
+                    <button class="btn btn-wintery me-3" (click)="openModalDetailsVenta(venta.id)">Ver más</button>
+                </div>
+            </div>
+        }
+        <ngb-pagination class="d-flex justify-content-center paginacion" [collectionSize]="ventas!.result.page.totalElements" [pageSize]="ventas!.result.page.size" [(page)]="page" (pageChange)="cambiarVentas()" />
+        </div>
+    </div>
+
+    <div class="contenido-caja">
+        <h4 class="display-6 text-center">Caja</h4>
+        <div class="d-flex justify-content-between mt-4">
+            <div class="d-flex justify-content-between ms-5">
+                <h4 class="text-center me-5">Dinero caja: </h4>
+                <h4 class="text-center"> {{caja?.dineroCaja | number: "1.0-2"}}€</h4>
+            </div>
+
+            <div class="d-flex justify-content-between me-5">
+                <h4 class="text-center me-5">Dinero ganado: </h4>
+                <h4 class="text-center"> {{ventas?.totalRecaudado| number: "1.0-2"}}€</h4>
+            </div>
+        </div>
+    </div>
+</div>
