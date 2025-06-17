@@ -1,0 +1,85 @@
+.body {
+    margin-top: -52%;
+}
+
+.detalles-provision {
+    margin-top: -52%;
+    width: 25%;
+    margin-left: 12%;
+    height: 90vh;
+}
+
+.productos-elegidos {
+    height: 65vh;
+    background-color: #EFEFEF;
+}
+
+input {
+    height: 5vh;
+    margin-top: 7%;
+}
+
+.producto-elegido {
+    height: 15vh;
+    background-color: #EFEFEF;
+    padding: 4%;
+    border-bottom: solid black 1px;
+}
+
+.contenido {
+    margin-left: 40%;
+    margin-top: -50%;
+    width: 65%;
+}
+
+.filtro {
+    margin-left: 65%;
+    align-items: center;
+    margin-top: 5%;
+    width: 30%;
+}
+
+.productos {
+    width: 75%;
+    margin-left: 20%;
+}
+
+.card {
+    height: 25vh; 
+}
+
+img {
+    max-height: 10vh;
+}
+
+select {
+    height: 5.5vh;
+    margin-right: 20%;
+}
+
+.nombre-productos {
+    margin-left: 55%;
+}
+
+button {
+    background-color: #544137;
+    color: white;
+    width: 60%;
+    margin-top: 25%;
+}
+
+button:hover {
+    background-color: #3d2f28;
+    color: white;
+}
+
+.footer-provision {
+    background-color: white;
+    height: 25vh;
+}
+
+.error-message {
+    margin-right: 3%;
+    margin-top: 15%;
+    width: 85%;
+}
