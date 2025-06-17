@@ -59,4 +59,6 @@ public interface VentaRepository extends JpaRepository<Venta, UUID> {
             WHERE v.id = :id
             """)
     Optional<Venta> findById(@Nullable UUID id);
+
+    int countByNombreCajero(String nombreCajero);
 }

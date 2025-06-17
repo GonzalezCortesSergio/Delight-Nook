@@ -1154,4 +1154,63 @@ public class UsuarioController {
       Usuario usuario = usuarioService.enable(username);
       return UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar()));
     }
+
+    @Operation(summary = "Se muestran los detalles del usuario autenticado")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se muestran los datos correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = UsuarioResponseDto.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "id": "c2f7ec8b-d98a-4f67-8430-f7655a323445",
+                                                                            "username": "Usuario_1",
+                                                                            "nombreCompleto": "Usuario 1",
+                                                                            "avatar": "avatar.png",
+                                                                            "roles": [
+                                                                                "ALMACENERO"
+                                                                            ],
+                                                                            "enabled": true
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT expired 170529 milliseconds ago at 2025-02-20T17:31:07.000Z. Current time: 2025-02-20T17:33:57.529Z. Allowed clock skew: 0 milliseconds.",
+                                                                            "instance": "/api/usuario/me"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping("/me")
+    public UsuarioResponseDto me(@AuthenticationPrincipal Usuario usuario) {
+        return UsuarioResponseDto.of(usuario, usuarioService.getImageUrl(usuario.getAvatar()));
+    }
 }
