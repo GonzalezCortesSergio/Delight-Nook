@@ -20,6 +20,7 @@ import { AccessDeniedPageComponent } from './pages/access-denied-page/access-den
 import { ProfileDetailsPageComponent } from './pages/cajero/profile-details-page/profile-details-page.component';
 import { CajaVentasPageComponent } from './pages/cajero/caja-ventas-page/caja-ventas-page.component';
 import { GestionAlmacenPageComponent } from './pages/almacenero/gestion-almacen-page/gestion-almacen-page.component';
+import { ProfileDetailsAlmaceneroPageComponent } from './pages/almacenero/profile-details-almacenero-page/profile-details-almacenero-page.component';
 
 
 const routes: Routes = [
@@ -62,7 +63,8 @@ const routes: Routes = [
     canActivate: [roleGuard],
     data: {roles: ["ALMACENERO"]},
     children: [
-      { path: "almacen", component: GestionAlmacenPageComponent }
+      { path: "almacen", component: GestionAlmacenPageComponent },
+      { path: "perfil", component: ProfileDetailsAlmaceneroPageComponent }
     ]
   },
   { path: "", pathMatch: "full", redirectTo: "/login" }
