@@ -1,0 +1,50 @@
+.card {
+    height: 38vh;  
+}
+
+.cartas {
+    width: 35%;
+    margin-left: 15%;
+}
+
+.contenido {
+    width: 70%;
+    margin-top: -10%;
+}
+
+img {
+    width: 17%;
+    max-height: 10vh;
+}
+
+.bi-arrow-left {
+    font-size: 40pt;
+    margin-left: 4%;
+}
+
+.add-producto {
+    color: white;
+    margin-left: 86%;
+    background-color:#e9a588;
+    border-radius: 5px;
+    height: 6vh;
+    border: none;
+    margin-bottom: -15%;
+
+}
+
+.filtros {
+    width: 15%;
+}
+
+input {
+    background-color: #E7C3B3;
+}
+
+select {
+    background-color: #E7C3B3;
+}
+
+.error-message {
+    margin-top: 23%;
+}

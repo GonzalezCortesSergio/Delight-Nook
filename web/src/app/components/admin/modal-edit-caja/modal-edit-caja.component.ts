@@ -1,7 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { CajaService } from '../../../services/caja.service';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditCaja } from '../../../models/caja';
 import { ErrorResponse } from '../../../models/error';
@@ -13,7 +12,7 @@ import { ErrorResponse } from '../../../models/error';
 })
 export class ModalEditCajaComponent {
 
-  constructor(private cajaService: CajaService, private usuarioService: UsuarioService, private router: Router) { }
+  constructor(private cajaService: CajaService, private usuarioService: UsuarioService) { }
 
   @Input()
   id: number | null = null;
@@ -46,7 +45,7 @@ export class ModalEditCajaComponent {
             const errorResponse: ErrorResponse = err.error;
 
             if (errorResponse.status == 401)
-              this.refrescarToken();
+              this.usuarioService.refreshToken(() => this.editarDinero());
 
             else {
               this.errorMessage = errorResponse["invalid-params"][0].message;
@@ -59,21 +58,6 @@ export class ModalEditCajaComponent {
     else {
       this.errorMessage = "Debe indicar qué operación quiere realizar"
     }
-  }
-
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-      .subscribe({
-        next: res => {
-          localStorage.setItem("token", res.token);
-          localStorage.setItem("refreshToken", res.refreshToken);
-          this.editarDinero();
-        },
-        error: () => {
-          localStorage.clear();
-          this.router.navigateByUrl("/login");
-        }
-      });
   }
 
   private toEditCaja() {

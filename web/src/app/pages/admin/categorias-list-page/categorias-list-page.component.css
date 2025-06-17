@@ -3,14 +3,14 @@
     height: 68vh;
 }
 
-.add-user {
+.add-categoria {
     color: white;
     margin-left: 87%;
     background-color:#e9a588;
     border-radius: 5px;
     height: 6vh;
     border: none;
-    margin-bottom: -15%;
+    margin-bottom: -10%;
 
 }
 
@@ -18,4 +18,8 @@
     font-size: 40pt;
     margin-left: 4%;
     margin-bottom: -5%;
+}
+
+.card {
+    height: 25vh;
 }

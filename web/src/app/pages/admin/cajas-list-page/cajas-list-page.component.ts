@@ -6,7 +6,7 @@ import { Caja, CajaResponse } from '../../../models/caja';
 import { ErrorResponse } from '../../../models/error';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalDeleteCajaComponent } from '../../../components/admin/modal-delete-caja/modal-delete-caja.component';
-import { ModalEditCajaComponent } from '../../../components/admin/modal-edit-caja/modal-edit-caja.component';
+import { ModalCreateCajaComponent } from '../../../components/admin/modal-create-caja/modal-create-caja.component';
 
 @Component({
   selector: 'app-cajas-list-page',
@@ -41,35 +41,14 @@ export class CajasListPageComponent implements OnInit {
         const errorResponse: ErrorResponse = err.error;
 
         if(errorResponse.status == 401) {
-          this.refrescarToken();
+          this.usuarioService.refreshToken(() => this.cargarCajas());
         }
       }
     })
   }
 
-  private refrescarToken() {
-    this.usuarioService.refreshToken()
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("refreshToken", res.refreshToken);
-        this.cargarCajas();
-      },
-      error: () => {
-        localStorage.clear();
-        this.router.navigateByUrl("/login");
-      }
-    })
-  }
-
-  openModalEditMoney(id: number) {
-    const modalRef = this.modalService.open(ModalEditCajaComponent);
-
-    modalRef.componentInstance.id = id;
-
-    modalRef.closed.subscribe(() => {
-      this.cargarCajas();
-    })
+  openDetails(caja: Caja) {
+    this.router.navigateByUrl(`/admin/cajas/detalles/${caja.id}`);
   }
 
   openModalDelete(caja: Caja) {
@@ -78,6 +57,14 @@ export class CajasListPageComponent implements OnInit {
 
     modalRef.componentInstance.caja = caja;
     
+    modalRef.closed.subscribe(() => {
+      this.cargarCajas();
+    })
+  }
+
+  openModalCreate() {
+    const modalRef = this.modalService.open(ModalCreateCajaComponent);
+
     modalRef.closed.subscribe(() => {
       this.cargarCajas();
     })

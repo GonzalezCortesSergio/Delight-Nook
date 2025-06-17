@@ -12,7 +12,7 @@ import { environment } from '../../../environments/environment.development';
   templateUrl: './login-cajero-page.component.html',
   styleUrl: './login-cajero-page.component.css'
 })
-export class LoginCajeroPageComponent implements OnInit{
+export class LoginCajeroPageComponent implements OnInit {
 
   constructor(private usuarioService: UsuarioService, private cajaService: CajaService, private router: Router) { }
 
@@ -35,35 +35,55 @@ export class LoginCajeroPageComponent implements OnInit{
   }
 
   iniciarSesion() {
-    
+
     this.errorMessage = null;
 
-    if(this.idCaja != -1) {
+    if (this.idCaja != -1) {
       this.cajaService.iniciarSesionCaja(this.toLoginRequest(this.username, this.password), this.idCaja)
-      .subscribe({
-        next: res => {
-          if(res.roles.includes("CAJERO")) {
-            localStorage.setItem("token", res.token);
-            localStorage.setItem("refreshToken", res.refreshToken);
-            localStorage.setItem("role", "CAJERO");
+        .subscribe({
+          next: res => {
+            if (res.roles.includes("CAJERO")) {
+              localStorage.setItem("token", res.token);
+              localStorage.setItem("refreshToken", res.refreshToken);
+              localStorage.setItem("role", "CAJERO");
 
-            this.router.navigateByUrl("/cajero/home");
+              this.router.navigateByUrl("/cajero/venta");
+            }
+
+            else {
+              this.errorMessage = "El usuario no es un cajero";
+            }
+          },
+          error: err => {
+            const errorResponse: ErrorResponse = err.error;
+
+            if (errorResponse.status == 400) {
+              this.usuarioService.iniciarSesion(this.toLoginRequest(this.username, this.password))
+                .subscribe({
+                  next: res => {
+                    if (res.roles.includes("CAJERO")) {
+                      localStorage.setItem("token", res.token);
+                      localStorage.setItem("refreshToken", res.refreshToken);
+                      localStorage.setItem("role", "CAJERO");
+
+                      this.router.navigateByUrl("/cajero/venta");
+                    }
+
+                    else {
+                      this.errorMessage = "El usuario no es un cajero";
+                    }
+                  }
+                })
+            }
+
+            this.errorMessage = errorResponse.detail;
+
+            for (const invalidParam of errorResponse["invalid-params"]) {
+              this.errorMessage += `, ${invalidParam.field} ${invalidParam.message}`;
+            }
+
           }
-
-          else {
-            this.errorMessage = "El usuario no es un cajero";
-          }
-        },
-        error: err => {
-          const errorResponse: ErrorResponse = err.error;
-
-          this.errorMessage = errorResponse.detail;
-
-          for(const invalidParam of errorResponse["invalid-params"]) {
-            this.errorMessage+=`, ${invalidParam.field} ${invalidParam.message}`;
-          }
-        }
-      })
+        })
     }
 
     else {
@@ -73,26 +93,26 @@ export class LoginCajeroPageComponent implements OnInit{
 
   private iniciarSesionAnonimo() {
     this.usuarioService.iniciarSesion(this.toLoginRequest(environment.anonymousUsername, environment.anonymousPassword))
-    .subscribe({
-      next: res => {
-        localStorage.setItem("token", res.token);
-        this.cargarCajas();
-      }
-    })
+      .subscribe({
+        next: res => {
+          localStorage.setItem("token", res.token);
+          this.cargarCajas();
+        }
+      })
   }
 
   private cargarCajas() {
     this.cajaService.findAll(this.page)
-    .subscribe({
-      next: res => {
-        this.cajas = this.cajas.concat(res.content);
-        this.page++;
-        this.cargarCajas();
-      },
-      error: () => {
-        localStorage.clear();
-      }
-    })
+      .subscribe({
+        next: res => {
+          this.cajas = this.cajas.concat(res.content);
+          this.page++;
+          this.cargarCajas();
+        },
+        error: () => {
+          localStorage.clear();
+        }
+      })
   }
 
   private toLoginRequest(username: string, password: string) {

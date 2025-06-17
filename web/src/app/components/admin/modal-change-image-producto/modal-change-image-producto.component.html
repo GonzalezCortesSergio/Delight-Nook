@@ -1,0 +1,15 @@
+<h4 class="text-center mt-3">Cambiar imagen de un producto</h4>
+
+<h6 class="mt-5 text-center">Inserte la imagen del producto</h6>
+
+<div class="mb-4 w-50 mx-auto">
+    <input class="form-control" type="file" (change)="changeFile($event)"/>
+</div>
+
+<div class="text-center mb-5">
+    <button class="btn btn-dark w-50" (click)="submitImage()" >Cambiar imagen</button>
+</div>
+
+@if(errorMessage) {
+    <h4 class="bg-metal-pink text-center py-3">{{errorMessage}}</h4>
+}

@@ -1,7 +1,8 @@
+import { Page } from "./page.interface";
+
 export interface CajaResponse {
     content: Caja[];
-    size: number;
-    totalElements: number;
+    page: Page;
 }
 
 export interface Caja {
@@ -17,5 +18,15 @@ export class EditCaja {
     constructor(id: number, dineroNuevo: number) {
         this.id = id;
         this.dineroNuevo = dineroNuevo;
+    }
+}
+
+export class CreateCaja {
+    private nombre: string;
+    private dineroCaja: number;
+
+    constructor(nombre: string, dineroCaja: number) {
+        this.nombre = nombre;
+        this.dineroCaja = dineroCaja;
     }
 }

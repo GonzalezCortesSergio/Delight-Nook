@@ -6,7 +6,6 @@ import com.salesianostriana.dam.delight_nook.security.validation.annotation.MinN
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.validation.constraints.DecimalMin;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,10 +22,8 @@ public class ProductoFilterDTO {
 
     private String proveedor;
 
-    @DecimalMin("0.01")
     private Double precioMin;
-
-    @DecimalMin("0.01")
+  
     private Double precioMax;
 
     public Specification<Producto> obtainFilterSpecification() {
@@ -44,7 +41,7 @@ public class ProductoFilterDTO {
                 Join<Producto, Categoria> joinCategoria = root.join("categoria");
                 Expression<String> categoriaNameToLowerCase = cb.lower(joinCategoria.get("nombre"));
                 predicate = cb.and(predicate,
-                        cb.like(categoriaNameToLowerCase, "%".concat(this.categoria).concat("%")));
+                        cb.like(categoriaNameToLowerCase, "%".concat(this.categoria.toLowerCase()).concat("%")));
             }
 
             if(StringUtils.hasText(this.proveedor)) {
@@ -53,12 +50,12 @@ public class ProductoFilterDTO {
                         cb.like(proveedorToLowerCase, "%".concat(this.proveedor.toLowerCase()).concat("%")));
             }
 
-            if(precioMin != null && precioMin != 0) {
+            if(precioMin != null && precioMin > 0) {
                 predicate = cb.and(predicate,
                         cb.greaterThanOrEqualTo(root.get("precioUnidad"), this.precioMin));
             }
 
-            if(precioMax != null && precioMax != 0) {
+            if(precioMax != null && precioMax > 0) {
                 predicate = cb.and(predicate,
                         cb.lessThanOrEqualTo(root.get("precioUnidad"), this.precioMax));
             }

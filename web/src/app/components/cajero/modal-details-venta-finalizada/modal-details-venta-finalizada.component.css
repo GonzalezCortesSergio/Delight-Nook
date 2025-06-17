@@ -1,0 +1,22 @@
+.header-info {
+    margin-top: 7%;
+}
+
+.body-info {
+    margin: 6%;
+    margin-top: 5%;
+}
+
+.lineas-venta {
+    height: 25vh;
+    overflow: auto;
+}
+
+.linea-venta {
+    background-color: #ECE9E2;
+    margin-bottom: 1%;
+    border-radius: 7px;
+    height: 7vh;
+    overflow: auto;
+    align-items: center;
+}

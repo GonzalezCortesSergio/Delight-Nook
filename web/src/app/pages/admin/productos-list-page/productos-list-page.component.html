@@ -1,0 +1,79 @@
+<h2 class="display-6 text-center mt-3">Productos</h2>
+
+<i class="bi bi-arrow-left" routerLink="/admin/home"></i>
+
+<button class="add-producto" routerLink="/admin/alta/producto">Agrega producto <i
+        class="bi bi-plus-circle"></i></button>
+<div class="d-flex justify-content-around">
+    
+    @if(errorMessage) {
+        <div class="contenido mx-auto">
+            <h5 class="text-center bg-metal-pink py-4 display-6 error-message">{{errorMessage}}</h5>
+        </div>
+    }
+
+    @else {
+        <div class="contenido row mx-auto">
+
+        @for (producto of productos?.content; track $index) {
+
+        <div class="col-5 cartas">
+            <div class="card mt-3">
+                <img class="card-img-top mx-auto mt-2" [src]="getImagen(producto)" onerror="'profile-default-icon.png'"
+                    alt="Imagen del producto" />
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{producto.nombre}}</h5>
+                    <div class="d-flex justify-content-between">
+                        <p class="text-center">Precio unitario: {{producto.precioUnidad | number: "1.0-2"}}€</p>
+                        <p class="text-center">Categoria: {{producto.categoria}}</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between m-2">
+                        <button class="btn btn-wintery" (click)="openDetails(producto.id)">Ver más</button>
+                        <button class="btn btn-metal-pink" (click)="openModalDelete(producto)">Borrar</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+        }
+        <ngb-pagination class="d-flex justify-content-center paginacion"
+            [collectionSize]="productos!.page.totalElements" [pageSize]="productos!.page.size" [(page)]="page"
+            (pageChange)="cambiarProductos()" />
+    </div>
+    }
+
+    <div class="filtros me-5 mt-5">
+        <h4 class="text-center">Filtros:</h4>
+        <div class="mb-3">
+            <input class="form-control" type="text" placeholder="Nombre" [(ngModel)]="nombre"
+                (input)="cambiarProductosConFiltro()" />
+        </div>
+        <div class="mb-3">
+            <select class="form-select" [(ngModel)]="categoria" (change)="cambiarProductosConFiltro()">
+                <option value="">Categoría</option>
+                @for(categoria of categorias; track $index) {
+                <option [value]="categoria.nombre">{{categoria.nombre}}</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <input class="form-control" type="text" placeholder="Proveedor" [(ngModel)]="proveedor"
+                (input)="cambiarProductosConFiltro()" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="precio-min">Precio mínimo:</label>
+            <input id="precio-min" class="form-control" type="number" placeholder="Precio mínimo"
+                [(ngModel)]="precioMin" (input)="cambiarProductosConFiltro()" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="precio-max">Precio máximo:</label>
+            <input id="precio-max" class="form-control" type="number" placeholder="Precio máximo"
+                [(ngModel)]="precioMax" (input)="cambiarProductosConFiltro()" />
+        </div>
+
+    </div>
+</div>
