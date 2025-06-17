@@ -11,7 +11,8 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Query("""
             SELECT s
             FROM Stock s
-            JOIN fetch s.producto p
+            LEFT JOIN fetch s.producto p
+            LEFT JOIN FETCH p.categoria
             WHERE p.id = :productoId
             """)
     Optional<Stock> findByProductoId(Long productoId);

@@ -7,16 +7,10 @@ import { UsuarioService } from '../../../services/usuario.service';
   templateUrl: './admin-home-page.component.html',
   styleUrl: './admin-home-page.component.css'
 })
-export class AdminHomePageComponent implements OnInit{
+export class AdminHomePageComponent{
 
   constructor(private router: Router, private usuarioService: UsuarioService) { }
 
-  role = localStorage.getItem("role");
-    
-  ngOnInit(): void {
-    if(!this.role || this.role !== "ADMIN")
-      this.router.navigateByUrl("/login");
-  }
 
   cerrarSesion() {
     this.usuarioService.cerrarSesion()

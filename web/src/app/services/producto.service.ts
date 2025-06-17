@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateProducto, EditProducto, ProductoDetails, ProductoFilter, ProductoResponse } from '../models/producto';
+import { CreateProducto, EditProducto, ProductoCantidad, ProductoDetails, ProductoFilter, ProductoResponse } from '../models/producto';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +73,13 @@ export class ProductoService {
       {
         headers: this.createHeaders()
       }
+    );
+  }
+
+  addProductoToStock(productoCantidad: ProductoCantidad) {
+    return this.http.post(`${this.baseUrl}/almacenero/addStock`,
+      productoCantidad,
+      { headers: this.createHeaders() }
     );
   }
 
