@@ -81,7 +81,19 @@ export class LoginPageComponent {
           localStorage.setItem("refreshToken", res.refreshToken);
           localStorage.setItem("role", "ALMACENERO");
 
-          this.router.navigateByUrl("/almacenero/home");
+          this.router.navigateByUrl("/almacenero/almacen");
+        }
+        else {
+          this.errorMessage = "El usuario no es de ese tipo";
+        }
+      },
+      error: err => {
+        const errorResponse: ErrorResponse = err.error;
+
+        this.errorMessage = errorResponse.detail;
+
+        for (const invalidParam of errorResponse["invalid-params"]) {
+          this.errorMessage+=`, ${invalidParam.field} ${invalidParam.message}`;
         }
       }
     })

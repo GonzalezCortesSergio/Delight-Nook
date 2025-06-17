@@ -79,3 +79,8 @@ export class ProductoCantidad {
     this.cantidad = cantidad;
   }
 }
+
+export interface ProductoCantidadInterface {
+  producto: Producto;
+  cantidad: number;
+}
