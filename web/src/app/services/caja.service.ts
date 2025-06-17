@@ -61,6 +61,13 @@ export class CajaService {
     );
   }
 
+  logoutCaja() {
+    return this.http.post(`${this.baseUrl}/cerrarSesion`,
+      null,
+      { headers: this.createHeaders() }
+    );
+  }
+
   private createHeaders(): HttpHeaders {
       return new HttpHeaders(
         {

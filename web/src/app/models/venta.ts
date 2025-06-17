@@ -33,3 +33,7 @@ export interface LineaVenta {
     cantidad: number;
     subTotal: number;
 }
+
+export interface NumVentas {
+    numVentas: number;
+}

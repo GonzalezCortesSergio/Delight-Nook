@@ -114,6 +114,12 @@ export class UsuarioService {
       validateUsuario
     );
   }
+
+  me(): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.baseUrl}/me`,
+      { headers: this.createHeaders() }
+    );
+  }
   
   private createHeaders(): HttpHeaders {
     return new HttpHeaders(
