@@ -38,6 +38,7 @@ import { ProfileDetailsPageComponent } from './pages/cajero/profile-details-page
 import { CajaVentasPageComponent } from './pages/cajero/caja-ventas-page/caja-ventas-page.component';
 import { GestionAlmacenPageComponent } from './pages/almacenero/gestion-almacen-page/gestion-almacen-page.component';
 import { NavbarAlmaceneroComponent } from './components/almacenero/navbar-almacenero/navbar-almacenero.component';
+import { ProfileDetailsAlmaceneroPageComponent } from './pages/almacenero/profile-details-almacenero-page/profile-details-almacenero-page.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { NavbarAlmaceneroComponent } from './components/almacenero/navbar-almace
     ProfileDetailsPageComponent,
     CajaVentasPageComponent,
     GestionAlmacenPageComponent,
-    NavbarAlmaceneroComponent
+    NavbarAlmaceneroComponent,
+    ProfileDetailsAlmaceneroPageComponent
   ],
   imports: [
     BrowserModule,
