@@ -58,7 +58,7 @@ export class CategoriaDetailsPageComponent implements OnInit{
   }
 
   mostrarDetalles(categoria: Categoria) {
-    window.location.href = `/admin/categorias/detalles/${categoria.id}`;
+    this.router.navigateByUrl(`/admin/categorias/detalles/${categoria.id}`)
   }
 
   openModalDelete(categoria: Categoria) {

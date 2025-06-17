@@ -219,7 +219,7 @@ public class UsuarioService {
         contentBuilder.append("<h3 style=\"text-align: center;\">Deberá proporcionar su contraseña, verificarla y este código: %s</h3>".formatted(activationToken));
         contentBuilder.append("</div>");
         contentBuilder.append("<div style=\"text-align: center;\">");
-        contentBuilder.append("<a href=\"http://localhost:4200/usuario/validar\"><h2>En el siguiente enlace</h2</a>");
+        contentBuilder.append("<a href=\"http://localhost/usuario/validar\"><h2>En el siguiente enlace</h2</a>");
         contentBuilder.append("</div>");
         contentBuilder.append("</body>");
         contentBuilder.append("</html>");

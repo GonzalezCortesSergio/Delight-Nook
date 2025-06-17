@@ -54,8 +54,8 @@ const routes: Routes = [
     data: {roles: ["CAJERO"]},
     children: [
       { path: "venta", component: VentaPageComponent },
-      { path: "detalles/caja", component: CajaVentasPageComponent },
-      { path: "detalles/perfil", component: ProfileDetailsPageComponent }
+      { path: "caja", component: CajaVentasPageComponent },
+      { path: "perfil", component: ProfileDetailsPageComponent }
     ]
   },
   {
