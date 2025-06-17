@@ -17,12 +17,14 @@ import { EditProductoPageComponent } from './pages/admin/edit-producto-page/edit
 import { VentaPageComponent } from './pages/cajero/venta-page/venta-page.component';
 import { roleGuard } from './role.guard';
 import { AccessDeniedPageComponent } from './pages/access-denied-page/access-denied-page.component';
+import { ProfileDetailsPageComponent } from './pages/profile-details-page/profile-details-page.component';
 
 
 const routes: Routes = [
 
   { path: "login", component: LoginPageComponent },
   { path: "login/cajero", component: LoginCajeroPageComponent },
+  { path: "usuario/detalles", component: ProfileDetailsPageComponent },
   { path: "usuario/validar", component: VerifyUserPageComponent },
   { path: "access-denied", component: AccessDeniedPageComponent },
   {
