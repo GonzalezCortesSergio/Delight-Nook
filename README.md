@@ -12,19 +12,19 @@ La cultura oriental, desde que se expandió de forma masiva a principios de los 
 Durante un tiempo hubo una buena variedad de tiendas que ofrecían productos varios ambientados en la cultura oriental, como sería miniso; tienda que se encontraba anteriormente en el centro comercial Los Arcos. Aunque en la actualidad no es el caso; haciendo que quien quiera recurrir a ese tipo de productos tenga que comprar por internet de forma prácticamente obligatoria, cosa que a día de hoy sigue suponiendo una pequeña molestia para algunas personas. 
 Implementar Delight-Nook puede ser una decisión estratégica interesante y potencialmente exitosa, teniendo en cuenta varios factores del mercado y tendencias de consumo. 
 
-<h5>1. Demanda de productos asequibles y de calidad</h5>
+<h3>1. Demanda de productos asequibles y de calidad</h3>
 
 Delight-Nook podría atraer a un gran número de personas que buscan una relación calidad-precio atractiva. 
 * El poder adquisitivo en España varía según la región, pero en general, los consumidores están más interesados en productos accesibles y de calidad. Las tiendas que ofrecen precios bajos y productos de diseño suelen tener un gran éxito, sobre todo en áreas urbanas como Sevilla. 
 
 
-<h5>2. Crecimiento del mercado de retail y tiendas de bajo costo </h5>
+<h3>2. Crecimiento del mercado de retail y tiendas de bajo costo </h3>
 
 El mercado de tiendas de bajo costo y los productos “fast retail” están en auge debido a la popularidad de la compra impulsiva y el estilo de vida acelerado de los consumidores. Delight-Nook podría llenar un vacío en el mercado sevillano que busca este tipo de experiencia de compra.
 * Tiendas como Tiger, Daiso y Action ya tienen presencia en varias ciudades de España, demostrando que existe una demanda creciente por este tipo de establecimientos. 
 
 
-<h5>3. Ubicación estratégica en Sevilla </h5>
+<h3>3. Ubicación estratégica en Sevilla </h3>
 
 
 Sevilla es una ciudad con una combinación de residentes locales y turistas internacionales, lo que proporciona una oportunidad única para Delight-Nook, que ofrece productos asequibles y atractivos. 
@@ -32,7 +32,7 @@ Sevilla es una ciudad con una combinación de residentes locales y turistas inte
 Por eso mismo he planteado este modelo de negocio. 
 
 
-<h5 style="text-align: center;">Nombre de la empresa </h5>
+<h5 style="text-align: center;">Nombre de la empresa </h3>
 
 La idea de esta tienda es que pueda irradiar a sus clientes con el encanto de sus productos. Por lo que actuaría como un rincón en donde puedas salir de ahí encantado; ya que una de las posibles traducciones de su nombre es rincón del encanto.
 
@@ -50,7 +50,7 @@ Flying Tiger, que pueden suponer algún tipo de competencia. Pero ninguna que
 cumpla las características de este negocio.
 
 
-<h5>Inversión:</h5>
+<h3>Inversión:</h3>
 
 Para llevar a cabo esta idea de negocio, se requerirá de:
 
@@ -78,7 +78,7 @@ tratándose de productos de electrónica; como auriculares inalámbricos o altav
 y como mínimo, serán de 1 euro; tratándose de productos de cosmética sencillos
 como mascarillas.
 
-<h5>Productos:</h5>
+<h3>Productos:</h3>
 
 Irrigador bucal:
 
@@ -237,176 +237,176 @@ El diagrama de clases del diseño sería el siguiente:
 
 La API está formada por una variedad de paquetes y clases que permiten su funcionamiento. Las cuales son:
 
-<h5>Paquete config:</h5>
+<h3>Paquete config:</h3>
 
 Paquete para las distintas clases de configuración adicional para la API. 
 
-<h5>Paquete controller:</h5>
+<h3>Paquete controller:</h3>
 
 Paquete para las distintas clases de controlador, que permiten recibir y enviar datos mediante peticiones HTTP.
 
 
-<h5>Paquete dto:</h5>
+<h3>Paquete dto:</h3>
 
 Paquete para los distintos DTOs, ordenados en sub-paquetes de las entidades, siendo estos:
 
-<h5>Sub-paquete caja:</h5>
+<h3>Sub-paquete caja:</h3>
 
 Paquete para los DTOs relacionados con la entidad Caja.
 
 
-<h5>Sub-paquete producto:</h5>
+<h3>Sub-paquete producto:</h3>
 
 
 Paquete para los DTOs relacionados con la entidad Producto.
 
 
-<h5>Sub-paquete venta:</h5>
+<h3>Sub-paquete venta:</h3>
 
 Paquete para los DTOs relacionados con la entidad Venta.
 
 
-<h5>Paquete error:</h5>
+<h3>Paquete error:</h3>
 
 Paquete que recopila las excepciones personalizadas y el controller advice. Contiene un sub-paquete, el cual es:
 
-<h5>Sub-paquete dto:</h5>
+<h3>Sub-paquete dto:</h3>
 
 Paquete que contiene un DTO personalizado para los mensajes de error.
 
 
-<h5>Paquete model:</h5>
+<h3>Paquete model:</h3>
 
 Paquete que contiene los modelos de las entidades.
 
 
-<h5>Paquete query: </h5>
+<h3>Paquete query: </h3>
 
 Paquete que contiene los DTOs necesarios para hacer filtrado de las entidades.
 
 
-<h5>Paquete repository:</h5>
+<h3>Paquete repository:</h3>
 
 Paquete que contiene los DAOs necesarios para las entidades en la base de datos.
 
 
-<h5>Paquete security:</h5>
+<h3>Paquete security:</h3>
 
 Paquete que contiene toda la lógica de seguridad. Y tiene algunos sub-paquetes, los cuales son:
 
 
-<h5>Sub-paquete exceptionhandling:</h5>
+<h3>Sub-paquete exceptionhandling:</h3>
 
 Paquete que contiene las clases necesarias para el manejo de excepciones relacionadas con la seguridad.
 
 
-<h5>Sub-paquete jwt:</h5>
+<h3>Sub-paquete jwt:</h3>
 
 Paquete que contiene la lógica de gestión de tokens de seguridad. Está compuesto por dos paquetes:
 
 
-<h5>Sub-sub-paquete access:</h5>
+<h3>Sub-sub-paquete access:</h3>
 
 Paquete que contiene la lógica de gestión de tokens de acceso.
 
 	
-<h5>Sub-sub-paquete refresh:</h5>
+<h3>Sub-sub-paquete refresh:</h3>
 
 Paquete que contiene la lógica de gestión de tokens de refresco.
 
 
-<h5>Sub-paquete validation:</h5>
+<h3>Sub-paquete validation:</h3>
 
 Paquete que contiene la lógica de validación de los DTOs de entrada de datos. Está compuesto por dos paquetes.
 
 
-<h5>Sub-sub-paquete annotation:</h5>
+<h3>Sub-sub-paquete annotation:</h3>
 
 Paquete que contiene las anotaciones inyectables en los DTOs de entrada de datos.
 
 
-<h5>Sub-sub-paquete validator:</h5>
+<h3>Sub-sub-paquete validator:</h3>
 
 Paquete que contiene las clases necesarias para la lógica de validación de las anotaciones.
 
 
-<h5>Paquete service:</h5>
+<h3>Paquete service:</h3>
 
 Paquete que contiene las clases necesarias para gestionar la lógica de negocio de las entidades.
 
 
-<h5>Paquete user:</h5>
+<h3>Paquete user:</h3>
 
 Paquete que contiene las clases relacionadas con la entidad Usuario y sus clases hijas. Está compuesto por varios paquetes:
 
 	
-<h5>Sub-paquete controller:</h5>
+<h3>Sub-paquete controller:</h3>
 
 Paquete que contiene el controlador que permite recibir y enviar datos mediante peticiones HTTP para los métodos relacionados con la entidad Usuario y sus clases hijas.
 
 
-<h5>Sub-paquete dto:</h5>
+<h3>Sub-paquete dto:</h3>
 
 Paquete que contiene todos los DTOs de entrada y salida de la entidad usuario.
 
 
-<h5>Sub-paquete error:</h5>
+<h3>Sub-paquete error:</h3>
 
 Paquete que contiene todas las excepciones relacionadas con la entidad usuario.
 
 	
-<h5>Sub-paquete model:</h5>
+<h3>Sub-paquete model:</h3>
 
 Paquete que contiene el modelo de la entidad Usuario y sus clases hijas.
 
 
-<h5>Sub-paquete repository:</h5>
+<h3>Sub-paquete repository:</h3>
 
 	
 Paquete que contiene el DAO que permite realizar las operaciones de base de datos
 de la entidad usuario.
 
 
-<h5>Sub-paquete service:</h5>
+<h3>Sub-paquete service:</h3>
 
 Paquete que contiene las clases necesarias para la lógica de negocio de la entidad
 usuario.
 
 
-<h5>Paquete util:</h5>
+<h3>Paquete util:</h3>
 
 Paquete que contiene distintas clases que aportan utilidades adicionales a la API, como inserción de datos, gestión de ficheros… Contiene un paquete:
 
 
-<h5>Sub-paquete files:</h5>
+<h3>Sub-paquete files:</h3>
 
 Paquete que contiene toda la lógica relacionada con la gestión de ficheros. Contiene varios paquetes:
 
 
-<h5>Sub-sub-paquete dto:</h5>
+<h3>Sub-sub-paquete dto:</h3>
 
 Paquete que contiene el DTO necesario para la respuesta de un fichero.
 
 
-<h5>Sub-sub-paquete exception:</h5>
+<h3>Sub-sub-paquete exception:</h3>
 
 Paquete que contiene las excepciones relacionadas con la gestión de ficheros.
 
 
-<h5>Sub-sub-paquete model:</h5>
+<h3>Sub-sub-paquete model:</h3>
 
 Paquete que contiene el modelo que define los metadatos de un fichero.
 
 
-<h5>Sub-sub-paquete service:</h5>
+<h3>Sub-sub-paquete service:</h3>
 
 Paquete que contiene toda la lógica de negocio relacionada con los ficheros. Tiene un paquete:
 
 
-<h5>Sub-sub-sub-paquete local:</h5>
+<h3>Sub-sub-sub-paquete local:</h3>
 
 Paquete que contiene las implementaciones para utilizar una lógica de negocio relacionada con el guardado de ficheros en el almacenamiento local.
 
-<h5>Sub-sub-paquete utils:</h5>
+<h3>Sub-sub-paquete utils:</h3>
 
 Paquete que contiene funcionalidades de utilidad para la gestión de ficheros.
