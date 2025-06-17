@@ -190,4 +190,8 @@ public class VentaService {
 
         return result;
     }
+
+    public int countByNombreCajero(Cajero cajero) {
+        return ventaRepository.countByNombreCajero(cajero.getNombreCompleto());
+    }
 }

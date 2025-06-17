@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.delight_nook.controller;
 
 import com.salesianostriana.dam.delight_nook.dto.producto.ProductoCantidadDto;
+import com.salesianostriana.dam.delight_nook.dto.venta.GetNumVentas;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDetailsDto;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentaDto;
 import com.salesianostriana.dam.delight_nook.dto.venta.GetVentasCajaDto;
@@ -933,6 +934,81 @@ public class VentaController {
             @PathVariable UUID idVenta) {
 
         return GetVentaDetailsDto.of(ventaService.findById(idVenta));
+    }
+
+    @Operation(summary = "Se muestra el número de ventas que ha realizado el cajero")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Se muestra el número de ventas correctamente",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = GetNumVentas.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            numVentas: 1
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Token no válido",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "Invalid token",
+                                                                            "status": 401,
+                                                                            "detail": "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+                                                                            "instance": "/api/venta/cajero/num-ventas"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No tienes permiso para realizar esta operación",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            schema = @Schema(implementation = ProblemDetail.class),
+                                            examples = {
+                                                    @ExampleObject(
+                                                            value = """
+                                                                        {
+                                                                            "type": "about:blank",
+                                                                            "title": "No authorization",
+                                                                            "status": 403,
+                                                                            "detail": "Access denied",
+                                                                            "instance": "/api/venta/cajero/num-ventas"
+                                                                        }
+                                                                    """
+                                                    )
+                                            }
+                                    )
+                            }
+                    )
+            }
+    )
+    @GetMapping("/cajero/num-ventas")
+    public GetNumVentas countByCajero(@AuthenticationPrincipal Cajero cajero) {
+        return new GetNumVentas(ventaService.countByNombreCajero(cajero));
     }
 
 }
